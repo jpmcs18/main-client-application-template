@@ -155,9 +155,6 @@ export default function UserPage() {
 
   return (
     <div className='main-container'>
-      <div className='header-container'>
-        <div className='header'>Users</div>
-      </div>
       <div className='item-container'>
         <SeachBar search={search} />
         <div>

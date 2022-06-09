@@ -1,10 +1,10 @@
-import React from 'react';
-import { useAddConcern, useConcerns } from '../../concern-page';
+import React, { useContext } from 'react';
+import { AddConcernItem, ConcernList } from '../../concern-page';
 import ConcernItem from './concern-item';
 
-export default function Concerns() {
-  const concerns = useConcerns();
-  const addConcern = useAddConcern();
+export default function ConcernItems() {
+  const concerns = useContext(ConcernList);
+  const addConcern = useContext(AddConcernItem);
   return (
     <table className='item-table'>
       <thead>

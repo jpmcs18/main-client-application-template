@@ -13,10 +13,11 @@
   --primary-table-alternating: rgba(226, 195, 195, 0.281);
   --table-hover-color: #f5f1f1;
   --navigation-bar-height: 55px;
-  --base-font-size: 1em;
-  --label-size: 0.6em;
-  --header-font-size: 1.1em;
-  --menu-font-size: 0.9em;
+  --base-font-size: 10pt;
+  --normal-font-size: 8pt;
+  --label-size: 6pt;
+  --header-font-size: 12pt;
+  --menu-font-size: 11pt;
   --normal: 100;
   --light: 300;
   --regular: 400;
@@ -44,7 +45,7 @@
   }
 }
 body {
-  margin: 0;
+  margin: 0 !important;
   padding: 0;
   font-size: var(--base-font-size);
   font-family: 'Roboto', sans-serif;
@@ -105,6 +106,7 @@ body {
       z-index: -1;
       background-color: var(--primary-color);
       left: 0;
+      top: 3em;
       justify-content: center;
       opacity: 0;
       .menu-items {
@@ -131,7 +133,7 @@ body {
         list-style: none;
         a,
         label {
-          font-size: 0.8em;
+          font-size: var(--label-size);
           text-align: center;
           text-decoration: none;
           display: block;
@@ -140,7 +142,7 @@ body {
         }
 
         button {
-          font-size: 0.8em;
+          font-size: var(--normal-font-size);
           text-align: center;
           text-decoration: none;
           display: block;
@@ -165,17 +167,22 @@ textarea,
 input {
   border: none;
   border-bottom: 1px solid var(--primary-color);
-
   &:focus {
     outline: none;
   }
+}
+textarea {
+  font-size: var(--normal-font-size);
+  font-family: 'Roboto', sans-serif;
+  text-align: justify;
 }
 
 .login-container {
   position: relative;
   background: white;
   margin: 10em auto;
-  width: 25em;
+  width: 20em;
+  box-sizing: border-box;
   padding-bottom: 0.2em;
   border-radius: 0.5em;
   box-shadow: 0em 0em 0.5em 0em #ccc;
@@ -198,8 +205,7 @@ input {
   }
 
   .login-content {
-    margin: 1.5em;
-    margin-top: 2em;
+    margin: 1.3em 1em;
     box-sizing: border-box;
   }
 }
@@ -207,10 +213,11 @@ input {
   margin: 0.5em;
 }
 .btn {
-  font-size: 0.7em;
+  font-size: var(--normal-font-size);
   border-radius: 0.3em;
-  margin-top: 0.8em;
-  padding: 0.5em 2em;
+  margin-top: 0.5em;
+  padding: 0.7em 2em;
+  min-width: 5em;
   cursor: pointer;
   background: white;
   color: var(--primary-color);
@@ -249,7 +256,7 @@ input {
     user-select: none;
   }
   select {
-    font-size: 0.7em;
+    font-size: var(--normal-font-size);
     height: 100%;
     width: 100%;
     border: none;
@@ -262,6 +269,9 @@ input {
     &:focus {
       outline: none;
     }
+  }
+  textarea {
+    font-size: var(--normal-font-size);
   }
   .input-container {
     width: 100%;
@@ -278,6 +288,7 @@ input {
       display: none;
     }
     input {
+      font-size: var(--normal-font-size);
       width: 100%;
       height: 100%;
       box-sizing: border-box;
@@ -549,19 +560,20 @@ input {
 .pagination {
   float: right;
   display: flex;
-  background: white;
-  font-size: 0.7em;
+  font-size: var(--normal-font-size);
+  margin: 1em;
 
   svg {
+    height: 15px !important;
+    width: 15px !important;
     box-sizing: border-box;
-    height: 20px !important;
-    width: 20px !important;
-    font-size: 0.7em;
+    font-size: var(--normal-font-size);
     padding: 5px;
     background: white;
+    color: var(--primary-color);
     border: none;
     border-radius: 0.2em;
-    box-shadow: 0px 1px 3px 1px #ccc;
+    box-shadow: 0em 0em 0.1em 0em var(--primary-color);
     margin: 0 0.2em;
     cursor: pointer;
   }
@@ -574,22 +586,29 @@ input {
 
   .pages-container {
     position: relative;
-    margin: 0 5px;
     z-index: 9;
+    margin: 0 0.2em;
+    height: 25px !important;
+    box-sizing: border-box;
+    font-size: var(--normal-font-size);
+    background: white;
+    border: none;
+    border-radius: 0.2em;
+    box-shadow: 0em 0em 0.1em 0em var(--primary-color);
 
     .current-page {
       background: none;
       border: none;
-      box-shadow: 0px 1px 3px 1px #ccc;
       text-decoration: none;
       cursor: pointer;
       border-radius: 0.25em;
       width: 60px;
-      padding: 0.45em;
       box-sizing: border-box;
-      text-align: center;
+      justify-content: center;
+      height: 100%;
       font-weight: var(--bold);
-      font-size: 1.15em;
+      color: var(--primary-color);
+      font-size: var(--normal-font-size);
     }
     .current-page:focus + .pages,
     .pages:hover {
@@ -604,7 +623,7 @@ input {
       scrollbar-width: thin;
       border-radius: 0.3em;
       background-color: #f9f9f9;
-      box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.3);
+      box-shadow: 0em 0.1em 0.2em 0em #ccc;
       left: 0;
       height: 0;
       top: calc(100% + 0.8em);
@@ -622,11 +641,14 @@ input {
         font-size: 0.8em;
         cursor: pointer;
         font-weight: var(--bold);
+        &:hover {
+          color: var(--primary-color);
+        }
       }
 
       .active {
-        background: var(--primary-color);
-        color: var(--primary-color-accent);
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
       }
     }
   }
@@ -655,59 +677,64 @@ input {
 }
 .content {
   position: relative;
-
-  .user-data {
-    display: block;
-    border-radius: 1em;
-    box-shadow: 0em 0em 3px 0px #ccc;
-    cursor: pointer;
+  .checkbox-container {
     display: flex;
-    box-sizing: border-box;
-    overflow: hidden;
-    .user-info {
-      padding: 0.5em;
-      width: 100%;
-      display: flex;
-      &:hover {
-        background: var(--primary-color-hover);
-      }
-    }
+    gap: 0.5em;
+    margin: 1em;
+  }
+}
 
-    .inactive,
-    .username {
-      margin-top: 0.4em;
-      color: #999;
-      font-size: 0.8em;
+.user-data {
+  display: block;
+  border-radius: 1em;
+  box-shadow: 0em 0em 3px 0px #ccc;
+  cursor: pointer;
+  display: flex;
+  box-sizing: border-box;
+  overflow: hidden;
+  .user-info {
+    padding: 0.5em;
+    width: 100%;
+    display: flex;
+    &:hover {
+      background: var(--primary-color-hover);
     }
-    .inactive {
-      font-size: 1em;
-    }
-    .active {
-      margin-top: 0.4em;
-      font-weight: var(--bold);
-      opacity: 0.8;
-    }
-    .name,
-    .admin {
-      display: inline;
-      font-weight: var(--bold);
-    }
-    .admin {
-      font-style: italic;
-      opacity: 0.7;
-      &::before {
-        content: ' - ';
-      }
-    }
+  }
 
-    .other-details {
-      display: none;
+  .inactive,
+  .username {
+    margin-top: 0.4em;
+    color: #999;
+    font-size: 0.8em;
+  }
+  .inactive {
+    font-size: 1em;
+  }
+  .active {
+    margin-top: 0.4em;
+    font-weight: var(--bold);
+    opacity: 0.8;
+  }
+  .name,
+  .admin {
+    display: inline;
+    font-weight: var(--bold);
+  }
+  .admin {
+    font-style: italic;
+    opacity: 0.7;
+    &::before {
+      content: ' - ';
     }
+  }
 
-    .selected-user {
-      display: flex !important;
-      align-items: center;
-    }
+  .other-details {
+    display: none;
+  }
+
+  .selected-user {
+    display: flex !important;
+    align-items: center;
   }
 }
 
@@ -794,7 +821,7 @@ input {
       }
     }
     th {
-      font-size: 0.7em;
+      font-size: var(--normal-font-size);
       text-align: left;
       height: 2.5em !important;
     }
@@ -816,7 +843,14 @@ input {
     padding: 0 0.4em;
   }
   td {
-    font-size: 0.6em;
+    font-size: var(--normal-font-size);
+  }
+
+  .elipsis {
+    max-width: 25em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   tbody tr {
@@ -831,21 +865,21 @@ input {
     &:hover .table-actions {
       width: unset;
       opacity: 1;
-      transition: opacity ease-in-out 0.2s;
     }
   }
 
   .table-actions {
     right: 0.5em;
-    position: absolute;
+    position: fixed;
     display: flex;
     opacity: 0;
     width: 0;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
+    gap: 0.3em;
     .table-icon-button {
       cursor: pointer;
-      font-size: 1em;
+      font-size: var(--normal-font-size);
       box-sizing: border-box;
       height: 2em;
       width: 2em;
@@ -855,7 +889,10 @@ input {
         transform: scale(1.2);
       }
     }
-
+    .btn {
+      margin: 0 !important;
+      min-width: none !important;
+    }
     .action-icon {
       color: var(--primary-color);
       margin: 0.3em;
@@ -870,7 +907,7 @@ input {
   border-radius: 1.5em;
   text-align: center;
   color: var(--primary-color);
-  font-size: 0.7em;
+  font-size: var(--normal-font-size);
   font-weight: var(--bold);
   padding: 0.5em;
   text-transform: uppercase;
@@ -959,7 +996,7 @@ tbody tr {
     }
 
     .modal-content-body {
-      margin: 0.5em;
+      margin: 0.8em 0.3em;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -1008,9 +1045,9 @@ tbody tr {
       display: flex;
       flex-direction: row-reverse;
       .btn-modal {
-        font-size: 0.7em;
+        font-size: var(--normal-font-size);
         border-radius: 0.3em;
-        padding: 0.4em 2em;
+        padding: 0.6em 2em;
         cursor: pointer;
         margin: 0 0.3em;
       }
@@ -1049,7 +1086,7 @@ tbody tr {
   padding: 0 !important;
   .tab-headers {
     display: flex;
-    font-size: 0.6em;
+    font-size: var(--normal-font-size);
     font-weight: var(--bold);
     align-content: stretch;
     cursor: pointer;
@@ -1166,7 +1203,7 @@ thead {
   align-items: center;
   justify-content: center;
   .care-of-display {
-    font-size: 0.7em;
+    font-size: var(--normal-font-size);
     width: 5em;
   }
 }
@@ -1193,21 +1230,26 @@ thead {
   padding: 0 0.5em;
   height: 3em;
 }
+
 .check {
   display: flex;
   justify-content: center;
   align-self: center;
+
+  .check-label {
+    align-self: center;
+  }
 }
 .check-label {
   margin-left: 0.3em !important;
-  font-size: 15px;
+  font-size: var(--normal-font-size);
 }
 .check-container {
   z-index: 0;
   display: block;
   position: relative;
   cursor: pointer;
-  font-size: 20px;
+  font-size: var(--normal-font-size);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1231,7 +1273,6 @@ thead {
     left: 0;
     height: 15px;
     width: 15px;
-    background-color: var(--primary-color-hover);
     &:after {
       content: '';
       position: absolute;
@@ -1269,118 +1310,14 @@ thead {
   }
 }
 @media screen and (min-width: 1800px) {
-  .voter-header {
-    font-size: 1.2em;
+  :root {
+    --base-font-size: 12pt;
+    --normal-font-size: 10pt;
+    --label-size: 8pt;
+    --header-font-size: 14pt;
+    --menu-font-size: 13pt;
   }
 
-  .item-table {
-    thead {
-      th {
-        font-size: 0.9em;
-      }
-    }
-    tbody {
-      td {
-        font-size: 0.8em;
-      }
-    }
-  }
-
-  .btn-border {
-    font-size: 0.6em;
-  }
-
-  .search-container {
-    input {
-      font-size: 0.8em;
-    }
-  }
-
-  .total {
-    font-size: 1.2em;
-  }
-
-  .btn {
-    font-size: 1em;
-  }
-
-  .tab-container {
-    .tab-headers {
-      font-size: 0.8em;
-    }
-  }
-
-  .pagination {
-    font-size: 0.75em;
-
-    svg {
-      height: 25px !important;
-      width: 25px !important;
-      font-size: 0.8em;
-    }
-  }
-
-  .custom-input {
-    margin-top: 0.7em;
-    height: 2.7em;
-    label {
-      font-size: 0.6em;
-    }
-    select {
-      font-size: 0.8em;
-    }
-    .input-container {
-      input {
-        font-size: 0.8em;
-      }
-    }
-    .checkbox {
-      font-size: 0.8em;
-    }
-    .datepicker-container {
-      .selected-date {
-        font-size: 0.8em;
-      }
-      .date-icon {
-        font-size: 0.8em;
-      }
-    }
-    .select-container {
-      .current-selection-icon {
-        font-size: 0.8em;
-      }
-      .current-selection {
-        font-size: 0.8em;
-      }
-    }
-  }
-
-  .modal-container {
-    .voter-modal {
-      width: 40%;
-    }
-    .modal-content {
-      .modal-content-header {
-        .header-text {
-          font-size: 1em;
-        }
-      }
-    }
-  }
-
-  .report-content {
-    height: calc(100vh - 18.5em);
-    overflow-y: auto;
-  }
-
-  .report-content-small-header {
-    height: calc(100vh - 15.5em);
-    overflow-y: auto;
-  }
-  .report-footer {
-    height: 3em;
-    .count {
-      font-size: 1em;
-    }
+  .menus {
   }
 }

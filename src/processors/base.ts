@@ -183,7 +183,6 @@ export async function httpAuthenticatingPost<Return>(
   url: string,
   param: any
 ): Promise<Return | undefined> {
-  console.log(url, param);
   return await axios
     .post(url, JSON.stringify(param), {
       headers: {

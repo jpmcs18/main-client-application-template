@@ -22,6 +22,7 @@ export default function ManageConcern({
   selectedConcern: Concern | undefined;
   onClose: (hasChange: boolean) => void;
 }) {
+  console.log(selectedConcern);
   const [concern, setConcern] = useState<Concern>(
     () =>
       selectedConcern ?? {
@@ -34,6 +35,8 @@ export default function ManageConcern({
         closedDate: undefined,
         officeId: undefined,
         office: undefined,
+        personnel: undefined,
+        personnelId: undefined,
       }
   );
   const [classifications, setClassifications] = useState<Classification[]>([]);
@@ -96,6 +99,7 @@ export default function ManageConcern({
   }
   async function saveData() {
     setBusy(true);
+    console.log(concern);
     if (concern.id === 0) {
       await createConcern(concern!)
         .then(() => {
@@ -161,7 +165,7 @@ export default function ManageConcern({
     <Modal
       onClose={() => onClose(false)}
       title={(concern?.id ?? 0) > 0 ? 'Update Concern' : 'New Concern'}>
-      <div className='concern-management-modal-body'>
+      <div className='concern-management-modal-body modal-content-body'>
         <div>
           <div>
             <CustomDropdown

@@ -14,6 +14,8 @@ import ManageProfile from './modals/manage-profile';
 import { ICON } from '../constant';
 import RolePage from './role-page';
 import ConcernPage from './concern-page';
+import TicketPage from './ticket-page';
+import ReportPage from './report-page';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -30,6 +32,10 @@ export default function HomePage() {
             {
               route: Routes.Concern,
               name: 'Concerns',
+            },
+            {
+              route: Routes.Ticket,
+              name: 'Tickets',
             },
           ],
         },
@@ -117,6 +123,8 @@ export default function HomePage() {
             <Route path={Routes.User} exact component={UserPage} />
             <Route path={Routes.Role} exact component={RolePage} />
             <Route path={Routes.Concern} exact component={ConcernPage} />
+            <Route path={Routes.Ticket} exact component={TicketPage} />
+            <Route path={'/report'} exact component={ReportPage} />
           </Switch>
           <div>
             {showProfile && (

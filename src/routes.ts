@@ -3,4 +3,5 @@ export const Routes = {
   User: '/users',
   Role: '/roles',
   Concern: '/concerns',
+  Ticket: '/tickets',
 };

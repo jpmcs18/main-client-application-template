@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Concern } from '../../../entities/transaction/Concern';
-import { ConcernActions } from '../../concern-page';
+import { DirectConcernActions } from '../../ticket-page';
 
-export default function ConcernItem({ concern }: { concern: Concern }) {
-  const action = useContext(ConcernActions);
+export default function DirectConcernItem({ concern }: { concern: Concern }) {
+  const action = useContext(DirectConcernActions);
   return (
     <tr>
       <td>
@@ -18,7 +18,7 @@ export default function ConcernItem({ concern }: { concern: Concern }) {
       </td>
       <td className='table-actions'>
         <button className='btn'>View Actions</button>
-        <button className='btn'>Assign To Concerned Personnel</button>
+        <button className='btn'>Forward To Concerned Personnel</button>
         <button
           className='btn'
           onClick={() => action({ action: 'Edit', payload: concern })}>

@@ -30,3 +30,12 @@ export const OfficeEnd = {
   GetList: 'offices',
   Get: 'offices',
 };
+
+export const PersonnelEnd = {
+  GetList: 'personnels',
+  Get: 'personnels',
+};
+
+export const PersonnelConcernEnd = {
+  GetList: 'personnel-concerns',
+};

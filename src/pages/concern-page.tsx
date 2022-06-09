@@ -1,20 +1,21 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
 import { Concern } from '../entities/transaction/Concern';
-import { searchConcerns } from '../processors/concern-process';
-import Concerns from './components/concerns-components/concerns-items';
+import { deleteConcern, searchConcerns } from '../processors/concern-process';
+import Concerns from './components/concerns-components/concern-items';
 import Pagination from './components/pagination';
 import SeachBar from './components/seachbar';
 import ManageConcern from './modals/manage-concern';
 
-const ConcernItems = createContext<Concern[]>([]);
-const AddConcernItem = createContext<() => void>(() => {});
-export function useConcerns() {
-  return useContext(ConcernItems);
-}
-export function useAddConcern() {
-  return useContext(AddConcernItem);
-}
+export type CONCERNACTIONS =
+  | { action: 'Edit'; payload: Concern }
+  | { action: 'Delete'; payload: number };
+
+export const ConcernList = createContext<Concern[]>([]);
+export const AddConcernItem = createContext<() => void>(() => {});
+export const ConcernActions = createContext<(action: CONCERNACTIONS) => void>(
+  () => {}
+);
 export default function ConcernPage() {
   const [key, setKey] = useState<string | undefined>();
   const [pageCount, setPageCount] = useState(0);
@@ -30,10 +31,17 @@ export default function ConcernPage() {
   }
   function onClose(hasChanges: boolean) {
     setShowModal(() => false);
+    if (hasChanges) {
+      searchConcern(key, currentPage);
+    }
   }
-  useEffect(() => {
-    searchConcern('', 1);
-  }, []);
+  useEffect(
+    () => {
+      searchConcern(key, currentPage);
+    },
+    // eslint-disable-next-line
+    []
+  );
   async function searchConcern(key: string | undefined, page: number) {
     setBusy(true);
     searchConcerns(key, page)
@@ -56,6 +64,43 @@ export default function ConcernPage() {
   function goToPage(page: number) {
     searchConcern(key, page);
   }
+  function concernAction(action: CONCERNACTIONS) {
+    switch (action.action) {
+      case 'Edit':
+        setSelectedConcern(action.payload);
+        setShowModal(true);
+        break;
+      case 'Delete':
+        setMessage({
+          message: 'Are you sure you want to delete this?',
+          action: 'YESNO',
+          onOk: () => {
+            deleteSelectedConcern(action.payload);
+          },
+        });
+        break;
+      default:
+        setMessage({ message: 'Invalid Action' });
+        break;
+    }
+  }
+
+  async function deleteSelectedConcern(id: number) {
+    setBusy(true);
+    await deleteConcern(id)
+      .then(() => {
+        setMessage({
+          message: 'User Deleted',
+          onOk: () => {
+            searchConcern(key, currentPage);
+          },
+        });
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
+  }
   return (
     <div className='main-container'>
       <div className='content'>
@@ -66,11 +111,13 @@ export default function ConcernPage() {
             currentPageNumber={currentPage}
             goInPage={goToPage}></Pagination>
         </div>
-        <ConcernItems.Provider value={concerns}>
+        <ConcernList.Provider value={concerns}>
           <AddConcernItem.Provider value={addConcern}>
-            <Concerns />
+            <ConcernActions.Provider value={concernAction}>
+              <Concerns />
+            </ConcernActions.Provider>
           </AddConcernItem.Provider>
-        </ConcernItems.Provider>
+        </ConcernList.Provider>
       </div>
       <div>
         {showModal && (

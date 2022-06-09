@@ -23,6 +23,7 @@ export default function CustomDropdown({
   readonly?: boolean | false;
   onChange?: (data: CustomReturn) => void;
 }) {
+  console.log(value);
   return (
     <div className='custom-input'>
       <label>{title}</label>
@@ -33,12 +34,14 @@ export default function CustomDropdown({
           <select
             id={id}
             className={className}
-            value={value}
             onChange={(e) => {
               onChange?.({ elementName: name ?? '', value: e.target.value });
             }}>
             {itemsList?.map((item) => (
-              <option key={item.key} value={item.key}>
+              <option
+                key={item.key}
+                value={item.key}
+                selected={item.value === value}>
                 {item.value}
               </option>
             ))}

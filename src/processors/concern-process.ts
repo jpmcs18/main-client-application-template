@@ -1,7 +1,7 @@
 import { ConcernEnd } from '../endpoints';
 import { Concern } from '../entities/transaction/Concern';
 import { ConcernSearchResult } from '../entities/transaction/ConcernSearchResult';
-import { httpGet, httpPost, httpPut } from './base';
+import { httpDelete, httpGet, httpPost, httpPut } from './base';
 
 export async function searchConcerns(
   name: string | undefined,
@@ -21,4 +21,8 @@ export async function createConcern(
 
 export async function updateConcern(concern: Concern): Promise<boolean> {
   return await httpPut(`${ConcernEnd.Update}/${concern.id}`, concern);
+}
+
+export async function deleteConcern(id: number): Promise<boolean> {
+  return await httpDelete(`${ConcernEnd.Delete}/${id}`);
 }
