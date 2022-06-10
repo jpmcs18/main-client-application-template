@@ -139,6 +139,7 @@ export default function ManageConcern({
           return { office: office, officeId: office.id } as Concern;
         return { ...prev, office: office, officeId: office.id };
       });
+      return;
     }
     if (elementName === 'classification') {
       let classification = classifications.filter((x) => x.id === +value)?.[0];
@@ -154,6 +155,7 @@ export default function ManageConcern({
           classificationId: classification.id,
         };
       });
+      return;
     }
     setConcern((prevConcern) => {
       if (prevConcern === undefined) return { [elementName]: value } as Concern;

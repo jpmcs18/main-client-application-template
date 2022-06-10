@@ -1,3 +1,4 @@
+import { Personnel } from '../transaction/Personnel';
 import { Role } from './Role';
 
 export interface User {
@@ -6,4 +7,6 @@ export interface User {
   name: string;
   active: boolean;
   admin: boolean;
+  personnel?: Personnel | undefined;
+  personnelId?: number | undefined;
 }

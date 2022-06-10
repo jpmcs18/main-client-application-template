@@ -168,6 +168,7 @@ export default function UserPage() {
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Classification</th>
                 <th>Username</th>
                 <th>Role</th>
                 <th>Status</th>

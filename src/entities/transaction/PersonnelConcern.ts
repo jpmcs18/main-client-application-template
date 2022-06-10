@@ -10,8 +10,8 @@ export interface PersonnelConcern {
   forwardPersonnelConcernId: number | undefined;
   forwardPersonnelConcern: PersonnelConcern | undefined;
   receivedDate: Date | undefined;
-  closedDate: Date | undefined;
-  forwardDate: Date | undefined;
-  isForwarded: boolean | undefined;
-  isDone: boolean | undefined;
+  closedDate?: Date | undefined;
+  forwardDate?: Date | undefined;
+  statusId?: number | undefined;
+  status?: string | undefined;
 }

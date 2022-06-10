@@ -5,9 +5,13 @@ import { deleteConcern, searchConcerns } from '../processors/concern-process';
 import Concerns from './components/concerns-components/concern-items';
 import Pagination from './components/pagination';
 import SeachBar from './components/seachbar';
+import AssignConcern from './modals/assign-concern';
+import ConcernActionsViewer from './modals/concern-actions-viewer';
 import ManageConcern from './modals/manage-concern';
 
 export type CONCERNACTIONS =
+  | { action: 'Assign'; payload: Concern }
+  | { action: 'ViewAction'; payload: Concern }
   | { action: 'Edit'; payload: Concern }
   | { action: 'Delete'; payload: number };
 
@@ -22,6 +26,8 @@ export default function ConcernPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [concerns, setConcerns] = useState<Concern[]>(() => []);
   const [showModal, setShowModal] = useState(false);
+  const [showAssignmentModal, setShowAssignmentModal] = useState(false);
+  const [showActionsModal, setShowActionsModal] = useState(false);
   const [selectedConcern, setSelectedConcern] = useState<Concern | undefined>();
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
@@ -30,7 +36,8 @@ export default function ConcernPage() {
     setShowModal(() => true);
   }
   function onClose(hasChanges: boolean) {
-    setShowModal(() => false);
+    setShowModal(false);
+    setShowAssignmentModal(false);
     if (hasChanges) {
       searchConcern(key, currentPage);
     }
@@ -66,6 +73,14 @@ export default function ConcernPage() {
   }
   function concernAction(action: CONCERNACTIONS) {
     switch (action.action) {
+      case 'ViewAction':
+        setSelectedConcern(action.payload);
+        setShowActionsModal(true);
+        break;
+      case 'Assign':
+        setSelectedConcern(action.payload);
+        setShowAssignmentModal(true);
+        break;
       case 'Edit':
         setSelectedConcern(action.payload);
         setShowModal(true);
@@ -122,6 +137,15 @@ export default function ConcernPage() {
       <div>
         {showModal && (
           <ManageConcern onClose={onClose} selectedConcern={selectedConcern} />
+        )}
+        {showAssignmentModal && (
+          <AssignConcern onClose={onClose} concern={selectedConcern} />
+        )}
+        {showActionsModal && (
+          <ConcernActionsViewer
+            concern={selectedConcern}
+            onClose={() => setShowActionsModal(false)}
+          />
         )}
       </div>
     </div>

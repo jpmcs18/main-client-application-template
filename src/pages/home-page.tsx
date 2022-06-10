@@ -107,7 +107,7 @@ export default function HomePage() {
                     <label
                       className='user-name nav-menu'
                       onClick={() => setShowProfile(true)}>
-                      {profile?.name ?? '------'}
+                      {`${profile?.personnel?.name} (${profile?.personnel?.classification?.description})`}
                     </label>
                   </li>
                   <li>

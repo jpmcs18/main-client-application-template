@@ -23,8 +23,6 @@ export async function httpGet<Return>(
       switch (res.status) {
         case 200:
           return res.data;
-        case 404:
-          return undefined;
       }
     })
     .catch(async (err) => {
@@ -39,6 +37,8 @@ export async function httpGet<Return>(
               return await httpGet<Return>(url);
             }
             throw new Error('Unauthorized');
+          case 404:
+            throw new Error('Not Data Found');
           default:
             throw new Error(err.response.data);
         }
@@ -65,10 +65,10 @@ export async function httpPost<Return>(
     } as AxiosRequestConfig)
     .then(async (res) => {
       switch (res.status) {
+        case 200:
+          return res.data;
         case 201:
           return res.data;
-        case 404:
-          throw new Error('Not Found');
         default:
           throw new Error('Unknown Error');
       }
@@ -85,6 +85,8 @@ export async function httpPost<Return>(
               return await httpPost<Return>(url, param);
             }
             throw new Error('Unauthorized');
+          case 404:
+            throw new Error('Not Data Found');
           default:
             throw new Error(err.response.data);
         }
@@ -110,8 +112,6 @@ export async function httpPut(url: string, param: any): Promise<boolean> {
       switch (res.status) {
         case 204:
           return true;
-        case 404:
-          throw new Error('Not Found');
         default:
           throw new Error('Unknown Error');
       }
@@ -128,6 +128,8 @@ export async function httpPut(url: string, param: any): Promise<boolean> {
               return await httpPut(url, param);
             }
             throw new Error('Unauthorized');
+          case 404:
+            throw new Error('Not Data Found');
           default:
             throw new Error(err.response.data);
         }
@@ -153,8 +155,6 @@ export async function httpDelete(url: string): Promise<boolean> {
       switch (res.status) {
         case 204:
           return true;
-        case 404:
-          throw new Error('Not Found');
         default:
           throw new Error('Unknown Error');
       }
@@ -171,6 +171,8 @@ export async function httpDelete(url: string): Promise<boolean> {
               return await httpDelete(url);
             }
             throw new Error('Unauthorized');
+          case 404:
+            throw new Error('Not Data Found');
           default:
             throw new Error(err.response.data);
         }
@@ -194,8 +196,6 @@ export async function httpAuthenticatingPost<Return>(
       switch (res.status) {
         case 200:
           return res.data;
-        case 404:
-          throw new Error('Not Found');
         default:
           throw new Error('Unknown Error');
       }
@@ -205,6 +205,8 @@ export async function httpAuthenticatingPost<Return>(
         switch (err.response.status) {
           case 400:
             throw new Error(err.response.data);
+          case 404:
+            throw new Error('Not Data Found');
           default:
             throw new Error(err.response.data);
         }

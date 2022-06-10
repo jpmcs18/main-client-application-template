@@ -1,8 +1,8 @@
 import { UserEnd } from '../endpoints';
 import { httpDelete, httpGet, httpPost, httpPut } from './base';
 import { Profile, UpdateUserProfile } from '../entities/user/Profile';
-import { UserSearchResult } from '../entities/user/UserSearchResult';
 import { User } from '../entities/user/User';
+import { SearchResult } from '../entities/SearchResult';
 
 export async function getUserData(): Promise<Profile | undefined> {
   return await httpGet<Profile>(UserEnd.GetData);
@@ -11,13 +11,13 @@ export async function getUserData(): Promise<Profile | undefined> {
 export async function searchUsers(
   name: string | undefined,
   page: number
-): Promise<UserSearchResult | undefined> {
+): Promise<SearchResult<User> | undefined> {
   let parameters: string = '?page=' + page;
   if (name !== undefined) {
     parameters += '&key=' + encodeURI(name);
   }
 
-  return await httpGet<UserSearchResult>(UserEnd.Search + parameters);
+  return await httpGet<SearchResult<User>>(UserEnd.Search + parameters);
 }
 
 export async function activateUsers(id: number): Promise<boolean> {
@@ -37,7 +37,7 @@ export async function createUser(user: User): Promise<User | undefined> {
 }
 
 export async function updateUser(user: User): Promise<boolean> {
-  return await httpPut(UserEnd.Update, user);
+  return await httpPut(UserEnd.Update + '/' + user.id, user);
 }
 
 export async function updateProfile(user: UpdateUserProfile): Promise<boolean> {

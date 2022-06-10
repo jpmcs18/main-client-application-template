@@ -43,8 +43,8 @@ export function saveProfile(profile: Profile) {
   if (profile !== undefined) {
     let trimmed: Profile = {
       username: profile.username,
-      name: profile.name,
       admin: profile.admin,
+      personnel: profile.personnel,
     };
     if ((profile.role?.id ?? 0) > 0) trimmed.role = profile.role;
     sessionStorage.setItem(profile_add, encrypt(JSON.stringify(trimmed)));

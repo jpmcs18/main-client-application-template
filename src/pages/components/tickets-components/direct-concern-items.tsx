@@ -8,12 +8,12 @@ export default function DirectConcernItems() {
     <table className='item-table'>
       <thead>
         <tr>
-          <th>Time Entry</th>
+          <th>Received Date</th>
           <th>Description</th>
           <th>Classification</th>
           <th>Concern Office</th>
           <th>Caller</th>
-          <th>Time Closed</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>

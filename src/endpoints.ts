@@ -19,6 +19,7 @@ export const ConcernEnd = {
   Create: 'concerns',
   Update: 'concerns',
   Delete: 'concerns',
+  Assign: 'concerns/assign',
 };
 
 export const ClassificationEnd = {
@@ -33,9 +34,12 @@ export const OfficeEnd = {
 
 export const PersonnelEnd = {
   GetList: 'personnels',
+  GetListByClassification: 'personnels/classification',
+  GetAvailableListByClassification: 'personnels/classification/available',
   Get: 'personnels',
 };
 
 export const PersonnelConcernEnd = {
   GetList: 'personnel-concerns',
+  GetActions: 'personnel-concerns/actions',
 };

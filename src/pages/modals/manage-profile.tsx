@@ -44,12 +44,10 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
           onOk: () => {
             saveProfile({
               ...profile,
-              name: user.name,
               username: user.username,
             });
             updateProfileInfo({
               ...profile,
-              name: user.name,
               username: user.username,
             });
           },
@@ -72,9 +70,8 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
         <div>
           <CustomTextBox
             title='Name'
-            name='name'
-            value={user?.name}
-            onChange={onChange}
+            readonly={true}
+            value={user?.personnel?.name}
           />
           <CustomTextBox
             title='Username'

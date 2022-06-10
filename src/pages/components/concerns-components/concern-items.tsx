@@ -14,7 +14,7 @@ export default function ConcernItems() {
           <th>Classification</th>
           <th>Concern Office</th>
           <th>Caller</th>
-          <th>Time Closed</th>
+          <th>Status</th>
         </tr>
         <tr>
           <th colSpan={10}>

@@ -1,18 +1,20 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
 import { Concern } from '../entities/transaction/Concern';
+import { PersonnelConcern } from '../entities/transaction/PersonnelConcern';
+import { getDirectConcerns } from '../processors/personnel-concern-process';
 import CustomCheckBox from './components/custom-check-box';
 import Pagination from './components/pagination';
 import DirectConcernItems from './components/tickets-components/direct-concern-items';
 
 export type CONCERNACTIONS = { action: 'Edit'; payload: Concern };
 
-export const DirectConcernList = createContext<Concern[]>([]);
+export const DirectConcernList = createContext<PersonnelConcern[]>([]);
 export const DirectConcernActions = createContext<
   (action: CONCERNACTIONS) => void
 >(() => {});
 export default function TicketPage() {
-  const [directConcerns, setDirectConcerns] = useState<Concern[]>([]);
+  const [directConcerns, setDirectConcerns] = useState<PersonnelConcern[]>([]);
   const [concern, setConcern] = useState<Concern[]>([]);
   const [selectedDirectConcern, setSelectedDirectConcern] = useState<
     Concern | undefined
@@ -35,8 +37,28 @@ export default function TicketPage() {
         break;
     }
   }
-  function fetchDirectConcern() {
+  useEffect(
+    () => {
+      fetchDirectConcern(currentPage);
+    },
+    // eslint-disable-next-line
+    []
+  );
+
+  async function fetchDirectConcern(page: number) {
     setBusy(true);
+    await getDirectConcerns(resolved, forwarded, page)
+      .then((res) => {
+        if (res !== undefined) {
+          setDirectConcerns(res.results);
+          setPageCount(res.pageCount);
+          setCurrentPage(page);
+        }
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
   }
   function goToPage(page: number) {
     // getConcern(page);
@@ -46,7 +68,7 @@ export default function TicketPage() {
       <div className='container'>
         <div className='header'>Assigned Concern</div>
         <div className='content'>
-          <div>
+          <div className='head-content'>
             <div className='checkbox-container'>
               <CustomCheckBox
                 text='Resolved'

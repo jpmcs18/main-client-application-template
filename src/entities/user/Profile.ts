@@ -1,3 +1,4 @@
+import { Personnel } from '../transaction/Personnel';
 import { Role } from './Role';
 
 export interface Profile {
@@ -5,11 +6,13 @@ export interface Profile {
   admin?: boolean | undefined;
   role?: Role | undefined;
   name?: string | undefined;
+  personnelId?: number | undefined;
+  personnel?: Personnel | undefined;
 }
 
 export interface UpdateUserProfile {
   username: string;
-  name: string;
+  personnel?: Personnel | undefined;
   password?: string;
   newPassword?: string;
   confirmNewPassword?: string;

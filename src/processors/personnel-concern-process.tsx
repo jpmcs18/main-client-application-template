@@ -1,13 +1,22 @@
 import { PersonnelConcernEnd } from '../endpoints';
-import { SearchResult } from '../entities/transaction/ConcernSearchResult';
+import { SearchResult } from '../entities/SearchResult';
 import { PersonnelConcern } from '../entities/transaction/PersonnelConcern';
 import { httpGet } from './base';
 
 export async function getDirectConcerns(
-  personnelId: number,
   isResolve: boolean,
   isForwarded: boolean,
   page: number
 ): Promise<SearchResult<PersonnelConcern> | undefined> {
-  return httpGet<SearchResult<PersonnelConcern>>(PersonnelConcernEnd.GetList);
+  let params = `?isResolve=${isResolve}&isForwarded=${isForwarded}&page=${page}`;
+  return httpGet<SearchResult<PersonnelConcern>>(
+    `${PersonnelConcernEnd.GetList}${params}`
+  );
+}
+export async function getActions(
+  concernId: number
+): Promise<PersonnelConcern[] | undefined> {
+  return httpGet<PersonnelConcern[]>(
+    `${PersonnelConcernEnd.GetActions}?concernId=${concernId}`
+  );
 }
