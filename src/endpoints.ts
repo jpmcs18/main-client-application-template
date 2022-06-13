@@ -42,4 +42,5 @@ export const PersonnelEnd = {
 export const PersonnelConcernEnd = {
   GetList: 'personnel-concerns',
   GetActions: 'personnel-concerns/actions',
+  Resolve: 'personnel-concerns/resolve',
 };

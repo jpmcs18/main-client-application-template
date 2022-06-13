@@ -175,6 +175,7 @@ textarea {
   font-size: var(--normal-font-size);
   font-family: 'Roboto', sans-serif;
   text-align: justify;
+  padding-top: 1em;
 }
 
 .login-container {
@@ -850,6 +851,10 @@ textarea {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    &:hover {
+      overflow: unset;
+      white-space: unset;
+    }
   }
 
   tbody tr {
@@ -970,12 +975,6 @@ tbody tr {
   .management-modal {
     width: 90%;
   }
-  .display-voter-modal {
-    width: 70%;
-  }
-  .voter-modal {
-    width: 50%;
-  }
   .modal-content {
     border-radius: 0.3em;
     position: relative;
@@ -987,9 +986,9 @@ tbody tr {
     min-width: 30%;
     box-shadow: 0em 0em 0.2em 0em #ccc;
     .modal-content-header {
+      padding: 1em;
       display: flex;
       justify-content: space-between;
-      padding: 0.7em;
       box-shadow: 0em 0em 0.2em 0em #ccc;
       .header-text {
         font-size: var(--header-font-size);
@@ -999,7 +998,7 @@ tbody tr {
     }
 
     .modal-content-body {
-      margin: 0.8em 0.3em;
+      padding: 1em;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -1086,6 +1085,14 @@ tbody tr {
     position: absolute;
     background-color: rgba($color: #ccc, $alpha: 0.7);
     z-index: 8;
+  }
+}
+.concern-management {
+  div:first-child {
+    display: flex;
+    div {
+      width: 100%;
+    }
   }
 }
 .tab-container {

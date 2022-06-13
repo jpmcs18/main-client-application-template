@@ -69,6 +69,8 @@ export async function httpPost<Return>(
           return res.data;
         case 201:
           return res.data;
+        case 204:
+          return true;
         default:
           throw new Error('Unknown Error');
       }

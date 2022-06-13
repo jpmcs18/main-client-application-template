@@ -10,9 +10,7 @@ export default function ConcernAction({
   return (
     <div className='concern-action'>
       <div className='personnel'>
-        <span>
-          {action.forwardPersonnelConcernId ? 'Forwarded' : 'Assigned'}
-        </span>
+        <span>{action.prevPersonnelConcernId ? 'Forwarded' : 'Assigned'}</span>
         &nbsp;
         <span>to {action.personnel?.name}</span>
       </div>

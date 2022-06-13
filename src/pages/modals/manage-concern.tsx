@@ -166,8 +166,9 @@ export default function ManageConcern({
   return (
     <Modal
       onClose={() => onClose(false)}
-      title={(concern?.id ?? 0) > 0 ? 'Update Concern' : 'New Concern'}>
-      <div className='concern-management-modal-body modal-content-body'>
+      title={(concern?.id ?? 0) > 0 ? 'Update Concern' : 'New Concern'}
+      className='management-modal'>
+      <div className='concern-management-modal-body modal-content-body concern-management'>
         <div>
           <div>
             <CustomDropdown
@@ -200,7 +201,7 @@ export default function ManageConcern({
           <CustomTextArea
             title='Description'
             name='description'
-            lineCount={5}
+            lineCount={7}
             value={concern?.description}
             onChange={onChange}
           />

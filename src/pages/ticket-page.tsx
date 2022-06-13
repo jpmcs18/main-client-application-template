@@ -1,13 +1,13 @@
-import React, { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
-import { Concern } from '../entities/transaction/Concern';
 import { PersonnelConcern } from '../entities/transaction/PersonnelConcern';
 import { getDirectConcerns } from '../processors/personnel-concern-process';
 import CustomCheckBox from './components/custom-check-box';
 import Pagination from './components/pagination';
 import DirectConcernItems from './components/tickets-components/direct-concern-items';
+import ResolveConcern from './modals/resolve-concern';
 
-export type CONCERNACTIONS = { action: 'Edit'; payload: Concern };
+export type CONCERNACTIONS = { action: 'Resolve'; payload: PersonnelConcern };
 
 export const DirectConcernList = createContext<PersonnelConcern[]>([]);
 export const DirectConcernActions = createContext<
@@ -15,11 +15,10 @@ export const DirectConcernActions = createContext<
 >(() => {});
 export default function TicketPage() {
   const [directConcerns, setDirectConcerns] = useState<PersonnelConcern[]>([]);
-  const [concern, setConcern] = useState<Concern[]>([]);
   const [selectedDirectConcern, setSelectedDirectConcern] = useState<
-    Concern | undefined
+    PersonnelConcern | undefined
   >();
-  const [showDirectModal, setShowDirectModal] = useState(false);
+  const [showResolveModal, setShowResolveModal] = useState(false);
   const [resolved, setResolved] = useState(false);
   const [forwarded, setForwarded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,9 +27,10 @@ export default function TicketPage() {
   const setBusy = useSetBusy();
   function concernAction(action: CONCERNACTIONS) {
     switch (action.action) {
-      case 'Edit':
+      case 'Resolve':
+        console.log(action);
         setSelectedDirectConcern(action.payload);
-        setShowDirectModal(true);
+        setShowResolveModal(true);
         break;
       default:
         setMessage({ message: 'Invalid Action' });
@@ -39,20 +39,31 @@ export default function TicketPage() {
   }
   useEffect(
     () => {
-      fetchDirectConcern(currentPage);
+      fetchDirectConcern({});
     },
     // eslint-disable-next-line
     []
   );
 
-  async function fetchDirectConcern(page: number) {
+  async function fetchDirectConcern({
+    page,
+    isResolved,
+    isForwarded,
+  }: {
+    page?: number | undefined;
+    isResolved?: boolean | undefined;
+    isForwarded?: boolean | undefined;
+  }) {
     setBusy(true);
-    await getDirectConcerns(resolved, forwarded, page)
+    await getDirectConcerns(
+      isResolved ?? resolved,
+      isForwarded ?? forwarded,
+      page ?? currentPage
+    )
       .then((res) => {
         if (res !== undefined) {
           setDirectConcerns(res.results);
           setPageCount(res.pageCount);
-          setCurrentPage(page);
         }
       })
       .catch((err) => {
@@ -60,13 +71,21 @@ export default function TicketPage() {
       })
       .finally(() => setBusy(false));
   }
+
   function goToPage(page: number) {
-    // getConcern(page);
+    setCurrentPage(page);
+    fetchDirectConcern({ page: page });
+  }
+
+  function onClose(hasChanges: boolean) {
+    setShowResolveModal(false);
+    if (hasChanges) {
+      fetchDirectConcern({});
+    }
   }
   return (
     <div className='main-container'>
       <div className='container'>
-        <div className='header'>Assigned Concern</div>
         <div className='content'>
           <div className='head-content'>
             <div className='checkbox-container'>
@@ -74,7 +93,9 @@ export default function TicketPage() {
                 text='Resolved'
                 id='resolved'
                 checkChange={() => {
-                  setResolved((x) => !x);
+                  var x = !resolved;
+                  setResolved(x);
+                  fetchDirectConcern({ isResolved: x });
                 }}
                 isCheck={resolved}
               />
@@ -82,7 +103,9 @@ export default function TicketPage() {
                 text='Forwarded'
                 id='forwarded'
                 checkChange={() => {
-                  setForwarded((x) => !x);
+                  var x = !forwarded;
+                  setForwarded(x);
+                  fetchDirectConcern({ isForwarded: x });
                 }}
                 isCheck={forwarded}
               />
@@ -94,9 +117,19 @@ export default function TicketPage() {
               goInPage={goToPage}></Pagination>
           </div>
           <DirectConcernList.Provider value={directConcerns}>
-            <DirectConcernItems />
+            <DirectConcernActions.Provider value={concernAction}>
+              <DirectConcernItems />
+            </DirectConcernActions.Provider>
           </DirectConcernList.Provider>
         </div>
+      </div>
+      <div>
+        {showResolveModal && (
+          <ResolveConcern
+            onClose={onClose}
+            personnelConcern={selectedDirectConcern}
+          />
+        )}
       </div>
     </div>
   );

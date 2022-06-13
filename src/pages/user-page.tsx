@@ -64,57 +64,68 @@ export default function UserPage() {
   }
 
   async function deleteSelectedUser(userid: number) {
-    setBusy(true);
-    await deleteUser(userid)
-      .then(() => {
-        setMessage({
-          message: 'User Deleted',
-          onOk: () => {
-            searchUser(name, currentPage);
-          },
-        });
-      })
-      .catch((err) => {
-        setMessage({ message: err.message });
-      })
-      .finally(() => setBusy(false));
+    setMessage({
+      message: 'Delete this user',
+      onOk: async () => {
+        setBusy(true);
+        await deleteUser(userid)
+          .then(() => {
+            setMessage({
+              message: 'User Deleted',
+              onOk: () => {
+                searchUser(name, currentPage);
+              },
+            });
+          })
+          .catch((err) => {
+            setMessage({ message: err.message });
+          })
+          .finally(() => setBusy(false));
+      },
+    });
   }
 
   function activateUser(id: number, active: boolean) {
-    setBusy(true);
-    activateUsers(id)
-      .then((res) => {
-        if (res !== undefined) {
-          setUsers((users) =>
-            users.map((user) => {
-              if (user.id === id && active !== null) {
-                user.active = !active;
-              }
-              return user;
-            })
-          );
+    setMessage({
+      message: 'Active this user?',
+      onOk: async () => {
+        setBusy(true);
+        await activateUsers(id)
+          .then((res) => {
+            setUsers((users) =>
+              users.map((user) => {
+                if (user.id === id && active !== null) {
+                  user.active = !active;
+                }
+                return user;
+              })
+            );
 
-          setMessage({ message: active ? 'Deactivated' : 'Activated' });
-        }
-      })
-      .catch((err) => {
-        setMessage({ message: err.message });
-      })
-      .finally(() => setBusy(false));
+            setMessage({ message: active ? 'Deactivated' : 'Activated' });
+          })
+          .catch((err) => {
+            setMessage({ message: err.message });
+          })
+          .finally(() => setBusy(false));
+      },
+    });
   }
 
   function resetPassword(id: number) {
-    setBusy(true);
-    resetUserPassword(id)
-      .then((res) => {
-        if (res !== undefined) {
-          setMessage({ message: 'Password reset to default password' });
-        }
-      })
-      .catch((err) => {
-        setMessage({ message: err.message });
-      })
-      .finally(() => setBusy(false));
+    setMessage({
+      message: 'Reset Password?',
+      onOk: async () => {
+        setBusy(true);
+        await resetUserPassword(id)
+          .then(() => {
+            setMessage({ message: 'Password reset to default password' });
+          })
+          .catch((err) => {
+            setMessage({ message: err.message });
+          })
+          .finally(() => setBusy(false));
+      },
+    });
   }
 
   function searchUser(name: undefined | string, page: number) {

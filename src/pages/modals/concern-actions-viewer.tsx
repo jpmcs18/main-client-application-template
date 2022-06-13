@@ -51,7 +51,7 @@ export default function ConcernActionsViewer({
       <div className='modal-content-body'>
         <div className='concern-actions'>
           {personnelConcern.map((x) => (
-            <ConcernAction action={x} />
+            <ConcernAction key={x.id} action={x} />
           ))}
         </div>
       </div>

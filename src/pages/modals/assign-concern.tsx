@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useSetBusy,
   useSetMessage,
@@ -8,7 +8,6 @@ import { Personnel } from '../../entities/transaction/Personnel';
 import { assignConcern } from '../../processors/concern-process';
 import {
   getAvailablePersonnelsByClassification,
-  getPersonnels,
   getPersonnelsByClassification,
 } from '../../processors/personnel-process';
 import CustomDropdown, { DropdownItem } from '../components/custom-dropdown';
@@ -114,7 +113,7 @@ export default function AssignConcern({
 
   async function saveData() {
     setBusy(true);
-    if ((selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0) == 0) {
+    if ((selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0) === 0) {
       setMessage({ message: 'Select Personnel' });
       return;
     }
@@ -122,13 +121,14 @@ export default function AssignConcern({
       concern?.id ?? 0,
       selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0
     )
-      .then(() => {
-        setMessage({
-          message: 'Success',
-          onOk: () => {
-            onClose(true);
-          },
-        });
+      .then((res) => {
+        if (res)
+          setMessage({
+            message: 'Success',
+            onOk: () => {
+              onClose(true);
+            },
+          });
       })
       .catch((err) => {
         setMessage({ message: err.message });
@@ -147,7 +147,7 @@ export default function AssignConcern({
             itemsList={availabelPersonnelItem}
           />
           <CustomDropdown
-            title='All Personnel'
+            title='All Concerned Personnel'
             name='personnel'
             value={selectedPersonnel?.name}
             onChange={onChange}
@@ -157,7 +157,7 @@ export default function AssignConcern({
       </div>
       <div className='modal-footer'>
         <button onClick={saveData} className='btn-modal btn-primary'>
-          SAVE
+          ASSIGN
         </button>
       </div>
     </Modal>

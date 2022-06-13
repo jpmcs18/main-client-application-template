@@ -7,8 +7,8 @@ export interface PersonnelConcern {
   personnelId: number | undefined;
   personnel: Personnel | undefined;
   action: string | undefined;
-  forwardPersonnelConcernId: number | undefined;
-  forwardPersonnelConcern: PersonnelConcern | undefined;
+  prevPersonnelConcernId: number | undefined;
+  prevPersonnelConcern: PersonnelConcern | undefined;
   receivedDate: Date | undefined;
   closedDate?: Date | undefined;
   forwardDate?: Date | undefined;

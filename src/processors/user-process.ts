@@ -20,12 +20,14 @@ export async function searchUsers(
   return await httpGet<SearchResult<User>>(UserEnd.Search + parameters);
 }
 
-export async function activateUsers(id: number): Promise<boolean> {
-  return await httpPut(UserEnd.Activate + '/' + id, null);
+export async function activateUsers(id: number): Promise<boolean | undefined> {
+  return await httpPost(UserEnd.Activate + '/' + id, null);
 }
 
-export async function resetUserPassword(id: number): Promise<boolean> {
-  return await httpPut(UserEnd.ResetPassword + '/' + id, null);
+export async function resetUserPassword(
+  id: number
+): Promise<boolean | undefined> {
+  return await httpPost(UserEnd.ResetPassword + '/' + id, null);
 }
 
 export async function deleteUser(id: number): Promise<boolean> {
