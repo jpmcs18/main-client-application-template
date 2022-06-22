@@ -22,9 +22,12 @@ export default function UserItem({
       <td>{user.personnel?.name}</td>
       <td>{user.personnel?.classification?.description}</td>
       <td>{user.username}</td>
-      <td>{user.admin ? 'Admin' : 'User'}</td>
+      <td className='elipsis'>
+        {user.admin ? 'Admin' : 'User'}
+        {(user.userRoles?.length ?? 0) > 0 && ' | '}
+        {user.userRoles?.map((x) => x.role.description).join(' | ')}
+      </td>
       <td>{user.active ? 'Active' : 'Inactive'}</td>
-      <td></td>
       <td className='table-actions'>
         <FontAwesomeIcon
           className='action-icon table-icon-button'

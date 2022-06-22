@@ -88,7 +88,7 @@ export async function httpPost<Return>(
             }
             throw new Error('Unauthorized');
           case 404:
-            throw new Error('Not Data Found');
+            throw new Error('No Data Found');
           default:
             throw new Error(err.response.data);
         }
@@ -131,7 +131,7 @@ export async function httpPut(url: string, param: any): Promise<boolean> {
             }
             throw new Error('Unauthorized');
           case 404:
-            throw new Error('Not Data Found');
+            throw new Error('No Data Found');
           default:
             throw new Error(err.response.data);
         }
@@ -174,7 +174,7 @@ export async function httpDelete(url: string): Promise<boolean> {
             }
             throw new Error('Unauthorized');
           case 404:
-            throw new Error('Not Data Found');
+            throw new Error('No Data Found');
           default:
             throw new Error(err.response.data);
         }
@@ -208,7 +208,7 @@ export async function httpAuthenticatingPost<Return>(
           case 400:
             throw new Error(err.response.data);
           case 404:
-            throw new Error('Not Data Found');
+            throw new Error('No Data Found');
           default:
             throw new Error(err.response.data);
         }

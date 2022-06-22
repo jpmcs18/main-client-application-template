@@ -2,27 +2,28 @@ import { useEffect, useState } from 'react';
 import {
   useSetBusy,
   useSetMessage,
+  useUserProfile,
 } from '../../custom-hooks/authorize-provider';
-import { Concern } from '../../entities/transaction/Concern';
 import { Personnel } from '../../entities/transaction/Personnel';
-import { assignConcern } from '../../processors/concern-process';
+import { PersonnelConcern } from '../../entities/transaction/PersonnelConcern';
+import { forwardPersonnelConcern } from '../../processors/personnel-concern-process';
 import {
   getAvailablePersonnelsByClassification,
   getPersonnels,
 } from '../../processors/personnel-process';
 import CustomDropdown, { DropdownItem } from '../components/custom-dropdown';
+import CustomTextArea from '../components/custom-textarea';
 import { CustomReturn } from '../components/CustomReturn';
 import Modal from './modal';
 
-export default function AssignConcern({
-  title,
+export default function ForwardConcern({
   onClose,
-  concern,
+  personnelConcern,
 }: {
-  title?: string;
   onClose: (hasChanges: boolean) => void;
-  concern: Concern | undefined;
+  personnelConcern: PersonnelConcern | undefined;
 }) {
+  const [reason, setReason] = useState<string>('');
   const [personnelItem, setPersonnelItem] = useState<DropdownItem[]>([]);
   const [availabelPersonnelItem, setAvailabelPersonnelItem] = useState<
     DropdownItem[]
@@ -36,6 +37,7 @@ export default function AssignConcern({
   >();
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
+  const profile = useUserProfile();
   useEffect(
     () => {
       initializeComponents();
@@ -58,12 +60,14 @@ export default function AssignConcern({
               key: '',
               value: '',
             },
-            ...res.map((x) => {
-              return {
-                key: x.id.toString(),
-                value: x.name,
-              };
-            }),
+            ...res
+              .filter((x) => x.id !== profile?.personnel?.id)
+              .map((x) => {
+                return {
+                  key: x.id.toString(),
+                  value: x.name,
+                };
+              }),
           ]);
         }
       })
@@ -74,7 +78,9 @@ export default function AssignConcern({
   }
   async function fetchAvailablePersonnels() {
     setBusy(true);
-    await getAvailablePersonnelsByClassification(concern?.classificationId ?? 0)
+    await getAvailablePersonnelsByClassification(
+      personnelConcern?.concern?.classificationId ?? 0
+    )
       .then((res) => {
         if (res !== undefined) {
           setAvailabelPersonnelItem([
@@ -82,12 +88,14 @@ export default function AssignConcern({
               key: '',
               value: '',
             },
-            ...res.map((x) => {
-              return {
-                key: x.id.toString(),
-                value: x.name,
-              };
-            }),
+            ...res
+              .filter((x) => x.id !== profile?.personnel?.id)
+              .map((x) => {
+                return {
+                  key: x.id.toString(),
+                  value: x.name,
+                };
+              }),
           ]);
         }
       })
@@ -117,9 +125,10 @@ export default function AssignConcern({
       setMessage({ message: 'Select Personnel' });
       return;
     }
-    await assignConcern(
-      concern?.id ?? 0,
-      selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0
+    await forwardPersonnelConcern(
+      personnelConcern?.id ?? 0,
+      selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0,
+      reason
     )
       .then((res) => {
         if (res)
@@ -136,9 +145,20 @@ export default function AssignConcern({
       .finally(() => setBusy(false));
   }
   return (
-    <Modal onClose={() => onClose(false)} title={title ?? 'Assign Concern'}>
+    <Modal
+      onClose={() => {
+        onClose(false);
+      }}
+      title='Forward Concern'>
       <div className='concern-management-modal-body modal-content-body'>
         <div>
+          <CustomTextArea
+            title='Reason'
+            lineCount={5}
+            onChange={(data) => {
+              setReason(data.value);
+            }}
+          />
           <CustomDropdown
             title='Available Personnel'
             name='available-personnel'
@@ -157,7 +177,7 @@ export default function AssignConcern({
       </div>
       <div className='modal-footer'>
         <button onClick={saveData} className='btn-modal btn-primary'>
-          ASSIGN
+          FORWARD
         </button>
       </div>
     </Modal>

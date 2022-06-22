@@ -5,9 +5,12 @@ import { getDirectConcerns } from '../processors/personnel-concern-process';
 import CustomCheckBox from './components/custom-check-box';
 import Pagination from './components/pagination';
 import DirectConcernItems from './components/tickets-components/direct-concern-items';
+import ForwardConcern from './modals/forward-concern';
 import ResolveConcern from './modals/resolve-concern';
 
-export type CONCERNACTIONS = { action: 'Resolve'; payload: PersonnelConcern };
+export type CONCERNACTIONS =
+  | { action: 'Resolve'; payload: PersonnelConcern }
+  | { action: 'Forward'; payload: PersonnelConcern };
 
 export const DirectConcernList = createContext<PersonnelConcern[]>([]);
 export const DirectConcernActions = createContext<
@@ -19,6 +22,7 @@ export default function TicketPage() {
     PersonnelConcern | undefined
   >();
   const [showResolveModal, setShowResolveModal] = useState(false);
+  const [showForwardModal, setShowForwardModal] = useState(false);
   const [resolved, setResolved] = useState(false);
   const [forwarded, setForwarded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,9 +32,12 @@ export default function TicketPage() {
   function concernAction(action: CONCERNACTIONS) {
     switch (action.action) {
       case 'Resolve':
-        console.log(action);
         setSelectedDirectConcern(action.payload);
         setShowResolveModal(true);
+        break;
+      case 'Forward':
+        setSelectedDirectConcern(action.payload);
+        setShowForwardModal(true);
         break;
       default:
         setMessage({ message: 'Invalid Action' });
@@ -79,6 +86,7 @@ export default function TicketPage() {
 
   function onClose(hasChanges: boolean) {
     setShowResolveModal(false);
+    setShowForwardModal(false);
     if (hasChanges) {
       fetchDirectConcern({});
     }
@@ -126,6 +134,12 @@ export default function TicketPage() {
       <div>
         {showResolveModal && (
           <ResolveConcern
+            onClose={onClose}
+            personnelConcern={selectedDirectConcern}
+          />
+        )}
+        {showForwardModal && (
+          <ForwardConcern
             onClose={onClose}
             personnelConcern={selectedDirectConcern}
           />

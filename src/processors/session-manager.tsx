@@ -45,8 +45,8 @@ export function saveProfile(profile: Profile) {
       username: profile.username,
       admin: profile.admin,
       personnel: profile.personnel,
+      distinctModules: profile.distinctModules,
     };
-    if ((profile.role?.id ?? 0) > 0) trimmed.role = profile.role;
     sessionStorage.setItem(profile_add, encrypt(JSON.stringify(trimmed)));
   }
 }

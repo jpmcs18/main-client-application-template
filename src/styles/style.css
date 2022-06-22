@@ -53,6 +53,7 @@ body {
   font-size: var(--base-font-size);
   font-family: 'Roboto', sans-serif;
   background: #f2f2f2;
+  overflow-x: hidden;
 }
 
 .menu-container {
@@ -965,16 +966,22 @@ textarea {
   border-collapse: collapse;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  position: relative;
   margin: 0.5em;
 }
 
+.item-table .deleted {
+  text-decoration: line-through;
+  color: gray !important;
+}
+
 .item-table thead {
-  color: var(--primary-color);
   z-index: 1;
 }
 
 .item-table thead tr:first-child {
-  border-bottom: 0.05em solid var(--primary-color);
+  color: white;
+  background-color: var(--primary-color);
 }
 
 .item-table thead tr:not(:first-child) th {
@@ -1056,8 +1063,10 @@ textarea {
 }
 
 .item-table .table-actions {
-  right: 0.5em;
-  position: fixed;
+  right: 1em;
+  position: absolute;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1187,7 +1196,7 @@ tbody tr {
 }
 
 .modal-container .management-modal {
-  width: 90%;
+  width: 70%;
 }
 
 .modal-container .modal-content {
@@ -1221,6 +1230,22 @@ tbody tr {
   font-size: var(--header-font-size);
   text-transform: capitalize;
   font-weight: var(--demibold);
+}
+
+.modal-container .modal-content .user-management-modal-body div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.modal-container .modal-content .user-management-modal-body div .btn {
+  min-width: 7em;
+}
+
+.modal-container .modal-content .user-management-modal-body .table-container {
+  max-height: 30vh !important;
+  overflow: auto;
+  overflow-x: hidden;
 }
 
 .modal-container .modal-content .modal-content-body {
@@ -1513,7 +1538,7 @@ tbody tr {
 thead {
   position: -webkit-sticky;
   position: sticky;
-  top: -0.5em;
+  top: 0.5em;
 }
 
 .action-with-name {
@@ -1579,9 +1604,24 @@ thead {
       align-self: center;
 }
 
+.left-content {
+  text-align: left !important;
+}
+
+.left-content .check {
+  -webkit-box-pack: start !important;
+      -ms-flex-pack: start !important;
+          justify-content: flex-start !important;
+}
+
+.center-content {
+  text-align: center !important;
+}
+
 .check-label {
   margin-left: 0.3em !important;
   font-size: var(--normal-font-size);
+  cursor: pointer;
 }
 
 .check-container {
@@ -1660,6 +1700,23 @@ thead {
   -webkit-box-shadow: 0em 0em 0.2em 0em var(--primary-color);
           box-shadow: 0em 0em 0.2em 0em var(--primary-color);
   padding: 0.2em;
+}
+
+.concern-action {
+  margin: 0.5em;
+  padding: 0.5em;
+  -webkit-box-shadow: 0em 0em 0.2em 0em var(--primary-color);
+          box-shadow: 0em 0em 0.2em 0em var(--primary-color);
+}
+
+.concern-action div:nth-child(odd) {
+  font-weight: var(--demibold);
+  font-size: var(--label-size);
+  text-transform: capitalize;
+}
+
+.concern-action div:nth-child(even) {
+  margin: 0.5em;
 }
 
 @media screen and (min-width: 1800px) {

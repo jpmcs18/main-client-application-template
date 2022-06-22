@@ -14,9 +14,13 @@ export async function searchConcerns(
   return await httpGet<SearchResult<Concern>>(ConcernEnd.Search + parameters);
 }
 export async function createConcern(
-  concern: Concern
+  concern: Concern,
+  personnelId: number | undefined
 ): Promise<Concern | undefined> {
-  return await httpPost<Concern>(ConcernEnd.Create, concern);
+  return await httpPost<Concern>(ConcernEnd.Create, {
+    ...concern,
+    personnelId,
+  });
 }
 
 export async function updateConcern(concern: Concern): Promise<boolean> {

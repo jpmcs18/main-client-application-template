@@ -29,6 +29,12 @@ export default function DirectConcernItem({
       <td>{concern.concern.caller}</td>
       <td>
         {concern.status}
+        {concern.closedDate && (
+          <span> ({new Date(concern.closedDate).toLocaleString()})</span>
+        )}
+        {concern.forwardDate && (
+          <span> ({new Date(concern.forwardDate).toLocaleString()})</span>
+        )}
         {concern.statusId !== PersonnelConcernStatus.Pending && (
           <div className='elipsis'>{concern?.action}</div>
         )}
@@ -39,12 +45,17 @@ export default function DirectConcernItem({
             <button
               className='btn'
               onClick={() => {
-                console.log('resolve');
                 action({ action: 'Resolve', payload: concern });
               }}>
               Resolve
             </button>
-            <button className='btn'>Forward</button>
+            <button
+              className='btn'
+              onClick={() => {
+                action({ action: 'Forward', payload: concern });
+              }}>
+              Forward
+            </button>
           </>
         )}
       </td>

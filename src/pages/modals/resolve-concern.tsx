@@ -36,7 +36,11 @@ export default function ResolveConcern({
       .finally(() => setBusy(false));
   }
   return (
-    <Modal onClose={() => onClose} title='Resolve Concern'>
+    <Modal
+      onClose={() => {
+        onClose(false);
+      }}
+      title='Resolve Concern'>
       <div className='modal-content-body'>
         <div>
           <CustomTextArea

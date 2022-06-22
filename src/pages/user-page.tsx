@@ -183,8 +183,6 @@ export default function UserPage() {
                 <th>Username</th>
                 <th>Role</th>
                 <th>Status</th>
-                <th>Access</th>
-                <th></th>
               </tr>
               <tr>
                 <th colSpan={6}>

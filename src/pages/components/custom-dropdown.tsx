@@ -23,7 +23,6 @@ export default function CustomDropdown({
   readonly?: boolean | false;
   onChange?: (data: CustomReturn) => void;
 }) {
-  console.log(value);
   return (
     <div className='custom-input'>
       <label>{title}</label>

@@ -5,11 +5,11 @@ import {
   useUpdateAuthorize,
   useUpdateUserProfile,
 } from '../custom-hooks/authorize-provider';
-import { authenticate } from '../processors/security-process';
 import { LoginUser } from '../entities/user/LoginUser';
-import CustomTextBox from './components/custom-textbox';
-import { getUserData } from '../processors/user-process';
+import { authenticate } from '../processors/security-process';
 import { saveProfile } from '../processors/session-manager';
+import { getUserData } from '../processors/user-process';
+import CustomTextBox from './components/custom-textbox';
 import { CustomReturn } from './components/CustomReturn';
 
 export default function LoginPage() {
@@ -27,8 +27,8 @@ export default function LoginPage() {
       .then(async (res) => {
         if (res) {
           await getProfile();
+          updateAuthorize(res);
         }
-        updateAuthorize(res);
       })
       .catch((err) => {
         setMessage({ message: err.message });

@@ -29,22 +29,25 @@ export default function ConcernItem({ concern }: { concern: Concern }) {
           </button>
         )}
         {concern.statusId === ConcernStatus.Open && (
-          <button
-            className='btn'
-            onClick={() => action({ action: 'Assign', payload: concern })}>
-            Assign To Concerned Personnel
-          </button>
+          <>
+            <button
+              className='btn'
+              onClick={() => action({ action: 'Assign', payload: concern })}>
+              Assign To Concerned Personnel
+            </button>
+
+            <button
+              className='btn'
+              onClick={() => action({ action: 'Edit', payload: concern })}>
+              Edit
+            </button>
+            <button
+              className='btn'
+              onClick={() => action({ action: 'Delete', payload: concern.id })}>
+              Delete
+            </button>
+          </>
         )}
-        <button
-          className='btn'
-          onClick={() => action({ action: 'Edit', payload: concern })}>
-          Edit
-        </button>
-        <button
-          className='btn'
-          onClick={() => action({ action: 'Delete', payload: concern.id })}>
-          Delete
-        </button>
       </td>
     </tr>
   );

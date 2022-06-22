@@ -5,7 +5,7 @@ import {
   useUpdateUserProfile,
   useUserProfile,
 } from '../../custom-hooks/authorize-provider';
-import { UpdateUserProfile } from '../../entities/user/Profile';
+import { UpdateUserProfile } from '../../entities/user/UpdateUserProfile';
 import { saveProfile } from '../../processors/session-manager';
 import { updateProfile } from '../../processors/user-process';
 import CustomTextBox from '../components/custom-textbox';
@@ -17,8 +17,8 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
   const updateProfileInfo = useUpdateUserProfile();
   const [user, setUser] = useState<UpdateUserProfile>(() => {
     return {
-      name: profile?.name ?? '',
       username: profile?.username ?? '',
+      personnel: profile?.personnel,
     };
   });
 

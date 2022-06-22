@@ -2,6 +2,7 @@ import { Concern } from './Concern';
 import { Personnel } from './Personnel';
 
 export interface PersonnelConcern {
+  classificationId: number;
   id: number;
   concern: Concern;
   personnelId: number | undefined;

@@ -1,130 +1,87 @@
-import { useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
-import { User } from '../entities/user/User';
-import {
-  activateUsers,
-  deleteUser,
-  resetUserPassword,
-  searchUsers,
-} from '../processors/user-process';
+import { Module } from '../entities/user/Module';
+import { Role } from '../entities/user/Role';
+import { searchRoles } from '../processors/role-process';
 import Pagination from './components/pagination';
+import RoleItems from './components/role-components/role-items';
 import SeachBar from './components/seachbar';
-import UserItem from './components/users-components/user-item';
-import ManageUser from './modals/manage-user';
+import ManageRole from './modals/manage-role';
 
-export type USERACTIONS =
-  | { type: 'Activate'; id: number; active: boolean }
-  | { type: 'ResetPassword'; id: number }
-  | { type: 'Edit'; user: User }
-  | { type: 'Delete'; id: number };
+type ACTIONS =
+  | { action: 'Add' }
+  | { action: 'View'; payload: Role }
+  | { action: 'Edit'; payload: Role }
+  | { action: 'Delete'; payload: number }
+  | { action: 'Check'; payload: Module };
+export const RoleList = createContext<Role[]>([]);
+export const RoleActions = createContext<(action: ACTIONS) => void>(() => {});
 
 export default function RolePage() {
-  const [name, setName] = useState<string | undefined>();
-  const [users, setUsers] = useState<User[]>([]);
+  const [key, setKey] = useState<string | undefined>();
+  const [roles, setRoles] = useState<Role[]>([]);
   const [pageCount, setPageCount] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
   const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | undefined>();
+  const [selectedRole, setSelectedRole] = useState<Role | undefined>();
+  const [viewOnly, setViewOnly] = useState(false);
 
   useEffect(
     () => {
-      searchUser(name, currentPage);
+      searchRole({});
     },
     // eslint-disable-next-line
     []
   );
 
-  function userAction(action: USERACTIONS) {
-    switch (action.type) {
-      case 'Activate':
-        activateUser(action.id, action.active);
+  function roleAction(action: ACTIONS) {
+    switch (action.action) {
+      case 'View':
+        setShowModal(true);
+        setSelectedRole(action.payload);
+        setViewOnly(true);
         break;
-      case 'ResetPassword':
-        resetPassword(action.id);
+      case 'Add':
+        setShowModal(true);
+        setSelectedRole(undefined);
+        setViewOnly(false);
         break;
       case 'Edit':
         setShowModal(true);
-        setSelectedUser(action.user);
+        setSelectedRole(action.payload);
+        setViewOnly(false);
         break;
-      case 'Delete':
-        setMessage({
-          message: 'Are you sure you want to delete this?',
-          action: 'YESNO',
-          onOk: () => {
-            deleteSelectedUser(action.id);
-          },
-        });
-        break;
-      default:
-        setMessage({ message: 'Invalid Action' });
-        break;
+      // case 'Delete':
+      //   setMessage({
+      //     message: 'Are you sure you want to delete this?',
+      //     action: 'YESNO',
+      //     onOk: () => {
+      //       deleteSelectedUser(action.payload);
+      //     },
+      //   });
+      //   break;
+      // default:
+      //   setMessage({ message: 'Invalid Action' });
+      //   break;
     }
   }
 
-  async function deleteSelectedUser(userid: number) {
+  function searchRole({
+    searchKey,
+    page,
+  }: {
+    searchKey?: string | undefined;
+    page?: number | undefined;
+  }) {
     setBusy(true);
-    await deleteUser(userid)
-      .then(() => {
-        setMessage({
-          message: 'User Deleted',
-          onOk: () => {
-            searchUser(name, currentPage);
-          },
-        });
-      })
-      .catch((err) => {
-        setMessage({ message: err.message });
-      })
-      .finally(() => setBusy(false));
-  }
-
-  function activateUser(id: number, active: boolean) {
-    setBusy(true);
-    activateUsers(id)
+    searchRoles(searchKey ?? key, page ?? currentPage)
       .then((res) => {
         if (res !== undefined) {
-          setUsers((users) =>
-            users.map((user) => {
-              if (user.id === id && active !== null) {
-                user.active = !active;
-              }
-              return user;
-            })
-          );
-
-          setMessage({ message: active ? 'Deactivated' : 'Activated' });
-        }
-      })
-      .catch((err) => {
-        setMessage({ message: err.message });
-      })
-      .finally(() => setBusy(false));
-  }
-
-  function resetPassword(id: number) {
-    setBusy(true);
-    resetUserPassword(id)
-      .then((res) => {
-        if (res !== undefined) {
-          setMessage({ message: 'Password reset to default password' });
-        }
-      })
-      .catch((err) => {
-        setMessage({ message: err.message });
-      })
-      .finally(() => setBusy(false));
-  }
-
-  function searchUser(name: undefined | string, page: number) {
-    setBusy(true);
-    searchUsers(name, page)
-      .then((res) => {
-        if (res !== undefined) {
-          setUsers(res.results);
+          setRoles(res.results);
           setPageCount(res.pageCount);
-          setCurrentPage(page);
+          if (page !== undefined) setCurrentPage(page);
         }
       })
       .catch((err) => {
@@ -134,63 +91,45 @@ export default function RolePage() {
   }
 
   function goToPage(page: number) {
-    searchUser(name, page);
+    searchRole({ page: page });
   }
 
   function search(key: string) {
-    setName(key);
-    searchUser(key, 1);
+    setKey(key);
+    searchRole({ searchKey: key, page: 1 });
   }
 
   function onClose(needToReload: boolean) {
     setShowModal(false);
     if (needToReload) {
-      searchUser(name, currentPage);
+      searchRole({});
     }
-  }
-  function addUser() {
-    setSelectedUser(undefined);
-    setShowModal(true);
   }
 
   return (
     <div className='main-container'>
-      <div className='header-container'>
-        <div className='header'>Roles</div>
-      </div>
       <div className='item-container'>
         <SeachBar search={search} />
         <div>
-          <button className='btn' onClick={addUser}>
-            Add New User
-          </button>
           <Pagination
             pages={pageCount}
             currentPageNumber={currentPage}
             goInPage={goToPage}></Pagination>
         </div>
-        <div className='content'>
-          <table className='users-content item-table'>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Access</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <UserItem key={user.id} user={user} action={userAction} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <RoleList.Provider value={roles}>
+          <RoleActions.Provider value={roleAction}>
+            <RoleItems />
+          </RoleActions.Provider>
+        </RoleList.Provider>
       </div>
       <div>
-        {showModal && <ManageUser onClose={onClose} usersInfo={selectedUser} />}
+        {showModal && (
+          <ManageRole
+            onClose={onClose}
+            selectedRole={selectedRole}
+            viewOnly={viewOnly}
+          />
+        )}
       </div>
     </div>
   );

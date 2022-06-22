@@ -9,4 +9,13 @@ export interface User {
   admin: boolean;
   personnel?: Personnel | undefined;
   personnelId?: number | undefined;
+  userRoles?: UserRole[] | undefined;
+}
+
+export interface UserRole {
+  id: number;
+  userId: number | undefined;
+  roleId: number;
+  role: Role;
+  deleted?: boolean | undefined;
 }

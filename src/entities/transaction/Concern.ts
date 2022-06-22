@@ -12,8 +12,8 @@ export interface Concern {
   officeId?: number | undefined;
   office?: Office | undefined;
   caller?: string | undefined;
-  personnelId?: number | undefined;
-  personnel?: Personnel | undefined;
   statusId?: number | undefined;
   status?: string | undefined;
+  personnelId?: number | undefined;
+  personnel?: Personnel | undefined;
 }

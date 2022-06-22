@@ -1,9 +1,9 @@
-import { ModuleRight } from './ModuleRight';
+import { Module } from './Module';
 
 export interface Access {
+  id: number;
   roleId: number;
-  moduleRightId: number;
-  granted: boolean;
-
-  moduleRight: ModuleRight;
+  moduleId: number;
+  module?: Module | undefined;
+  checked: boolean | false;
 }

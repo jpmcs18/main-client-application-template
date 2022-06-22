@@ -1,20 +1,15 @@
 import React, { useContext } from 'react';
-import { ConcernActions, ConcernList } from '../../concern-page';
-import ConcernItem from './concern-item';
+import { RoleActions, RoleList } from '../../role-page';
+import RoleItem from './role-item';
 
-export default function ConcernItems() {
-  const action = useContext(ConcernActions);
-  const concerns = useContext(ConcernList);
+export default function RoleItems() {
+  const action = useContext(RoleActions);
+  const concerns = useContext(RoleList);
   return (
     <table className='item-table'>
       <thead>
         <tr>
-          <th>Time Entry</th>
           <th>Description</th>
-          <th>Classification</th>
-          <th>Concern Office</th>
-          <th>Caller</th>
-          <th>Status</th>
         </tr>
         <tr>
           <th colSpan={10}>
@@ -23,14 +18,14 @@ export default function ConcernItems() {
               onClick={() => {
                 action({ action: 'Add' });
               }}>
-              Add New Concern
+              Add New Role
             </button>
           </th>
         </tr>
       </thead>
       <tbody>
         {concerns.map((concern) => (
-          <ConcernItem key={concern.id} concern={concern} />
+          <RoleItem key={concern.id} role={concern} />
         ))}
       </tbody>
     </table>

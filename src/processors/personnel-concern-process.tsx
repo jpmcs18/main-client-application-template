@@ -26,3 +26,14 @@ export async function resolvePersonnelConcern(
 ): Promise<boolean | undefined> {
   return httpPost<boolean>(PersonnelConcernEnd.Resolve, { id, actionTaken });
 }
+export async function forwardPersonnelConcern(
+  id: number,
+  personnelId: number,
+  reason: string
+): Promise<boolean | undefined> {
+  return httpPost<boolean>(PersonnelConcernEnd.Forward, {
+    id,
+    personnelId,
+    reason,
+  });
+}

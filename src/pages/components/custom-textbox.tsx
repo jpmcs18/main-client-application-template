@@ -50,18 +50,17 @@ export default function CustomTextBox({
               }
               onKeyPress={onKeyPress}
             />
-            <div
-              className={
-                'eye-container ' + (type !== 'password' ? 'hidden' : '')
-              }>
-              <FontAwesomeIcon
-                icon={(toggle ? faEye : faEyeSlash) as IconProp}
-                className='eye-icon'
-                onClick={() => {
-                  setToggle((prev) => !prev);
-                }}
-              />
-            </div>
+            {type === 'password' && (
+              <div className='eye-container'>
+                <FontAwesomeIcon
+                  icon={(toggle ? faEye : faEyeSlash) as IconProp}
+                  className='eye-icon'
+                  onClick={() => {
+                    setToggle((prev) => !prev);
+                  }}
+                />
+              </div>
+            )}
           </>
         )}
       </div>

@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
 import { Concern } from '../entities/transaction/Concern';
 import { deleteConcern, searchConcerns } from '../processors/concern-process';
-import Concerns from './components/concerns-components/concern-items';
+import ConcernItems from './components/concerns-components/concern-items';
 import Pagination from './components/pagination';
 import SeachBar from './components/seachbar';
 import AssignConcern from './modals/assign-concern';
@@ -10,13 +10,13 @@ import ConcernActionsViewer from './modals/concern-actions-viewer';
 import ManageConcern from './modals/manage-concern';
 
 export type CONCERNACTIONS =
+  | { action: 'Add' }
   | { action: 'Assign'; payload: Concern }
   | { action: 'ViewAction'; payload: Concern }
   | { action: 'Edit'; payload: Concern }
   | { action: 'Delete'; payload: number };
 
 export const ConcernList = createContext<Concern[]>([]);
-export const AddConcernItem = createContext<() => void>(() => {});
 export const ConcernActions = createContext<(action: CONCERNACTIONS) => void>(
   () => {}
 );
@@ -31,10 +31,6 @@ export default function ConcernPage() {
   const [selectedConcern, setSelectedConcern] = useState<Concern | undefined>();
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
-  function addConcern() {
-    setSelectedConcern(() => undefined);
-    setShowModal(() => true);
-  }
   function onClose(hasChanges: boolean) {
     setShowModal(false);
     setShowAssignmentModal(false);
@@ -73,6 +69,10 @@ export default function ConcernPage() {
   }
   function concernAction(action: CONCERNACTIONS) {
     switch (action.action) {
+      case 'Add':
+        setSelectedConcern(() => undefined);
+        setShowModal(() => true);
+        break;
       case 'ViewAction':
         setSelectedConcern(action.payload);
         setShowActionsModal(true);
@@ -127,11 +127,9 @@ export default function ConcernPage() {
             goInPage={goToPage}></Pagination>
         </div>
         <ConcernList.Provider value={concerns}>
-          <AddConcernItem.Provider value={addConcern}>
-            <ConcernActions.Provider value={concernAction}>
-              <Concerns />
-            </ConcernActions.Provider>
-          </AddConcernItem.Provider>
+          <ConcernActions.Provider value={concernAction}>
+            <ConcernItems />
+          </ConcernActions.Provider>
         </ConcernList.Provider>
       </div>
       <div>
