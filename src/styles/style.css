@@ -15,6 +15,7 @@
   --normal-font-size: 1rem;
   --label-size: 0.7rem;
   --header-font-size: 1.2rem;
+  --login-header-font-size: 1.5rem;
   --menu-font-size: 1.2rem;
   --normal: 100;
   --light: 300;
@@ -261,15 +262,31 @@ input {
 }
 
 .login-container .login-header h1 {
-  font-size: var(--header-font-size);
+  font-size: var(--login-header-font-size);
   letter-spacing: 1.5px;
   color: var(--primary-color);
 }
 
 .login-container .login-content {
   margin: 1.3em 1em;
+  gap: 0.5em;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.login-container .login-content .btn {
+  width: 20em;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  margin-top: 2em;
 }
 
 .btn {
@@ -280,10 +297,10 @@ input {
   min-width: 5em;
   cursor: pointer;
   background: white;
-  color: var(--primary-color);
+  color: var(--primary-color-accent);
+  font-weight: var(--demibold);
   border: none;
-  -webkit-box-shadow: 0em 0em 0.1em 0em var(--primary-color);
-          box-shadow: 0em 0em 0.1em 0em var(--primary-color);
+  background: var(--primary-color);
 }
 
 .btn:hover {
@@ -1280,6 +1297,12 @@ tbody tr {
           box-shadow: 0em 0em 0.3em 0em var(--primary-color);
 }
 
+.modal-container .modal-content .modal-footer .btn-primary:focus {
+  outline: none;
+  -webkit-box-shadow: 0em 0em 0.3em 0em var(--primary-color);
+          box-shadow: 0em 0em 0.3em 0em var(--primary-color);
+}
+
 .modal-container .modal-content .modal-footer .btn-secondary {
   background: white;
   color: var(--secondary-color);
@@ -1660,6 +1683,7 @@ thead {
     --normal-font-size: 0.8rem;
     --label-size: 0.6rem;
     --header-font-size: 1rem;
+    --login-header-font-size: 1.3rem;
     --menu-font-size: 1rem;
   }
 }

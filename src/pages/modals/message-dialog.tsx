@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import {
   useMessage,
   useSetCloseMessageDialog,
@@ -9,6 +10,7 @@ export default function MessageDialog() {
   const closeDialog = useSetCloseMessageDialog();
   const Message = useMessage();
   const updateAuthorize = useUpdateAuthorize();
+  const ref = useRef<HTMLButtonElement>(null);
 
   function handleClose() {
     closeDialog();
@@ -19,32 +21,29 @@ export default function MessageDialog() {
     closeDialog();
     Message?.onOk?.();
   }
+  useEffect(
+    () => {
+      ref?.current?.focus();
+    },
+    //eslint-disable-next-line
+    []
+  );
+
   return (
     <Modal>
       <div className='modal-content-body'>
         <p>{Message?.message}</p>
       </div>
       <div className='modal-footer'>
-        {(Message?.action === undefined || Message?.action === 'OKCANCEL') && (
-          <button onClick={ok} className='btn-modal btn-primary'>
-            OK
-          </button>
-        )}
-        {Message?.action === 'OKCANCEL' && (
-          <button onClick={handleClose} className='btn-modal btn-secondary '>
-            CANCEL
-          </button>
-        )}
-        {Message?.action === 'YESNO' && (
-          <button onClick={ok} className='btn-modal btn-primary'>
-            YES
-          </button>
-        )}
-        {Message?.action === 'YESNO' && (
-          <button onClick={handleClose} className='btn-modal btn-secondary'>
-            NO
-          </button>
-        )}
+        <button onClick={ok} className='btn-modal btn-primary' ref={ref}>
+          {(Message?.action === undefined ||
+            Message?.action === 'OKCANCEL') && <span>OK</span>}
+          {Message?.action === 'YESNO' && <span>YES</span>}
+        </button>
+        <button onClick={handleClose} className='btn-modal btn-secondary '>
+          {Message?.action === 'OKCANCEL' && <span>CANCEL</span>}
+          {Message?.action === 'YESNO' && <span>NO</span>}
+        </button>
       </div>
     </Modal>
   );

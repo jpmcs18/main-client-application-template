@@ -15,6 +15,7 @@
   --normal-font-size: 1rem;
   --label-size: 0.7rem;
   --header-font-size: 1.2rem;
+  --login-header-font-size: 1.5rem;
   --menu-font-size: 1.2rem;
   --normal: 100;
   --light: 300;
@@ -204,7 +205,7 @@ input {
     box-shadow: 0em 0.1em 0.2em 0em #ccc;
 
     h1 {
-      font-size: var(--header-font-size);
+      font-size: var(--login-header-font-size);
       letter-spacing: 1.5px;
       color: var(--primary-color);
     }
@@ -212,7 +213,15 @@ input {
 
   .login-content {
     margin: 1.3em 1em;
+    gap: 0.5em;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    .btn {
+      width: 20em;
+      align-self: center;
+      margin-top: 2em;
+    }
   }
 }
 .btn {
@@ -223,9 +232,10 @@ input {
   min-width: 5em;
   cursor: pointer;
   background: white;
-  color: var(--primary-color);
+  color: var(--primary-color-accent);
+  font-weight: var(--demibold);
   border: none;
-  box-shadow: 0em 0em 0.1em 0em var(--primary-color);
+  background: var(--primary-color);
   &:hover {
     box-shadow: 0em 0em 0.3em 0em var(--primary-color);
   }
@@ -1016,6 +1026,10 @@ tbody tr {
         &:hover {
           box-shadow: 0em 0em 0.3em 0em var(--primary-color);
         }
+        &:focus {
+          outline: none;
+          box-shadow: 0em 0em 0.3em 0em var(--primary-color);
+        }
       }
 
       .btn-secondary {
@@ -1303,6 +1317,7 @@ thead {
     --normal-font-size: 0.8rem;
     --label-size: 0.6rem;
     --header-font-size: 1rem;
+    --login-header-font-size: 1.3rem;
     --menu-font-size: 1rem;
   }
 }
