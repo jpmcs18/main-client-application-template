@@ -117,22 +117,24 @@ export default function ConcernPage() {
       .finally(() => setBusy(false));
   }
   return (
-    <div className='main-container'>
-      <div className='content'>
+    <>
+      <section>
         <SeachBar search={search} />
-        <div>
-          <Pagination
-            pages={pageCount}
-            currentPageNumber={currentPage}
-            goInPage={goToPage}></Pagination>
-        </div>
+      </section>
+      <section>
+        <Pagination
+          pages={pageCount}
+          currentPageNumber={currentPage}
+          goInPage={goToPage}></Pagination>
+      </section>
+      <section>
         <ConcernList.Provider value={concerns}>
           <ConcernActions.Provider value={concernAction}>
             <ConcernItems />
           </ConcernActions.Provider>
         </ConcernList.Provider>
-      </div>
-      <div>
+      </section>
+      <>
         {showModal && (
           <ManageConcern onClose={onClose} selectedConcern={selectedConcern} />
         )}
@@ -145,7 +147,7 @@ export default function ConcernPage() {
             onClose={() => setShowActionsModal(false)}
           />
         )}
-      </div>
-    </div>
+      </>
+    </>
   );
 }

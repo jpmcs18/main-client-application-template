@@ -88,29 +88,29 @@ export default function ClassificationPage() {
   }
 
   return (
-    <div className='main-container'>
-      <div className='item-container'>
+    <>
+      <section>
         <SeachBar search={search} />
-        <div>
-          <Pagination
-            pages={pageCount}
-            currentPageNumber={currentPage}
-            goInPage={goToPage}></Pagination>
-        </div>
+      </section>
+      <Pagination
+        pages={pageCount}
+        currentPageNumber={currentPage}
+        goInPage={goToPage}></Pagination>
+      <section>
         <ClassificationList.Provider value={classifications}>
           <ClassificationActions.Provider value={classificationAction}>
             <ClassificationItems />
           </ClassificationActions.Provider>
         </ClassificationList.Provider>
-      </div>
-      <div>
+      </section>
+      <>
         {showModal && (
           <ManageClassification
             onClose={onClose}
             selectedClassification={selectedClassification}
           />
         )}
-      </div>
-    </div>
+      </>
+    </>
   );
 }

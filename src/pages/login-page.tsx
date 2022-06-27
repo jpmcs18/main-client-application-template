@@ -68,32 +68,34 @@ export default function LoginPage() {
     }
   }
   return (
-    <div className='login-container'>
-      <div className='login-header'>
-        <h1>Authentication</h1>
+    <section>
+      <div className='login-container'>
+        <div className='login-header'>
+          <h1>Users Authentication</h1>
+        </div>
+        <div className='login-content'>
+          <CustomTextBox
+            title='Username'
+            name='username'
+            id='username'
+            className='username'
+            onChange={onTextChange}
+            onKeyPress={onKeyPress}
+          />
+          <CustomTextBox
+            title='Password'
+            name='password'
+            id='password'
+            type='password'
+            className='password'
+            onChange={onTextChange}
+            onKeyPress={onKeyPress}
+          />
+          <button onClick={signIn} className='btn'>
+            Login
+          </button>
+        </div>
       </div>
-      <div className='login-content'>
-        <CustomTextBox
-          title='Username'
-          name='username'
-          id='username'
-          className='username'
-          onChange={onTextChange}
-          onKeyPress={onKeyPress}
-        />
-        <CustomTextBox
-          title='Password'
-          name='password'
-          id='password'
-          type='password'
-          className='password'
-          onChange={onTextChange}
-          onKeyPress={onKeyPress}
-        />
-        <button onClick={signIn} className='btn'>
-          Login
-        </button>
-      </div>
-    </div>
+    </section>
   );
 }

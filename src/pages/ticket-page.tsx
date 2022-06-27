@@ -92,46 +92,44 @@ export default function TicketPage() {
     }
   }
   return (
-    <div className='main-container'>
-      <div className='container'>
-        <div className='content'>
-          <div className='head-content'>
-            <div className='checkbox-container'>
-              <CustomCheckBox
-                text='Resolved'
-                id='resolved'
-                checkChange={() => {
-                  var x = !resolved;
-                  setResolved(x);
-                  fetchDirectConcern({ isResolved: x });
-                }}
-                isCheck={resolved}
-              />
-              <CustomCheckBox
-                text='Forwarded'
-                id='forwarded'
-                checkChange={() => {
-                  var x = !forwarded;
-                  setForwarded(x);
-                  fetchDirectConcern({ isForwarded: x });
-                }}
-                isCheck={forwarded}
-              />
-            </div>
-
-            <Pagination
-              pages={pageCount}
-              currentPageNumber={currentPage}
-              goInPage={goToPage}></Pagination>
-          </div>
-          <DirectConcernList.Provider value={directConcerns}>
-            <DirectConcernActions.Provider value={concernAction}>
-              <DirectConcernItems />
-            </DirectConcernActions.Provider>
-          </DirectConcernList.Provider>
+    <>
+      <section className='head-content'>
+        <div className='checkbox-container'>
+          <CustomCheckBox
+            text='Resolved'
+            id='resolved'
+            checkChange={() => {
+              var x = !resolved;
+              setResolved(x);
+              fetchDirectConcern({ isResolved: x });
+            }}
+            isCheck={resolved}
+          />
+          <CustomCheckBox
+            text='Forwarded'
+            id='forwarded'
+            checkChange={() => {
+              var x = !forwarded;
+              setForwarded(x);
+              fetchDirectConcern({ isForwarded: x });
+            }}
+            isCheck={forwarded}
+          />
         </div>
-      </div>
-      <div>
+
+        <Pagination
+          pages={pageCount}
+          currentPageNumber={currentPage}
+          goInPage={goToPage}></Pagination>
+      </section>
+      <section>
+        <DirectConcernList.Provider value={directConcerns}>
+          <DirectConcernActions.Provider value={concernAction}>
+            <DirectConcernItems />
+          </DirectConcernActions.Provider>
+        </DirectConcernList.Provider>
+      </section>
+      <>
         {showResolveModal && (
           <ResolveConcern
             onClose={onClose}
@@ -144,7 +142,7 @@ export default function TicketPage() {
             personnelConcern={selectedDirectConcern}
           />
         )}
-      </div>
-    </div>
+      </>
+    </>
   );
 }

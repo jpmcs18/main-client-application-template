@@ -49,8 +49,12 @@ export default function HomePage() {
               head: 'Managements',
               navs: [
                 {
+                  route: Routes.User,
+                  name: 'Users',
+                },
+                {
                   route: Routes.Personnel,
-                  name: 'Personnel',
+                  name: 'Personnels',
                 },
                 {
                   route: Routes.Role,
@@ -58,11 +62,11 @@ export default function HomePage() {
                 },
                 {
                   route: Routes.Classification,
-                  name: 'Classification',
+                  name: 'Classifications',
                 },
                 {
                   route: Routes.Office,
-                  name: 'Office',
+                  name: 'Offices',
                 },
               ],
             },
@@ -108,76 +112,55 @@ export default function HomePage() {
     <>
       {authorize ? (
         <BrowserRouter>
-          <header className='navbar'>
-            <div className='menu-container'>
-              <NavLink to={Routes.Home} className='icon'>
-                {ICON}
-              </NavLink>
-              <nav>
+          <header>
+            <nav>
+              <div className='menu-with-icon'>
+                <NavLink to={Routes.Home} className='icon'>
+                  {ICON}
+                </NavLink>
                 <div>
                   <ul className='navigations'>
-                    {(profile?.distinctModules?.length ?? 0) < 3 &&
-                    (profile?.distinctModules?.length ?? 0) > 0 ? (
-                      profile?.distinctModules?.map((x) => (
-                        <li key={x.id.toString()}>
-                          <NavLink to={x.route ?? ''} className='nav-menu'>
-                            {x.description ?? ''}
-                          </NavLink>
-                        </li>
-                      ))
-                    ) : (
-                      <li>
-                        <button className='nav-menu'>Menus</button>
-                        <div className='menus'>
-                          {menus
-                            .filter((x) => x.navs.length > 0)
-                            .map((menu) => (
-                              <div className='menu-items' key={menu.head}>
-                                <div className='head'>{menu.head}</div>
-                                <div className='navs'>
-                                  {menu.navs.map((nav) => (
-                                    <div key={nav.route}>
-                                      <NavLink
-                                        to={nav.route ?? ''}
-                                        className='nav-menu'>
-                                        {nav.name}
-                                      </NavLink>
-                                    </div>
-                                  ))}
-                                </div>
+                    <li>
+                      <button className='nav-menu'>Menus</button>
+                      <div className='menus'>
+                        {menus
+                          .filter((x) => x.navs.length > 0)
+                          .map((menu) => (
+                            <div className='menu-items' key={menu.head}>
+                              <div className='head'>{menu.head}</div>
+                              <div className='navs'>
+                                {menu.navs.map((nav) => (
+                                  <div key={nav.route}>
+                                    <NavLink
+                                      to={nav.route ?? ''}
+                                      className='nav-menu'>
+                                      {nav.name}
+                                    </NavLink>
+                                  </div>
+                                ))}
                               </div>
-                            ))}
-                        </div>
-                      </li>
-                    )}
-                    {(profile?.distinctModules?.filter(
-                      (x) => x.route === Routes.User
-                    )?.[0]?.id ||
-                      profile?.admin) && (
-                      <li>
-                        <NavLink to={Routes.User} className='nav-menu'>
-                          Users
-                        </NavLink>
-                      </li>
-                    )}
+                            </div>
+                          ))}
+                      </div>
+                    </li>
                   </ul>
                 </div>
-                <ul className='user'>
-                  <li>
-                    <label
-                      className='user-name nav-menu'
-                      onClick={() => setShowProfile(true)}>
-                      {`${profile?.personnel?.name} (${profile?.personnel?.classification?.description})`}
-                    </label>
-                  </li>
-                  <li>
-                    <label onClick={logoutUser} className='nav-menu'>
-                      Logout
-                    </label>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+              </div>
+              <ul className='user'>
+                <li>
+                  <label
+                    className='user-name nav-menu'
+                    onClick={() => setShowProfile(true)}>
+                    {`${profile?.personnel?.name} (${profile?.personnel?.classification?.description})`}
+                  </label>
+                </li>
+                <li>
+                  <label onClick={logoutUser} className='nav-menu'>
+                    Logout
+                  </label>
+                </li>
+              </ul>
+            </nav>
           </header>
           <Switch>
             {(profile?.distinctModules?.filter(

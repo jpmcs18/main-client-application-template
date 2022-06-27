@@ -160,44 +160,44 @@ export default function UserPage() {
   }
 
   return (
-    <div className='main-container'>
-      <div className='item-container'>
+    <>
+      <section>
         <SeachBar search={search} />
-        <div>
-          <Pagination
-            pages={pageCount}
-            currentPageNumber={currentPage}
-            goInPage={goToPage}></Pagination>
-        </div>
-        <div className='content'>
-          <table className='users-content item-table'>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Classification</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Status</th>
-              </tr>
-              <tr>
-                <th colSpan={6}>
-                  <button className='btn' onClick={addUser}>
-                    Add New User
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <UserItem key={user.id} user={user} action={userAction} />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div>
+      </section>
+      <section>
+        <Pagination
+          pages={pageCount}
+          currentPageNumber={currentPage}
+          goInPage={goToPage}></Pagination>
+      </section>
+      <section>
+        <table className='users-content item-table'>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Classification</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+            <tr>
+              <th colSpan={6}>
+                <button className='btn' onClick={addUser}>
+                  Add New User
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <UserItem key={user.id} user={user} action={userAction} />
+            ))}
+          </tbody>
+        </table>
+      </section>
+      <>
         {showModal && <ManageUser onClose={onClose} usersInfo={selectedUser} />}
-      </div>
-    </div>
+      </>
+    </>
   );
 }

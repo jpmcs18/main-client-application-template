@@ -10,7 +10,7 @@ export default function ConcernItem({ concern }: { concern: Concern }) {
       <td>
         {concern.entryDate && new Date(concern.entryDate).toLocaleString()}
       </td>
-      <td className='elipsis'>{concern.description}</td>
+      <td>{concern.description}</td>
       <td>{concern.classification?.description}</td>
       <td>{concern.office?.description}</td>
       <td>{concern.caller}</td>

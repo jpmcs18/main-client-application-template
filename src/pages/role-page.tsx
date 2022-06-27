@@ -107,22 +107,24 @@ export default function RolePage() {
   }
 
   return (
-    <div className='main-container'>
-      <div className='item-container'>
+    <>
+      <section>
         <SeachBar search={search} />
-        <div>
-          <Pagination
-            pages={pageCount}
-            currentPageNumber={currentPage}
-            goInPage={goToPage}></Pagination>
-        </div>
+      </section>
+      <section>
+        <Pagination
+          pages={pageCount}
+          currentPageNumber={currentPage}
+          goInPage={goToPage}></Pagination>
+      </section>
+      <section>
         <RoleList.Provider value={roles}>
           <RoleActions.Provider value={roleAction}>
             <RoleItems />
           </RoleActions.Provider>
         </RoleList.Provider>
-      </div>
-      <div>
+      </section>
+      <>
         {showModal && (
           <ManageRole
             onClose={onClose}
@@ -130,7 +132,7 @@ export default function RolePage() {
             viewOnly={viewOnly}
           />
         )}
-      </div>
-    </div>
+      </>
+    </>
   );
 }

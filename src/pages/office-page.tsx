@@ -84,26 +84,28 @@ export default function OfficePage() {
   }
 
   return (
-    <div className='main-container'>
-      <div className='item-container'>
+    <>
+      <section>
         <SeachBar search={search} />
-        <div>
-          <Pagination
-            pages={pageCount}
-            currentPageNumber={currentPage}
-            goInPage={goToPage}></Pagination>
-        </div>
+      </section>
+      <section>
+        <Pagination
+          pages={pageCount}
+          currentPageNumber={currentPage}
+          goInPage={goToPage}></Pagination>
+      </section>
+      <section>
         <OfficeList.Provider value={offices}>
           <OfficeActions.Provider value={officeAction}>
             <OfficeItems />
           </OfficeActions.Provider>
         </OfficeList.Provider>
-      </div>
-      <div>
+      </section>
+      <>
         {showModal && (
           <ManageOffice onClose={onClose} selectedOffice={selectedOffice} />
         )}
-      </div>
-    </div>
+      </>
+    </>
   );
 }
