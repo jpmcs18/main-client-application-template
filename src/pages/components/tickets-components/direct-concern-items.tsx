@@ -8,12 +8,12 @@ export default function DirectConcernItems() {
     <table className='item-table'>
       <thead>
         <tr>
-          <th>Received Date</th>
+          <th style={{ width: '10%' }}>Received Date</th>
           <th>Description</th>
-          <th>Classification</th>
-          <th>Concern Office</th>
-          <th>Caller</th>
-          <th>Status</th>
+          <th style={{ width: '10%' }}>Classification</th>
+          <th style={{ width: '20%' }}>Concern Office</th>
+          <th style={{ width: '15%' }}>Caller</th>
+          <th style={{ width: '5%' }}>Status</th>
         </tr>
       </thead>
       <tbody>

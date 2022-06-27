@@ -12,12 +12,10 @@
   --primary-color-accent: white;
   --primary-table-alternating: rgba(226, 195, 195, 0.281);
   --table-hover-color: #f5f1f1;
-  --base-font-size: 0.8rem;
-  --input-font-size: 0.7rem;
-  --normal-font-size: 0.8rem;
-  --label-size: 0.6rem;
-  --header-font-size: 1.1rem;
-  --menu-font-size: 1rem;
+  --normal-font-size: 1rem;
+  --label-size: 0.7rem;
+  --header-font-size: 1.2rem;
+  --menu-font-size: 1.2rem;
   --normal: 100;
   --light: 300;
   --regular: 400;
@@ -50,7 +48,6 @@
 body {
   margin: 0 !important;
   padding: 0;
-  font-size: var(--base-font-size);
   font-family: 'Roboto', sans-serif;
   background: #f2f2f2;
   overflow-x: hidden;
@@ -236,7 +233,7 @@ textarea {
 select,
 textarea,
 input {
-  font-size: var(--input-font-size);
+  font-size: var(--normal-font-size);
 }
 
 .login-container {
@@ -338,7 +335,7 @@ input {
   border: none;
   border-bottom: 1px solid var(--primary-color);
   text-overflow: ellipsis;
-  height: 2em;
+  height: 3em;
   cursor: pointer;
 }
 
@@ -384,7 +381,7 @@ input {
   padding: 0.6em 0.2em;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  height: 2em;
+  height: 3em;
 }
 
 .custom-input .input-container input::-ms-clear, .custom-input .input-container input::-ms-reveal {
@@ -1656,5 +1653,14 @@ thead {
 
 .concern-action div:nth-child(even) {
   margin: 0.5em;
+}
+
+@media screen and (max-width: 1400px) {
+  :root {
+    --normal-font-size: 0.8rem;
+    --label-size: 0.6rem;
+    --header-font-size: 1rem;
+    --menu-font-size: 1rem;
+  }
 }
 /*# sourceMappingURL=style.css.map */
