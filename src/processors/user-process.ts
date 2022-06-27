@@ -54,6 +54,8 @@ export async function updateUser(
   });
 }
 
-export async function updateProfile(user: UpdateUserProfile): Promise<boolean> {
-  return await httpPut(UserEnd.UpdateProfile, user);
+export async function updateProfile(
+  user: UpdateUserProfile
+): Promise<boolean | undefined> {
+  return await httpPost<boolean>(UserEnd.UpdateProfile, user);
 }

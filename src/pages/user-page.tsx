@@ -64,25 +64,20 @@ export default function UserPage() {
   }
 
   async function deleteSelectedUser(userid: number) {
-    setMessage({
-      message: 'Delete this user',
-      onOk: async () => {
-        setBusy(true);
-        await deleteUser(userid)
-          .then(() => {
-            setMessage({
-              message: 'User Deleted',
-              onOk: () => {
-                searchUser(name, currentPage);
-              },
-            });
-          })
-          .catch((err) => {
-            setMessage({ message: err.message });
-          })
-          .finally(() => setBusy(false));
-      },
-    });
+    setBusy(true);
+    await deleteUser(userid)
+      .then(() => {
+        setMessage({
+          message: 'User Deleted',
+          onOk: () => {
+            searchUser(name, currentPage);
+          },
+        });
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
   }
 
   function activateUser(id: number, active: boolean) {

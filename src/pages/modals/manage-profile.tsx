@@ -19,6 +19,9 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
     return {
       username: profile?.username ?? '',
       personnel: profile?.personnel,
+      password: '',
+      newPassword: '',
+      confirmNewPassword: '',
     };
   });
 
@@ -50,6 +53,7 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
               ...profile,
               username: user.username,
             });
+            onClose();
           },
         });
       })
