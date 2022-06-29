@@ -20,7 +20,7 @@ export default function ForwardConcern({
   onClose,
   personnelConcern,
 }: {
-  onClose: (hasChanges: boolean) => void;
+  onClose: (hasChanges: boolean, personnel: string) => void;
   personnelConcern: PersonnelConcern | undefined;
 }) {
   const [reason, setReason] = useState<string>('');
@@ -135,7 +135,12 @@ export default function ForwardConcern({
           setMessage({
             message: 'Success',
             onOk: () => {
-              onClose(true);
+              onClose(
+                true,
+                selectedPersonnel?.name ??
+                  selectedAvailablePersonnel?.name ??
+                  ''
+              );
             },
           });
       })
@@ -147,7 +152,7 @@ export default function ForwardConcern({
   return (
     <Modal
       onClose={() => {
-        onClose(false);
+        onClose(false, '');
       }}
       title='Forward Concern'>
       <div className='concern-management-modal-body modal-content-body'>

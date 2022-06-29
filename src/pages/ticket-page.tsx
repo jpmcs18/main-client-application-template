@@ -1,5 +1,16 @@
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  HubConnectionState,
+} from '@microsoft/signalr';
 import { createContext, useEffect, useState } from 'react';
-import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
+import { API } from '../constant';
+import {
+  useSetBusy,
+  useSetMessage,
+  useUserProfile,
+} from '../custom-hooks/authorize-provider';
+import { Hub } from '../endpoints';
 import { PersonnelConcern } from '../entities/transaction/PersonnelConcern';
 import { getDirectConcerns } from '../processors/personnel-concern-process';
 import CustomCheckBox from './components/custom-check-box';
@@ -23,13 +34,57 @@ export default function TicketPage() {
   >();
   const [showResolveModal, setShowResolveModal] = useState(false);
   const [showForwardModal, setShowForwardModal] = useState(false);
+  const [pending, setPending] = useState(true);
   const [resolved, setResolved] = useState(false);
   const [forwarded, setForwarded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
+  const profile = useUserProfile();
   const setMessage = useSetMessage();
   const setBusy = useSetBusy();
-  function concernAction(action: CONCERNACTIONS) {
+  const [connection, setConnection] = useState<HubConnection>();
+
+  useEffect(
+    () => {
+      if (!('Notification' in window)) {
+        console.log('This browser does not support desktop notification');
+      } else {
+        Notification.requestPermission();
+      }
+      connect();
+    },
+    //eslint-disable-next-line
+    []
+  );
+  async function connect() {
+    try {
+      var conn = new HubConnectionBuilder()
+        .withUrl(API + Hub.Transaction)
+        .build();
+
+      conn.on('NewTicket', () => {
+        new Notification('New Ticket Assigned');
+        fetchDirectConcern({});
+      });
+
+      conn.on('ForwardTicket', (personnel) => {
+        new Notification(`New Ticket Forwarded by ${personnel}`);
+        fetchDirectConcern({});
+      });
+
+      await conn.start();
+      if (conn.state === HubConnectionState.Connected)
+        await conn.invoke('JoinTicket', profile?.personnel?.name);
+      setConnection(conn);
+    } catch (ex) {
+      setMessage({ message: ex });
+    }
+  }
+  async function reconnect() {
+    if (connection?.state === HubConnectionState.Disconnected)
+      await connection?.start();
+  }
+  async function concernAction(action: CONCERNACTIONS) {
     switch (action.action) {
       case 'Resolve':
         setSelectedDirectConcern(action.payload);
@@ -56,15 +111,18 @@ export default function TicketPage() {
     page,
     isResolved,
     isForwarded,
+    isPending,
   }: {
     page?: number | undefined;
     isResolved?: boolean | undefined;
     isForwarded?: boolean | undefined;
+    isPending?: boolean | undefined;
   }) {
     setBusy(true);
     await getDirectConcerns(
       isResolved ?? resolved,
       isForwarded ?? forwarded,
+      isPending ?? pending,
       page ?? currentPage
     )
       .then((res) => {
@@ -84,10 +142,26 @@ export default function TicketPage() {
     fetchDirectConcern({ page: page });
   }
 
-  function onClose(hasChanges: boolean) {
-    setShowResolveModal(false);
+  async function onCloseForward(hasChanges: boolean, personnel: string) {
     setShowForwardModal(false);
     if (hasChanges) {
+      fetchDirectConcern({});
+      await reconnect();
+      await connection?.invoke(
+        'ForwardTicket',
+        profile?.personnel?.name,
+        personnel
+      );
+    }
+  }
+  async function onCLoseResolve(hasChanges: boolean) {
+    setShowResolveModal(false);
+    if (hasChanges) {
+      await reconnect();
+      await connection?.invoke(
+        'Resolve',
+        selectedDirectConcern?.concern.number
+      );
       fetchDirectConcern({});
     }
   }
@@ -95,6 +169,16 @@ export default function TicketPage() {
     <>
       <section className='head-content'>
         <div className='checkbox-container'>
+          <CustomCheckBox
+            text='Pending'
+            id='pending'
+            checkChange={() => {
+              var x = !pending;
+              setPending(x);
+              fetchDirectConcern({ isPending: x });
+            }}
+            isCheck={pending}
+          />
           <CustomCheckBox
             text='Resolved'
             id='resolved'
@@ -132,13 +216,13 @@ export default function TicketPage() {
       <>
         {showResolveModal && (
           <ResolveConcern
-            onClose={onClose}
+            onClose={onCLoseResolve}
             personnelConcern={selectedDirectConcern}
           />
         )}
         {showForwardModal && (
           <ForwardConcern
-            onClose={onClose}
+            onClose={onCloseForward}
             personnelConcern={selectedDirectConcern}
           />
         )}

@@ -1,8 +1,17 @@
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  HubConnectionState,
+  LogLevel,
+} from '@microsoft/signalr';
 import React, { createContext, useEffect, useState } from 'react';
+import { API } from '../constant';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
+import { Hub } from '../endpoints';
 import { Concern } from '../entities/transaction/Concern';
 import { deleteConcern, searchConcerns } from '../processors/concern-process';
 import ConcernItems from './components/concerns-components/concern-items';
+import CustomCheckBox from './components/custom-check-box';
 import Pagination from './components/pagination';
 import SeachBar from './components/seachbar';
 import AssignConcern from './modals/assign-concern';
@@ -29,30 +38,87 @@ export default function ConcernPage() {
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [showActionsModal, setShowActionsModal] = useState(false);
   const [selectedConcern, setSelectedConcern] = useState<Concern | undefined>();
+  const [assigned, setAssigned] = useState(true);
+  const [closed, setClosed] = useState(false);
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
-  function onClose(hasChanges: boolean) {
+  const [connection, setConnection] = useState<HubConnection>();
+  async function onClose(hasChanges: boolean, personnel: string | undefined) {
     setShowModal(false);
     setShowAssignmentModal(false);
     if (hasChanges) {
-      searchConcern(key, currentPage);
+      console.log(connection?.state);
+      await reconnect();
+      await connection?.invoke('NewConcern');
+      await connection?.invoke('NewTicket', personnel);
+      searchConcern({});
     }
   }
   useEffect(
     () => {
-      searchConcern(key, currentPage);
+      if (!('Notification' in window)) {
+        console.log('This browser does not support desktop notification');
+      } else {
+        Notification.requestPermission();
+      }
+      connect();
+      searchConcern({});
     },
     // eslint-disable-next-line
     []
   );
-  async function searchConcern(key: string | undefined, page: number) {
+  async function connect() {
+    try {
+      var conn = new HubConnectionBuilder()
+        .withUrl(API + Hub.Transaction)
+        .configureLogging(LogLevel.Information)
+        .build();
+
+      conn.on('NewConcern', () => {
+        new Notification('New Concern Added');
+        searchConcern({});
+      });
+      conn.on('ResolveConcern', (ticketnumber) => {
+        new Notification(`Ticket ${ticketnumber} Resolved`);
+        searchConcern({});
+      });
+      await conn.start();
+      if (conn.state === HubConnectionState.Connected) {
+        await conn.invoke('JoinConcernCreators');
+        console.log(conn.state);
+      }
+      setConnection(conn);
+    } catch (ex) {
+      setMessage({ message: ex });
+    }
+  }
+
+  async function reconnect() {
+    if (connection?.state === HubConnectionState.Disconnected)
+      await connection?.start();
+  }
+  async function searchConcern({
+    searchKey,
+    pageNumber,
+    isAssigned,
+    isClosed,
+  }: {
+    searchKey?: string;
+    pageNumber?: number;
+    isAssigned?: boolean;
+    isClosed?: boolean;
+  }) {
     setBusy(true);
-    searchConcerns(key, page)
+    searchConcerns(
+      searchKey ?? key,
+      pageNumber ?? currentPage,
+      isAssigned ?? assigned,
+      isClosed ?? closed
+    )
       .then((res) => {
         if (res !== undefined) {
           setConcerns(res.results);
           setPageCount(res.pageCount);
-          setCurrentPage(page);
         }
       })
       .catch((err) => {
@@ -62,10 +128,12 @@ export default function ConcernPage() {
   }
   function search(key: string) {
     setKey(key);
-    searchConcern(key, 1);
+    setCurrentPage(1);
+    searchConcern({ searchKey: key, pageNumber: 1 });
   }
   function goToPage(page: number) {
-    searchConcern(key, page);
+    setCurrentPage(page);
+    searchConcern({ pageNumber: page });
   }
   function concernAction(action: CONCERNACTIONS) {
     switch (action.action) {
@@ -107,7 +175,7 @@ export default function ConcernPage() {
         setMessage({
           message: 'User Deleted',
           onOk: () => {
-            searchConcern(key, currentPage);
+            searchConcern({});
           },
         });
       })
@@ -121,7 +189,29 @@ export default function ConcernPage() {
       <section>
         <SeachBar search={search} />
       </section>
-      <section>
+      <section className='head-content'>
+        <div className='checkbox-container'>
+          <CustomCheckBox
+            text='Assigned'
+            id='assigned'
+            checkChange={() => {
+              var x = !assigned;
+              setAssigned(x);
+              searchConcern({ isAssigned: x });
+            }}
+            isCheck={assigned}
+          />
+          <CustomCheckBox
+            text='Closed'
+            id='closed'
+            checkChange={() => {
+              var x = !closed;
+              setClosed(x);
+              searchConcern({ isClosed: x });
+            }}
+            isCheck={closed}
+          />
+        </div>
         <Pagination
           pages={pageCount}
           currentPageNumber={currentPage}

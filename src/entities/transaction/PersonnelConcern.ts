@@ -15,4 +15,5 @@ export interface PersonnelConcern {
   forwardDate?: Date | undefined;
   statusId?: number | undefined;
   status?: string | undefined;
+  creator?: string | undefined;
 }

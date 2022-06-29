@@ -83,6 +83,7 @@ export default function UserPage() {
   function activateUser(id: number, active: boolean) {
     setMessage({
       message: 'Active this user?',
+      action: 'YESNO',
       onOk: async () => {
         setBusy(true);
         await activateUsers(id)
@@ -109,6 +110,7 @@ export default function UserPage() {
   function resetPassword(id: number) {
     setMessage({
       message: 'Reset Password?',
+      action: 'YESNO',
       onOk: async () => {
         setBusy(true);
         await resetUserPassword(id)

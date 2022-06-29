@@ -5,9 +5,11 @@ import { httpDelete, httpGet, httpPost, httpPut } from './base';
 
 export async function searchConcerns(
   name: string | undefined,
-  page: number
+  page: number,
+  assigned: boolean,
+  closed: boolean
 ): Promise<SearchResult<Concern> | undefined> {
-  let parameters: string = '?page=' + page;
+  let parameters: string = `?page=${page}&isAssigned=${assigned}&isClosed=${closed}`;
   if (name !== undefined) {
     parameters += '&key=' + encodeURI(name);
   }

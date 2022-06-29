@@ -64,3 +64,7 @@ export const PersonnelConcernEnd = {
   Resolve: 'personnel-concerns/resolve',
   Forward: 'personnel-concerns/forward',
 };
+
+export const Hub = {
+  Transaction: '/transaction-hub',
+};

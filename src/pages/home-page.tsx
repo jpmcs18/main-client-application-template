@@ -18,6 +18,7 @@ import TicketPage from './ticket-page';
 import ClassificationPage from './classification-page';
 import PersonnelPage from './personnel-page';
 import OfficePage from './office-page';
+import Dashboard from './dashboard';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -114,55 +115,60 @@ export default function HomePage() {
         <BrowserRouter>
           <header>
             <nav>
-              <div className='menu-with-icon'>
-                <NavLink to={Routes.Home} className='icon'>
+              <div className='menu-container'>
+                <NavLink to={Routes.Home} exact className='nav-icon'>
                   {ICON}
                 </NavLink>
-                <div>
-                  <ul className='navigations'>
-                    <li>
-                      <button className='nav-menu'>Menus</button>
-                      <div className='menus'>
-                        {menus
-                          .filter((x) => x.navs.length > 0)
-                          .map((menu) => (
-                            <div className='menu-items' key={menu.head}>
-                              <div className='head'>{menu.head}</div>
-                              <div className='navs'>
-                                {menu.navs.map((nav) => (
-                                  <div key={nav.route}>
-                                    <NavLink
-                                      to={nav.route ?? ''}
-                                      className='nav-menu'>
-                                      {nav.name}
-                                    </NavLink>
-                                  </div>
-                                ))}
-                              </div>
+                {(profile?.distinctModules?.length ?? 0) < 3 &&
+                (profile?.distinctModules?.length ?? 0) > 0 ? (
+                  <>
+                    {profile?.distinctModules?.map((x) => (
+                      <NavLink to={x.route ?? ''} exact className='nav-menu'>
+                        {x.description}
+                      </NavLink>
+                    ))}
+                  </>
+                ) : (
+                  <div>
+                    <button className='nav-menu'>Menus</button>
+                    <div className='menus'>
+                      {menus
+                        .filter((x) => x.navs.length > 0)
+                        .map((menu) => (
+                          <div className='menu-items' key={menu.head}>
+                            <div className='head'>{menu.head}</div>
+                            <div className='navs'>
+                              {menu.navs.map((nav) => (
+                                <div key={nav.route}>
+                                  <NavLink
+                                    to={nav.route ?? ''}
+                                    exact
+                                    className='nav-menu'>
+                                    {nav.name}
+                                  </NavLink>
+                                </div>
+                              ))}
                             </div>
-                          ))}
-                      </div>
-                    </li>
-                  </ul>
-                </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <ul className='user'>
-                <li>
-                  <label
-                    className='user-name nav-menu'
-                    onClick={() => setShowProfile(true)}>
-                    {`${profile?.personnel?.name} (${profile?.personnel?.classification?.description})`}
-                  </label>
-                </li>
-                <li>
-                  <label onClick={logoutUser} className='nav-menu'>
-                    Logout
-                  </label>
-                </li>
-              </ul>
+              <div className='menu-container'>
+                <label
+                  className='user-name nav-menu'
+                  onClick={() => setShowProfile(true)}>
+                  {`${profile?.personnel?.name} (${profile?.personnel?.classification?.description})`}
+                </label>
+                <label onClick={logoutUser} className='nav-menu'>
+                  Logout
+                </label>
+              </div>
             </nav>
           </header>
           <Switch>
+            <Route path={Routes.Home} exact component={Dashboard} />
             {(profile?.distinctModules?.filter(
               (x) => x.route === Routes.User
             )?.[0]?.id ||

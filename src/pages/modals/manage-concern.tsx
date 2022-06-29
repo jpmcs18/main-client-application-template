@@ -25,12 +25,13 @@ export default function ManageConcern({
   onClose,
 }: {
   selectedConcern: Concern | undefined;
-  onClose: (hasChange: boolean) => void;
+  onClose: (hasChange: boolean, personnel: string) => void;
 }) {
   const [concern, setConcern] = useState<Concern>(
     () =>
       selectedConcern ?? {
         id: 0,
+        number: '',
         entryDate: undefined,
         caller: '',
         description: '',
@@ -179,7 +180,12 @@ export default function ManageConcern({
           setMessage({
             message: 'New Concern Added',
             onOk: () => {
-              onClose(true);
+              onClose(
+                true,
+                selectedPersonnel?.name ??
+                  selectedAvailablePersonnel?.name ??
+                  ''
+              );
             },
           });
         })
@@ -193,7 +199,12 @@ export default function ManageConcern({
           setMessage({
             message: 'Concern Updated',
             onOk: () => {
-              onClose(true);
+              onClose(
+                true,
+                selectedPersonnel?.name ??
+                  selectedAvailablePersonnel?.name ??
+                  ''
+              );
             },
           });
         })
@@ -252,8 +263,12 @@ export default function ManageConcern({
 
   return (
     <Modal
-      onClose={() => onClose(false)}
-      title={(concern?.id ?? 0) > 0 ? 'Update Concern' : 'New Concern'}
+      onClose={() => onClose(false, '')}
+      title={
+        (concern?.id ?? 0) > 0
+          ? `Update Concern ${concern.number}`
+          : 'New Concern'
+      }
       className='management-modal'>
       <div className='concern-management-modal-body modal-content-body concern-management'>
         <div>

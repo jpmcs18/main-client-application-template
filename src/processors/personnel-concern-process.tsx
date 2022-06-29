@@ -6,9 +6,10 @@ import { httpGet, httpPost } from './base';
 export async function getDirectConcerns(
   isResolve: boolean,
   isForwarded: boolean,
+  isPending: boolean,
   page: number
 ): Promise<SearchResult<PersonnelConcern> | undefined> {
-  let params = `?isResolved=${isResolve}&isForwarded=${isForwarded}&page=${page}`;
+  let params = `?isResolved=${isResolve}&isForwarded=${isForwarded}&isPending=${isPending}&page=${page}`;
   return httpGet<SearchResult<PersonnelConcern>>(
     `${PersonnelConcernEnd.GetList}${params}`
   );

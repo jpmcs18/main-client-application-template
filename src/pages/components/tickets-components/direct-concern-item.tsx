@@ -10,15 +10,23 @@ export default function DirectConcernItem({
 }) {
   const action = useContext(DirectConcernActions);
   return (
-    <tr>
+    <tr
+      title={
+        concern?.action
+          ? (concern?.statusId ?? 0) === PersonnelConcernStatus.Resolved
+            ? `Action Taken: ${concern.action}`
+            : `Reason: ${concern.action}`
+          : undefined
+      }>
       <td>
         {concern.receivedDate &&
           new Date(concern.receivedDate).toLocaleString()}
       </td>
+      <td>{concern.concern.number}</td>
       <td>
-        <div className='elipsis'>{concern.concern.description}</div>
+        <div>{concern.concern.description}</div>
         {concern.prevPersonnelConcernId && (
-          <div className='elipsis'>
+          <div>
             <span>Forward Reason: </span>
             {concern.prevPersonnelConcern?.action}
           </div>
@@ -28,16 +36,15 @@ export default function DirectConcernItem({
       <td>{concern.concern.office?.description}</td>
       <td>{concern.concern.caller}</td>
       <td>
-        {concern.status}
-        {concern.closedDate && (
-          <span> ({new Date(concern.closedDate).toLocaleString()})</span>
-        )}
-        {concern.forwardDate && (
-          <span> ({new Date(concern.forwardDate).toLocaleString()})</span>
-        )}
-        {concern.statusId !== PersonnelConcernStatus.Pending && (
-          <div className='elipsis'>{concern?.action}</div>
-        )}
+        <div>{concern.status}</div>
+        <div>
+          {concern.closedDate && (
+            <span> ({new Date(concern.closedDate).toLocaleString()})</span>
+          )}
+          {concern.forwardDate && (
+            <span> ({new Date(concern.forwardDate).toLocaleString()})</span>
+          )}
+        </div>
       </td>
       <td className='table-actions'>
         {concern.statusId === PersonnelConcernStatus.Pending && (

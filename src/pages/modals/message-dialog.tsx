@@ -40,10 +40,12 @@ export default function MessageDialog() {
             Message?.action === 'OKCANCEL') && <span>OK</span>}
           {Message?.action === 'YESNO' && <span>YES</span>}
         </button>
-        <button onClick={handleClose} className='btn-modal btn-secondary '>
-          {Message?.action === 'OKCANCEL' && <span>CANCEL</span>}
-          {Message?.action === 'YESNO' && <span>NO</span>}
-        </button>
+        {Message?.action && (
+          <button onClick={handleClose} className='btn-modal btn-secondary '>
+            {Message?.action === 'OKCANCEL' && <span>CANCEL</span>}
+            {Message?.action === 'YESNO' && <span>NO</span>}
+          </button>
+        )}
       </div>
     </Modal>
   );

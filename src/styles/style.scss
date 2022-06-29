@@ -12,16 +12,19 @@
   --primary-color-accent: white;
   --primary-table-alternating: rgba(226, 195, 195, 0.281);
   --table-hover-color: #f5f1f1;
-  --normal-font-size: 1rem;
-  --label-size: 0.7rem;
-  --header-font-size: 1.2rem;
-  --login-header-font-size: 1.5rem;
-  --menu-font-size: 1.2rem;
+  --normal-font-size: 0.9rem;
+  --label-size: 0.6rem;
+  --header-font-size: 1.1rem;
+  --table-header-font-size: 1rem;
+  --login-header-font-size: 1.6rem;
+  --menu-font-size: 1.1rem;
+  --loading-font-size: 1.5rem;
   --normal: 100;
   --light: 300;
   --regular: 400;
   --demibold: 700;
   --bold: 900;
+  --shadow: 0em 0em 0.5em 0em #ccc;
 }
 /* width */
 ::-webkit-scrollbar {
@@ -49,31 +52,36 @@ body {
   font-family: 'Roboto', sans-serif;
   background: #f2f2f2;
   overflow-x: hidden;
+  font-size: var(--normal-font-size);
 }
 header {
   background: var(--primary-color);
   position: sticky;
   top: 0;
   z-index: 3;
-  padding: 0.5em 0em;
+  box-shadow: 0em 0.3em 0.3em 0.2em #ccc;
+  margin-bottom: 2em;
   nav {
     margin: 0 auto;
     width: 80%;
     display: flex;
     align-items: center;
+    box-sizing: border-box;
     justify-content: space-between;
-    .menu-with-icon {
+    padding: 1em 0;
+    .menu-container {
       display: flex;
       align-items: center;
-      gap: 1em;
-      .icon {
-        font-size: var(--menu-font-size);
-        font-weight: var(--bold);
-        text-decoration: none;
-        width: 5em;
-        text-align: center;
-        color: var(--primary-color-accent);
-      }
+      gap: 2em;
+    }
+    .nav-icon {
+      font-size: var(--menu-font-size);
+      font-weight: var(--bold);
+      text-decoration: none;
+      text-align: center;
+      width: min-content;
+      cursor: pointer;
+      color: var(--primary-color-accent);
     }
 
     .nav-menu {
@@ -90,6 +98,8 @@ header {
       height: unset;
       padding: 1em 0em;
       width: 100%;
+      background-color: var(--primary-color);
+      justify-content: center;
       z-index: 99;
       transform: scale(1);
       transition: opacity ease-in-out 0.3s;
@@ -97,14 +107,11 @@ header {
 
     .menus {
       display: flex;
-      width: 100%;
       transform: scale(0);
       overflow: hidden;
       position: fixed;
       z-index: -1;
-      background-color: var(--primary-color);
       left: 0;
-      justify-content: center;
       opacity: 0;
       gap: 2em;
       .menu-items {
@@ -128,36 +135,29 @@ header {
         }
       }
     }
-    ul {
-      display: flex;
-      gap: 2em;
-      li {
-        list-style: none;
-        a,
-        label {
-          font-size: var(--label-size);
-          text-align: center;
-          text-decoration: none;
-          display: block;
-          cursor: pointer;
-        }
+    a,
+    label {
+      font-size: var(--label-size);
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+    }
 
-        button {
-          font-size: var(--normal-font-size);
-          text-align: center;
-          text-decoration: none;
-          background-color: var(--primary-color);
-          cursor: pointer;
-          border: none;
-          outline: none;
-        }
+    button {
+      font-size: var(--normal-font-size);
+      text-align: center;
+      text-decoration: none;
+      background-color: var(--primary-color);
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
 
-        .active {
-          font-weight: var(--bold);
-          pointer-events: none;
-          color: var(--primary-color-accent);
-        }
-      }
+    .active {
+      font-weight: var(--bold);
+      pointer-events: none;
+      color: var(--primary-color-accent);
     }
   }
 }
@@ -182,7 +182,7 @@ textarea {
 select,
 textarea,
 input {
-  font-size: var(--normal-font-size);
+  font-size: var(--normal-font-size) !important;
 }
 
 .login-container {
@@ -207,20 +207,18 @@ input {
     h1 {
       font-size: var(--login-header-font-size);
       letter-spacing: 1.5px;
+      font-weight: var(--bold);
       color: var(--primary-color);
     }
   }
 
   .login-content {
-    margin: 1.3em 1em;
+    margin: 1.5em;
     gap: 0.5em;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     .btn {
-      width: 20em;
-      align-self: center;
-      margin-top: 2em;
+      margin: 2em 0.2em 0.2em 0.2em;
     }
   }
 }
@@ -231,7 +229,6 @@ input {
   padding: 0.7em 2em;
   min-width: 5em;
   cursor: pointer;
-  background: white;
   color: var(--primary-color-accent);
   font-weight: var(--demibold);
   border: none;
@@ -478,7 +475,7 @@ input {
     label {
       position: relative;
       color: var(--primary-color);
-      font-size: 1.3em;
+      font-size: var(--loading-font-size);
       font-weight: var(--bold);
       z-index: 9999999;
       transition: transform 350ms ease-in-out;
@@ -528,7 +525,7 @@ input {
   display: flex;
   padding: 0.2em 0.5em;
   margin: 0.8em 0.3em;
-  box-shadow: 0em 0em 0.2em 0.01em #ccc;
+  box-shadow: var(--shadow);
   border-radius: 5em;
   input {
     flex-grow: 1;
@@ -546,7 +543,6 @@ input {
   display: flex;
   font-size: var(--normal-font-size);
   margin: 1em;
-
   svg {
     height: 15px !important;
     width: 15px !important;
@@ -723,10 +719,6 @@ input {
   }
 }
 
-.div-container {
-  box-shadow: 0px 0px 5px 0px #ccc;
-}
-
 .main-item-container {
   display: flex;
   align-content: stretch;
@@ -742,6 +734,7 @@ input {
   box-sizing: border-box;
   position: relative;
   margin: 0.5em;
+  box-shadow: var(--shadow);
   .deleted {
     text-decoration: line-through;
     color: gray !important;
@@ -759,12 +752,14 @@ input {
         .btn {
           width: 100%;
           box-shadow: none;
-          background-color: unset;
+          background-color: var(--primary-color-accent);
+          color: var(--primary-color);
           height: 100%;
           margin: 0 !important;
           font-weight: var(--demibold);
+          border-radius: 0em 0em 0.3em 0.3em;
           &:hover {
-            background-color: var(--primary-color2);
+            background-color: var(--primary-color);
             color: var(--primary-color-accent);
           }
         }
@@ -774,6 +769,7 @@ input {
       font-size: var(--normal-font-size);
       text-align: left;
       height: 2.5em !important;
+      padding: 0.2em 0.4em;
     }
   }
   .app-badge {
@@ -785,25 +781,6 @@ input {
     font-weight: var(--bold);
     display: inline-flex;
     opacity: 0.8;
-  }
-  th,
-  td {
-    height: 4em;
-    padding: 0 0.4em;
-  }
-  td {
-    font-size: var(--normal-font-size);
-  }
-
-  .elipsis {
-    max-width: 25em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    &:hover {
-      overflow: unset;
-      white-space: unset;
-    }
   }
 
   tbody tr {
@@ -819,6 +796,10 @@ input {
       width: unset;
       opacity: 1;
     }
+    td {
+      padding: 0.2em 0.4em;
+      height: 4em !important;
+    }
   }
 
   .table-actions {
@@ -830,26 +811,11 @@ input {
     width: 0;
     align-items: center;
     justify-content: center;
+    align-self: center;
     gap: 0.3em;
-    .table-icon-button {
-      cursor: pointer;
-      font-size: var(--normal-font-size);
-      box-sizing: border-box;
-      height: 2em;
-      width: 2em;
-      padding: 0.3em;
-
-      &:hover {
-        transform: scale(1.2);
-      }
-    }
     .btn {
       margin: 0 !important;
       min-width: none !important;
-    }
-    .action-icon {
-      color: var(--primary-color);
-      margin: 0.3em;
     }
   }
 }
@@ -893,6 +859,7 @@ input {
 tbody tr {
   cursor: pointer;
 }
+
 .load-more {
   cursor: pointer;
   &:hover {
@@ -916,9 +883,6 @@ tbody tr {
   left: 0;
   right: 0;
   bottom: 0;
-  .close-icon {
-    cursor: pointer;
-  }
   .search-modal {
     width: 70%;
   }
@@ -939,11 +903,18 @@ tbody tr {
       padding: 1em;
       display: flex;
       justify-content: space-between;
-      box-shadow: 0em 0em 0.2em 0em #ccc;
+      box-shadow: 0em 0.2em 0.2em 0em #ccc;
       .header-text {
         font-size: var(--header-font-size);
         text-transform: capitalize;
         font-weight: var(--demibold);
+        color: var(--primary-color);
+      }
+      .close-icon {
+        cursor: pointer;
+        color: var(--primary-color);
+        height: 1.5em !important;
+        width: 1.5em !important;
       }
     }
     .user-management-modal-body {
@@ -1095,7 +1066,6 @@ tbody tr {
     }
   }
 }
-
 .voter-count-container {
   display: flex;
   justify-content: center;
@@ -1107,72 +1077,6 @@ tbody tr {
     box-shadow: 0em 0em 0.3em 0em var(--primary-color);
   }
 }
-.report-filter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  height: 6.3em;
-  * {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none;
-  }
-  .btn-container {
-    margin: 0 0.5em;
-    width: 24%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .check {
-      justify-content: unset !important;
-    }
-  }
-
-  .checked-control-container {
-    border-radius: 0.2em;
-    height: 3em;
-    width: 24%;
-    margin: 0.2em 0em 0em 0.5em;
-    cursor: pointer;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    position: relative;
-    padding: 0.3em;
-    span {
-      margin: 1em;
-    }
-    .custom-input {
-      margin: 0;
-    }
-    &:before {
-      content: '';
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba($color: #ccc, $alpha: 0.5);
-    }
-  }
-
-  .checked {
-    box-shadow: 0em 0em 0.2em 0em var(--primary-color);
-    &:before {
-      content: none;
-    }
-  }
-}
-
-.base-container {
-  max-height: 78vh;
-  overflow: auto;
-}
-
 thead {
   position: sticky;
   top: 0.5em;
@@ -1319,5 +1223,36 @@ thead {
     --header-font-size: 1rem;
     --login-header-font-size: 1.3rem;
     --menu-font-size: 1rem;
+  }
+  nav,
+  section {
+    width: 85%;
+  }
+
+  .search-modal {
+    width: 90%;
+  }
+  .management-modal {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  :root {
+    --normal-font-size: 0.6rem;
+    --label-size: 0.6rem;
+    --header-font-size: 0.8rem;
+    --login-header-font-size: 1.2rem;
+    --menu-font-size: 0.8rem;
+  }
+  nav,
+  section {
+    width: 100%;
+  }
+  .menu-container {
+    gap: 1em !important;
+  }
+  .modal-content {
+    width: 80%;
   }
 }

@@ -23,7 +23,7 @@ const UpdateUserProfileContext = React.createContext<
   (args: Profile | undefined) => void
 >(() => {});
 export interface Message {
-  message: string;
+  message: any;
   type?: MESSAGETYPE | undefined;
   action?: MESSAGEACTION | undefined;
   onOk?: () => void;

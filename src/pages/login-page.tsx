@@ -71,7 +71,7 @@ export default function LoginPage() {
     <section>
       <div className='login-container'>
         <div className='login-header'>
-          <h1>Users Authentication</h1>
+          <h1>User Authentication</h1>
         </div>
         <div className='login-content'>
           <CustomTextBox

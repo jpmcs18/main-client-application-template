@@ -20,7 +20,7 @@ export default function AssignConcern({
   concern,
 }: {
   title?: string;
-  onClose: (hasChanges: boolean) => void;
+  onClose: (hasChanges: boolean, personnel: string) => void;
   concern: Concern | undefined;
 }) {
   const [personnelItem, setPersonnelItem] = useState<DropdownItem[]>([]);
@@ -126,7 +126,12 @@ export default function AssignConcern({
           setMessage({
             message: 'Success',
             onOk: () => {
-              onClose(true);
+              onClose(
+                true,
+                selectedPersonnel?.name ??
+                  selectedAvailablePersonnel?.name ??
+                  ''
+              );
             },
           });
       })
@@ -136,7 +141,7 @@ export default function AssignConcern({
       .finally(() => setBusy(false));
   }
   return (
-    <Modal onClose={() => onClose(false)} title={title ?? 'Assign Concern'}>
+    <Modal onClose={() => onClose(false, '')} title={title ?? 'Assign Concern'}>
       <div className='concern-management-modal-body modal-content-body'>
         <div>
           <CustomDropdown

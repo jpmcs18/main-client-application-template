@@ -9,12 +9,13 @@ export default function ConcernItems() {
     <table className='item-table'>
       <thead>
         <tr>
-          <th style={{ width: '10%' }}>Time Entry</th>
+          <th style={{ width: '8%' }}>Time Entry</th>
+          <th style={{ width: '10%' }}>Ticket Number</th>
           <th>Description</th>
           <th style={{ width: '10%' }}>Classification</th>
           <th style={{ width: '20%' }}>Concern Office</th>
           <th style={{ width: '15%' }}>Caller</th>
-          <th style={{ width: '5%' }}>Status</th>
+          <th style={{ width: '8%' }}>Status</th>
         </tr>
         <tr>
           <th colSpan={10}>

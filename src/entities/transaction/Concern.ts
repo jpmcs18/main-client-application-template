@@ -4,6 +4,7 @@ import { Personnel } from './Personnel';
 
 export interface Concern {
   id: number;
+  number: string;
   description: string;
   entryDate?: Date | undefined;
   closedDate?: Date | undefined;

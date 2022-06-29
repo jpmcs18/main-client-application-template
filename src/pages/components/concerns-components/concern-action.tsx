@@ -20,6 +20,9 @@ export default function ConcernAction({
             new Date(action.receivedDate).toLocaleString()}
           )
         </span>
+        <span>
+          {action.prevPersonnelConcernId ? '' : ` By ${action.creator}`}
+        </span>
       </div>
       <div>{action.personnel?.name}</div>
       <div>Status</div>
