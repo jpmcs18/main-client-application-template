@@ -101,6 +101,21 @@ export default function ManagePersonnel({
   }
   function onChange({ value, elementName }: CustomReturn) {
     if (elementName === 'classification') {
+      if (value === '0') {
+        setPersonnel((prev) => {
+          if (prev === undefined)
+            return {
+              classification: undefined,
+              classificationId: undefined,
+            } as Personnel;
+          return {
+            ...prev,
+            classification: undefined,
+            classificationId: undefined,
+          };
+        });
+        return;
+      }
       let classification = classifications.filter((x) => x.id === +value)?.[0];
       setPersonnel((prev) => {
         if (prev === undefined)

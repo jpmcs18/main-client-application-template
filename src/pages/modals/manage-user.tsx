@@ -35,6 +35,7 @@ export default function ManageUser({
         name: '',
         active: false,
         admin: false,
+        userRoles: undefined,
         personnel: undefined,
         personnelId: undefined,
       }
@@ -125,6 +126,9 @@ export default function ManageUser({
   }
   function onChange({ elementName, value }: CustomReturn) {
     if (elementName === 'role') {
+      if (value === '0') {
+        return;
+      }
       let role = roles.filter((x) => x.id === +value)?.[0];
       setUserRoles((r) => [
         ...r,
@@ -133,9 +137,20 @@ export default function ManageUser({
       setRoleItems((r) => r.filter((x) => x.key !== value));
     }
     if (elementName === 'personnel') {
+      if (value === '0') {
+        setUser((prev) => {
+          return { ...prev, personnel: undefined, personnelId: undefined };
+        });
+        return;
+      }
       let personnel = personnels.filter((x) => x.id === +value)?.[0];
       setUser((prev) => {
-        return { ...prev, personnel: personnel, personnelId: personnel.id };
+        return {
+          ...prev,
+          personnel: personnel,
+          personnelId: personnel.id,
+          name: personnel.name,
+        };
       });
       return;
     }

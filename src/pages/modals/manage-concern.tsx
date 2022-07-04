@@ -217,11 +217,20 @@ export default function ManageConcern({
 
   async function onChange({ elementName, value }: CustomReturn) {
     if (elementName === 'personnel') {
+      if (value === '0') {
+        setSelectedPersonnel(undefined);
+        return;
+      }
+
       setSelectedPersonnel(personnels.filter((x) => x.id === +value)?.[0]);
       setSelectedAvailablePersonnel(undefined);
       return;
     }
     if (elementName === 'available-personnel') {
+      if (value === '0') {
+        setSelectedAvailablePersonnel(undefined);
+        return;
+      }
       setSelectedAvailablePersonnel(
         personnels.filter((x) => x.id === +value)?.[0]
       );
@@ -229,6 +238,14 @@ export default function ManageConcern({
       return;
     }
     if (elementName === 'office') {
+      if (value === '0') {
+        setConcern((prev) => {
+          if (prev === undefined)
+            return { office: undefined, officeId: undefined } as Concern;
+          return { ...prev, office: undefined, officeId: undefined };
+        });
+        return;
+      }
       let office = offices.filter((x) => x.id === +value)?.[0];
       setConcern((prev) => {
         if (prev === undefined)
@@ -238,6 +255,22 @@ export default function ManageConcern({
       return;
     }
     if (elementName === 'classification') {
+      if (value === '0') {
+        setConcern((prev) => {
+          if (prev === undefined)
+            return {
+              classification: undefined,
+              classificationId: undefined,
+            } as Concern;
+          return {
+            ...prev,
+            classification: undefined,
+            classificationId: undefined,
+          };
+        });
+        setAvailabelPersonnelItem([]);
+        return;
+      }
       let classification = classifications.filter((x) => x.id === +value)?.[0];
       setConcern((prev) => {
         if (prev === undefined)

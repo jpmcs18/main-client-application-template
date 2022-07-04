@@ -7,9 +7,9 @@ export interface User {
   name: string;
   active: boolean;
   admin: boolean;
-  personnel?: Personnel | undefined;
-  personnelId?: number | undefined;
-  userRoles?: UserRole[] | undefined;
+  personnel: Personnel | undefined;
+  personnelId: number | undefined;
+  userRoles: UserRole[] | undefined;
 }
 
 export interface UserRole {

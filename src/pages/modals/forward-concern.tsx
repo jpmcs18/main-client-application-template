@@ -106,11 +106,19 @@ export default function ForwardConcern({
   }
   function onChange({ elementName, value }: CustomReturn) {
     if (elementName === 'personnel') {
+      if (value === '0') {
+        setSelectedPersonnel(undefined);
+        return;
+      }
       setSelectedPersonnel(personnels.filter((x) => x.id === +value)?.[0]);
       setSelectedAvailablePersonnel(undefined);
       return;
     }
     if (elementName === 'available-personnel') {
+      if (value === '0') {
+        setSelectedAvailablePersonnel(undefined);
+        return;
+      }
       setSelectedAvailablePersonnel(
         personnels.filter((x) => x.id === +value)?.[0]
       );

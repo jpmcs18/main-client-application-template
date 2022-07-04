@@ -2,9 +2,9 @@ export const Routes = {
   Home: '/',
   User: '/users',
   Role: '/roles',
-  Office: '/office',
-  Personnel: '/personnel',
-  Classification: '/classification',
+  Office: '/offices',
+  Personnel: '/personnels',
+  Classification: '/classifications',
   Concern: '/concerns',
   Ticket: '/tickets',
 };

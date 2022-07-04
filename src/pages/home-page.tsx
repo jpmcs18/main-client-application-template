@@ -47,7 +47,7 @@ export default function HomePage() {
               ],
             },
             {
-              head: 'Managements',
+              head: 'Maintenances',
               navs: [
                 {
                   route: Routes.User,
@@ -84,10 +84,10 @@ export default function HomePage() {
               ],
             },
             {
-              head: 'Managements',
+              head: 'Maintenances',
               navs: [
                 ...(profile?.distinctModules
-                  ?.filter((x) => x.header === 'Management')
+                  ?.filter((x) => x.header === 'Maintenance')
                   .map((x) => {
                     return { route: x.route, name: x.description };
                   }) ?? []),
