@@ -41,9 +41,6 @@ export default function DirectConcernItem({
           {concern.closedDate && (
             <span> ({new Date(concern.closedDate).toLocaleString()})</span>
           )}
-          {concern.forwardDate && (
-            <span> ({new Date(concern.forwardDate).toLocaleString()})</span>
-          )}
         </div>
       </td>
       <td className='table-actions'>

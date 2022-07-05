@@ -109,6 +109,11 @@ export default function RolePage() {
   return (
     <>
       <section>
+        <div className='header'>
+          <div className='header-text'>Roles</div>
+        </div>
+      </section>
+      <section>
         <SeachBar search={search} />
       </section>
       <section>

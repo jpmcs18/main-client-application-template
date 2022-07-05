@@ -31,9 +31,6 @@ export default function ConcernAction({
         {action.closedDate && (
           <span> ({new Date(action.closedDate).toLocaleString()})</span>
         )}
-        {action.forwardDate && (
-          <span> ({new Date(action.forwardDate).toLocaleString()})</span>
-        )}
       </div>
       {action.statusId !== PersonnelConcernStatus.Pending && (
         <>

@@ -63,10 +63,11 @@ header {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
+  padding: 0em 1em;
   z-index: 3;
   -webkit-box-shadow: 0em 0.3em 0.3em 0.2em #ccc;
           box-shadow: 0em 0.3em 0.3em 0.2em #ccc;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 header nav {
@@ -903,6 +904,163 @@ input {
   margin: 0.2em 0.1em;
 }
 
+.date-action {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1em;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.date-action svg {
+  cursor: pointer;
+}
+
+.date-action .stop {
+  color: #ccc;
+}
+
+.date-action .month-year {
+  width: 15em;
+  padding: 0.5em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-shadow: inset 0em 0em 0.2em 0em #ccc;
+          box-shadow: inset 0em 0em 0.2em 0em #ccc;
+}
+
+.date-action .month-year div {
+  font-weight: var(--demibold);
+  font-size: var(--header-font-size);
+  padding: 0.4em;
+  margin: 0 !important;
+}
+
+.header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0.5em;
+}
+
+.header .header-text {
+  position: relative;
+  font-size: var(--header-font-size);
+  font-weight: var(--demibold);
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.header .header-text:before {
+  content: '';
+  position: absolute;
+  width: 80%;
+  height: 0;
+  border-bottom: 1px solid var(--primary-color);
+  bottom: -0.3em;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.calendar {
+  margin-bottom: 1em;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: 5em;
+  -ms-grid-columns: (auto)[7];
+      grid-template: 5em/repeat(7, auto);
+  gap: 0.3em;
+}
+
+.calendar .date {
+  padding: 0.4em;
+  height: 10em;
+  position: relative;
+  cursor: pointer;
+}
+
+.calendar .date .remarks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.calendar .current-month {
+  -webkit-box-shadow: 0em 0em 0.2em 0em var(--primary-color);
+          box-shadow: 0em 0em 0.2em 0em var(--primary-color);
+}
+
+.calendar .has-data {
+  cursor: pointer;
+}
+
+.calendar .has-data:hover {
+  -webkit-box-shadow: 0em 0em 0.5em 0em var(--primary-color);
+          box-shadow: 0em 0em 0.5em 0em var(--primary-color);
+}
+
+.calendar .current {
+  background-color: white;
+}
+
+.calendar .current .day {
+  font-size: var(--header-font-size);
+  font-weight: var(--bold);
+}
+
+.calendar .non {
+  -webkit-box-shadow: 0em 0em 0.2em 0em #ccc;
+          box-shadow: 0em 0em 0.2em 0em #ccc;
+}
+
+.calendar .non .day {
+  color: #aaa;
+}
+
+.calendar .day-header {
+  font-size: var(--header-font-size);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-weight: var(--bold);
+}
+
 .item-table {
   width: calc(100% - 1.1em);
   border-collapse: collapse;
@@ -1097,6 +1255,10 @@ tbody tr {
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+.modal-container .concern-detail {
+  width: 60%;
 }
 
 .modal-container .search-modal {
@@ -1535,13 +1697,13 @@ thead {
           box-shadow: 0em 0em 0.2em 0em var(--primary-color);
 }
 
-.concern-action div:nth-child(odd) {
+.concern-action > div:nth-child(odd) {
   font-weight: var(--demibold);
   font-size: var(--label-size);
   text-transform: capitalize;
 }
 
-.concern-action div:nth-child(even) {
+.concern-action > div:nth-child(even) {
   margin: 0.5em;
 }
 
@@ -1565,10 +1727,10 @@ thead {
   }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
   :root {
     --normal-font-size: 0.6rem;
-    --label-size: 0.6rem;
+    --label-size: 0.5rem;
     --header-font-size: 0.8rem;
     --login-header-font-size: 1.2rem;
     --menu-font-size: 0.8rem;
@@ -1582,6 +1744,44 @@ thead {
   }
   .modal-content {
     width: 80%;
+  }
+  .concern-detail {
+    width: 80%;
+  }
+  .calendar .date {
+    height: 7em;
+  }
+  .calendar .date .remarks {
+    font-size: var(--normal-font-size);
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  :root {
+    --normal-font-size: 0.5rem;
+    --label-size: 0.4rem;
+    --header-font-size: 0.7rem;
+    --login-header-font-size: 1.1rem;
+    --menu-font-size: 0.7rem;
+  }
+  nav,
+  section {
+    width: 100% !important;
+  }
+  .menu-container {
+    gap: 1em !important;
+  }
+  .modal-content {
+    width: 80%;
+  }
+  .concern-detail {
+    width: 80%;
+  }
+  .calendar .date {
+    height: 5em;
+  }
+  .calendar .date .remarks {
+    font-size: var(--normal-font-size);
   }
 }
 /*# sourceMappingURL=style.css.map */

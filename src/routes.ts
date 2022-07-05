@@ -7,4 +7,5 @@ export const Routes = {
   Classification: '/classifications',
   Concern: '/concerns',
   Ticket: '/tickets',
+  Summary: '/summary',
 };

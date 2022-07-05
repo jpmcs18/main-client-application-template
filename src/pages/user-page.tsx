@@ -164,6 +164,11 @@ export default function UserPage() {
   return (
     <>
       <section>
+        <div className='header'>
+          <div className='header-text'>Users</div>
+        </div>
+      </section>
+      <section>
         <SeachBar search={search} />
       </section>
       <section>

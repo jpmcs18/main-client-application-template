@@ -90,6 +90,11 @@ export default function OfficePage() {
   return (
     <>
       <section>
+        <div className='header'>
+          <div className='header-text'>Personnels</div>
+        </div>
+      </section>
+      <section>
         <SeachBar search={search} />
       </section>
       <section>

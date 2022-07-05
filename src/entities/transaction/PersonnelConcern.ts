@@ -12,8 +12,13 @@ export interface PersonnelConcern {
   prevPersonnelConcern: PersonnelConcern | undefined;
   receivedDate: Date | undefined;
   closedDate?: Date | undefined;
-  forwardDate?: Date | undefined;
   statusId?: number | undefined;
   status?: string | undefined;
   creator?: string | undefined;
+}
+
+export interface TicketSummary {
+  date: Date;
+  noOfResolved: number;
+  noOfForwarded: number;
 }

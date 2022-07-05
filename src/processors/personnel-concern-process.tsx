@@ -1,6 +1,9 @@
 import { PersonnelConcernEnd } from '../endpoints';
 import { SearchResult } from '../entities/SearchResult';
-import { PersonnelConcern } from '../entities/transaction/PersonnelConcern';
+import {
+  PersonnelConcern,
+  TicketSummary,
+} from '../entities/transaction/PersonnelConcern';
 import { httpGet, httpPost } from './base';
 
 export async function getDirectConcerns(
@@ -37,4 +40,23 @@ export async function forwardPersonnelConcern(
     personnelId,
     reason,
   });
+}
+
+export async function getTicketSummary(
+  month: number,
+  year: number
+): Promise<TicketSummary[] | undefined> {
+  return httpGet<TicketSummary[]>(
+    `${PersonnelConcernEnd.Summary}?month=${month}&year=${year}`
+  );
+}
+
+export async function getDetailedSummary(
+  year: number,
+  month: number,
+  day: number
+): Promise<PersonnelConcern[] | undefined> {
+  return httpGet<PersonnelConcern[]>(
+    `${PersonnelConcernEnd.DetailedSummary}?year=${year}&month=${month}&day=${day}`
+  );
 }

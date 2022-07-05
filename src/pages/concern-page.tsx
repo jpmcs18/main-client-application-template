@@ -69,25 +69,29 @@ export default function ConcernPage() {
   );
   async function connect() {
     try {
-      var conn = new HubConnectionBuilder()
-        .withUrl(API + Hub.Transaction)
-        .configureLogging(LogLevel.Information)
-        .build();
+      if (connection === undefined) {
+        var conn = new HubConnectionBuilder()
+          .withUrl(API + Hub.Transaction)
+          .configureLogging(LogLevel.Information)
+          .build();
 
-      conn.on('NewConcern', () => {
-        new Notification('New Concern Added');
-        searchConcern({});
-      });
-      conn.on('ResolveConcern', (ticketnumber) => {
-        new Notification(`Ticket ${ticketnumber} Resolved`);
-        searchConcern({});
-      });
-      await conn.start();
-      if (conn.state === HubConnectionState.Connected) {
-        await conn.invoke('JoinConcernCreators');
-        console.log(conn.state);
+        conn.on('NewConcern', () => {
+          new Notification('New Concern Added');
+          searchConcern({});
+        });
+        conn.on('ResolveConcern', (ticketnumber) => {
+          new Notification(`Ticket ${ticketnumber} Resolved`);
+          searchConcern({});
+        });
+        await conn.start();
+        if (conn.state === HubConnectionState.Connected) {
+          await conn.invoke('JoinConcernCreators');
+          console.log(conn.state);
+        }
+        setConnection(conn);
+      } else {
+        await reconnect();
       }
-      setConnection(conn);
     } catch (ex) {
       setMessage({ message: ex });
     }
@@ -186,6 +190,11 @@ export default function ConcernPage() {
   }
   return (
     <>
+      <section>
+        <div className='header'>
+          <div className='header-text'>Concerns</div>
+        </div>
+      </section>
       <section>
         <SeachBar search={search} />
       </section>

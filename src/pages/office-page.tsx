@@ -86,6 +86,11 @@ export default function OfficePage() {
   return (
     <>
       <section>
+        <div className='header'>
+          <div className='header-text'>Offices</div>
+        </div>
+      </section>
+      <section>
         <SeachBar search={search} />
       </section>
       <section>

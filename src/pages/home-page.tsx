@@ -19,6 +19,7 @@ import ClassificationPage from './classification-page';
 import PersonnelPage from './personnel-page';
 import OfficePage from './office-page';
 import Dashboard from './dashboard';
+import SummaryPage from './summary-page';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -43,6 +44,10 @@ export default function HomePage() {
                 {
                   route: Routes.Ticket,
                   name: 'Tickets',
+                },
+                {
+                  route: Routes.Summary,
+                  name: 'Summary',
                 },
               ],
             },
@@ -119,11 +124,15 @@ export default function HomePage() {
                 <NavLink to={Routes.Home} exact className='nav-icon'>
                   {ICON}
                 </NavLink>
-                {(profile?.distinctModules?.length ?? 0) < 3 &&
+                {(profile?.distinctModules?.length ?? 0) <= 3 &&
                 (profile?.distinctModules?.length ?? 0) > 0 ? (
                   <>
                     {profile?.distinctModules?.map((x) => (
-                      <NavLink to={x.route ?? ''} exact className='nav-menu'>
+                      <NavLink
+                        to={x.route ?? ''}
+                        exact
+                        className='nav-menu'
+                        key={x.accessId}>
                         {x.description}
                       </NavLink>
                     ))}
@@ -214,6 +223,12 @@ export default function HomePage() {
             )?.[0]?.id ||
               profile?.admin) && (
               <Route path={Routes.Office} exact component={OfficePage} />
+            )}
+            {(profile?.distinctModules?.filter(
+              (x) => x.route === Routes.Summary
+            )?.[0]?.id ||
+              profile?.admin) && (
+              <Route path={Routes.Summary} exact component={SummaryPage} />
             )}
           </Switch>
           <div>

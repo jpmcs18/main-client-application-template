@@ -58,24 +58,28 @@ export default function TicketPage() {
   );
   async function connect() {
     try {
-      var conn = new HubConnectionBuilder()
-        .withUrl(API + Hub.Transaction)
-        .build();
+      if (connection === undefined) {
+        var conn = new HubConnectionBuilder()
+          .withUrl(API + Hub.Transaction)
+          .build();
 
-      conn.on('NewTicket', () => {
-        new Notification('New Ticket Assigned');
-        fetchDirectConcern({});
-      });
+        conn.on('NewTicket', () => {
+          new Notification('New Ticket Assigned');
+          fetchDirectConcern({});
+        });
 
-      conn.on('ForwardTicket', (personnel) => {
-        new Notification(`New Ticket Forwarded by ${personnel}`);
-        fetchDirectConcern({});
-      });
+        conn.on('ForwardTicket', (personnel) => {
+          new Notification(`New Ticket Forwarded by ${personnel}`);
+          fetchDirectConcern({});
+        });
 
-      await conn.start();
-      if (conn.state === HubConnectionState.Connected)
-        await conn.invoke('JoinTicket', profile?.personnel?.name);
-      setConnection(conn);
+        await conn.start();
+        if (conn.state === HubConnectionState.Connected)
+          await conn.invoke('JoinTicket', profile?.personnel?.name);
+        setConnection(conn);
+      } else {
+        await reconnect();
+      }
     } catch (ex) {
       setMessage({ message: ex });
     }
@@ -167,6 +171,11 @@ export default function TicketPage() {
   }
   return (
     <>
+      <section>
+        <div className='header'>
+          <div className='header-text'>Tickets</div>
+        </div>
+      </section>
       <section className='head-content'>
         <div className='checkbox-container'>
           <CustomCheckBox

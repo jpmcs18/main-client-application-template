@@ -63,6 +63,8 @@ export const PersonnelConcernEnd = {
   GetActions: 'personnel-concerns/actions',
   Resolve: 'personnel-concerns/resolve',
   Forward: 'personnel-concerns/forward',
+  Summary: 'personnel-concerns/summary',
+  DetailedSummary: 'personnel-concerns/detailed-summary',
 };
 
 export const Hub = {

@@ -90,6 +90,11 @@ export default function ClassificationPage() {
   return (
     <>
       <section>
+        <div className='header'>
+          <div className='header-text'>Classifications</div>
+        </div>
+      </section>
+      <section>
         <SeachBar search={search} />
       </section>
       <Pagination
