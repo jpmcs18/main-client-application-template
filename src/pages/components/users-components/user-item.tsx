@@ -16,7 +16,7 @@ export default function UserItem({
       <td className='elipsis'>
         {user.admin ? 'Admin' : 'User'}
         {(user.userRoles?.length ?? 0) > 0 && ' | '}
-        {user.userRoles?.map((x) => x.role.description).join(' | ')}
+        {user.userRoles?.map((x) => x.role?.description).join(' | ')}
       </td>
       <td>{user.active ? 'Active' : 'Inactive'}</td>
       <td className='table-actions'>

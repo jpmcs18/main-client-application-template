@@ -4,7 +4,6 @@ import {
   useSetMessage,
   useUserProfile,
 } from '../../custom-hooks/authorize-provider';
-import { Personnel } from '../../entities/transaction/Personnel';
 import { PersonnelConcern } from '../../entities/transaction/PersonnelConcern';
 import { forwardPersonnelConcern } from '../../processors/personnel-concern-process';
 import {
@@ -28,12 +27,14 @@ export default function ForwardConcern({
   const [availabelPersonnelItem, setAvailabelPersonnelItem] = useState<
     DropdownItem[]
   >([]);
-  const [personnels, setPersonnels] = useState<Personnel[]>([]);
   const [selectedPersonnel, setSelectedPersonnel] = useState<
-    Personnel | undefined
+    number | undefined
   >();
   const [selectedAvailablePersonnel, setSelectedAvailablePersonnel] = useState<
-    Personnel | undefined
+    number | undefined
+  >();
+  const [selectedPersonnelName, setSelectedPersonnelName] = useState<
+    string | undefined
   >();
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
@@ -54,12 +55,7 @@ export default function ForwardConcern({
     await getPersonnels()
       .then((res) => {
         if (res !== undefined) {
-          setPersonnels(res);
           setPersonnelItem([
-            {
-              key: '',
-              value: '',
-            },
             ...res
               .filter((x) => x.id !== profile?.personnel?.id)
               .map((x) => {
@@ -104,24 +100,16 @@ export default function ForwardConcern({
       })
       .finally(() => setBusy(false));
   }
-  function onChange({ elementName, value }: CustomReturn) {
+
+  function onChange({ elementName, value, text }: CustomReturn) {
+    setSelectedPersonnelName(text);
     if (elementName === 'personnel') {
-      if (value === '0') {
-        setSelectedPersonnel(undefined);
-        return;
-      }
-      setSelectedPersonnel(personnels.filter((x) => x.id === +value)?.[0]);
+      setSelectedPersonnel(+value);
       setSelectedAvailablePersonnel(undefined);
       return;
     }
     if (elementName === 'available-personnel') {
-      if (value === '0') {
-        setSelectedAvailablePersonnel(undefined);
-        return;
-      }
-      setSelectedAvailablePersonnel(
-        personnels.filter((x) => x.id === +value)?.[0]
-      );
+      setSelectedAvailablePersonnel(+value);
       setSelectedPersonnel(undefined);
       return;
     }
@@ -129,13 +117,13 @@ export default function ForwardConcern({
 
   async function saveData() {
     setBusy(true);
-    if ((selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0) === 0) {
+    if ((selectedPersonnel ?? selectedAvailablePersonnel ?? 0) === 0) {
       setMessage({ message: 'Select Personnel' });
       return;
     }
     await forwardPersonnelConcern(
       personnelConcern?.id ?? 0,
-      selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0,
+      selectedPersonnel ?? selectedAvailablePersonnel ?? 0,
       reason
     )
       .then((res) => {
@@ -143,12 +131,7 @@ export default function ForwardConcern({
           setMessage({
             message: 'Success',
             onOk: () => {
-              onClose(
-                true,
-                selectedPersonnel?.name ??
-                  selectedAvailablePersonnel?.name ??
-                  ''
-              );
+              onClose(true, selectedPersonnelName ?? '');
             },
           });
       })
@@ -175,14 +158,16 @@ export default function ForwardConcern({
           <CustomDropdown
             title='Available Personnel'
             name='available-personnel'
-            value={selectedAvailablePersonnel?.name}
+            hasDefault={true}
+            value={selectedAvailablePersonnel}
             onChange={onChange}
             itemsList={availabelPersonnelItem}
           />
           <CustomDropdown
             title='All Personnel'
             name='personnel'
-            value={selectedPersonnel?.name}
+            hasDefault={true}
+            value={selectedPersonnel}
             onChange={onChange}
             itemsList={personnelItem}
           />

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;900&display=swap");
 :root {
   --primary-color: #a00404;
   --primary-color2: #ce3838;
@@ -12,16 +12,16 @@
   --primary-color-accent: white;
   --primary-table-alternating: rgba(226, 195, 195, 0.281);
   --table-hover-color: #f5f1f1;
-  --normal-font-size: 0.9rem;
   --label-size: 0.6rem;
-  --header-font-size: 1.1rem;
-  --table-header-font-size: 1rem;
+  --normal-font-size: 0.8rem;
+  --header-font-size: 1.2rem;
+  --table-header-font-size: 0.9rem;
   --login-header-font-size: 1.6rem;
-  --menu-font-size: 1.1rem;
+  --menu-font-size: 1rem;
   --loading-font-size: 1.5rem;
-  --normal: 100;
-  --light: 300;
-  --regular: 400;
+  --normal: 300;
+  --light: 400;
+  --regular: 500;
   --demibold: 700;
   --bold: 900;
   --shadow: 0em 0em 0.5em 0em #ccc;
@@ -52,10 +52,12 @@
 body {
   margin: 0 !important;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', sans-serif;
   background: #f2f2f2;
   overflow-x: hidden;
+  font-weight: var(--normal);
   font-size: var(--normal-font-size);
+  line-height: 1.2em;
 }
 
 header {
@@ -68,6 +70,9 @@ header {
   -webkit-box-shadow: 0em 0.3em 0.3em 0.2em #ccc;
           box-shadow: 0em 0.3em 0.3em 0.2em #ccc;
   margin-bottom: 1em;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 header nav {
@@ -99,7 +104,7 @@ header nav .menu-container {
 
 header nav .nav-icon {
   font-size: var(--menu-font-size);
-  font-weight: var(--bold);
+  font-weight: var(--demibold);
   text-decoration: none;
   text-align: center;
   width: -webkit-min-content;
@@ -165,7 +170,7 @@ header nav .menus .menu-items {
 header nav .menus .menu-items .head {
   text-align: center;
   font-size: var(--header-font-size);
-  font-weight: var(--bold);
+  font-weight: var(--demibold);
   color: var(--primary-color-accent);
 }
 
@@ -312,16 +317,15 @@ input {
 }
 
 .custom-input {
+  width: 100%;
   padding: 0.3em;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  overflow-y: auto;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 100%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   text-align: left;
@@ -329,7 +333,6 @@ input {
       -ms-flex-pack: justify;
           justify-content: space-between;
   position: relative;
-  overflow-y: hidden;
 }
 
 .custom-input label {
@@ -348,6 +351,7 @@ input {
   border-bottom: 1px solid var(--primary-color);
   text-overflow: ellipsis;
   height: 3em;
+  background-color: unset;
   cursor: pointer;
 }
 
@@ -360,8 +364,8 @@ input {
 }
 
 .custom-input textarea {
-  padding: 0.6em 0.2em;
   width: 100%;
+  padding: 0.6em 0.2em;
 }
 
 .custom-input .input-container {
@@ -405,10 +409,8 @@ input {
   color: var(--primary-color);
   padding: 0.4em;
   cursor: pointer;
-  background: white;
   border-radius: 0.3em;
   padding: 0.6em;
-  font-size: 0.7em;
 }
 
 .custom-input .checkbox:focus {
@@ -430,27 +432,39 @@ input {
 
 .custom-input .datepicker-container {
   position: relative;
-  width: 100%;
-  height: 100%;
+  height: 3em;
+  overflow: visible;
 }
 
 .custom-input .datepicker-container .custom-datepicker {
+  overflow: visible;
   background: none;
   text-decoration: none;
+  border-bottom: 1px solid var(--primary-color) !important;
   cursor: pointer;
-  width: 100%;
   height: 100%;
+  width: 100%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   text-align: left;
-  font-size: 0.7em;
+  position: relative;
+  padding: 0em !important;
+  margin-bottom: 0.9em;
+}
+
+.custom-input .datepicker-container .custom-datepicker .react-calendar,
+.custom-input .datepicker-container .custom-datepicker .react-datetime-picker__calendar {
+  width: unset !important;
+  max-width: unset !important;
+}
+
+.custom-input .datepicker-container .custom-datepicker .react-datetime-picker__calendar,
+.custom-input .datepicker-container .custom-datepicker .react-datetime-picker__clock {
+  z-index: 3;
 }
 
 .custom-input .datepicker-container .custom-datepicker .react-datetime-picker__wrapper {
   border: 0px;
-  padding: 0em !important;
-  border-bottom: 1px solid var(--primary-color) !important;
-  margin-bottom: 0.9em;
 }
 
 .custom-input .datepicker-container .custom-datepicker .react-datetime-picker__clear-button {
@@ -499,7 +513,6 @@ input {
   opacity: 0;
   scrollbar-width: thin;
   border-radius: 0.3em;
-  background-color: white;
   -webkit-box-shadow: 0em 0.2em 0.3em 0em #ccc;
           box-shadow: 0em 0.2em 0.3em 0em #ccc;
   left: 0;
@@ -516,7 +529,6 @@ input {
 }
 
 .custom-input .select-container .selection div {
-  color: black;
   padding: 10px;
   width: 100%;
   -webkit-box-sizing: border-box;
@@ -592,57 +604,116 @@ input {
   display: flex;
 }
 
-.loading-block .loading label {
+.loading-block .loading div {
   position: relative;
-  color: var(--primary-color);
-  font-size: var(--loading-font-size);
-  font-weight: var(--bold);
   z-index: 9999999;
-  -webkit-transition: -webkit-transform 350ms ease-in-out;
-  transition: -webkit-transform 350ms ease-in-out;
-  transition: transform 350ms ease-in-out;
-  transition: transform 350ms ease-in-out, -webkit-transform 350ms ease-in-out;
   cursor: progress;
-  text-transform: uppercase;
+  height: 3em;
+  width: 3em;
+  -webkit-animation: scale 1s infinite alternate;
+          animation: scale 1s infinite alternate;
 }
 
-.loading-block .loading label:before {
+.loading-block .loading div:after {
   content: '';
   position: absolute;
+  top: 1em;
   left: 0;
   bottom: 0;
   right: 0;
-  background: var(--primary-color);
-  height: 0.1em;
-  border-radius: 5em;
-  -webkit-animation: showhide 1.5s alternate infinite;
-          animation: showhide 1.5s alternate infinite;
+  border-left: 1em dotted blue;
+  border-right: 1em dotted black;
+  animation: rotate 3s infinite reverse;
+  height: 1em;
+  width: 3em;
 }
 
-.loading-block .loading label:hover {
-  -webkit-transform: scale(1.5);
-          transform: scale(1.5);
+.loading-block .loading div:before {
+  content: '';
+  position: absolute;
+  left: 2em;
+  bottom: 0;
+  right: 0;
+  top: -1em;
+  border-top: 1em dotted #a41818;
+  border-bottom: 1em dotted #166d16;
+  -webkit-animation: rotate2 3s infinite linear;
+          animation: rotate2 3s infinite linear;
+  height: 3em;
+  width: 1em;
 }
 
-@-webkit-keyframes showhide {
-  from {
-    -webkit-transform: scaley(0);
-            transform: scaley(0);
+@-webkit-keyframes rotate {
+  0% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
   }
-  to {
-    -webkit-transform: scaley(1);
-            transform: scaley(1);
+  30% {
+    border-left: 1em dotted black;
+    border-right: 1em dotted blue;
+  }
+  50% {
+    border-left: 1em dotted #a41818;
+    border-right: 1em dotted #166d16;
   }
 }
 
-@keyframes showhide {
-  from {
-    -webkit-transform: scaley(0);
-            transform: scaley(0);
+@keyframes rotate {
+  0% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
   }
-  to {
-    -webkit-transform: scaley(1);
-            transform: scaley(1);
+  30% {
+    border-left: 1em dotted black;
+    border-right: 1em dotted blue;
+  }
+  50% {
+    border-left: 1em dotted #a41818;
+    border-right: 1em dotted #166d16;
+  }
+}
+
+@-webkit-keyframes rotate2 {
+  0% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+  30% {
+    border-top: 1em dotted #166d16;
+    border-bottom: 1em dotted #a41818;
+  }
+  50% {
+    border-top: 1em dotted blue;
+    border-bottom: 1em dotted black;
+  }
+}
+
+@keyframes rotate2 {
+  0% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+  30% {
+    border-top: 1em dotted #166d16;
+    border-bottom: 1em dotted #a41818;
+  }
+  50% {
+    border-top: 1em dotted blue;
+    border-bottom: 1em dotted black;
+  }
+}
+
+@-webkit-keyframes scale {
+  0% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+}
+
+@keyframes scale {
+  0% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
   }
 }
 
@@ -786,14 +857,6 @@ input {
 .pagination .pages-container .pages .active {
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
-}
-
-.checkbox-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 0.5em;
-  margin: 1em;
 }
 
 .user-data {
@@ -1015,6 +1078,12 @@ input {
           flex-direction: column;
 }
 
+.calendar .date .day {
+  padding: 0.3em;
+  height: 1.5em;
+  width: 1.5em;
+}
+
 .calendar .current-month {
   -webkit-box-shadow: 0em 0em 0.2em 0em var(--primary-color);
           box-shadow: 0em 0em 0.2em 0em var(--primary-color);
@@ -1029,13 +1098,23 @@ input {
           box-shadow: 0em 0em 0.5em 0em var(--primary-color);
 }
 
-.calendar .current {
-  background-color: white;
-}
-
 .calendar .current .day {
-  font-size: var(--header-font-size);
-  font-weight: var(--bold);
+  font-weight: var(--demibold);
+  background-color: var(--primary-color);
+  color: var(--primary-color-accent);
+  padding: 0.3em;
+  border-radius: 50%;
+  height: 1.5em;
+  width: 1.5em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .calendar .non {
@@ -1048,7 +1127,7 @@ input {
 }
 
 .calendar .day-header {
-  font-size: var(--header-font-size);
+  font-size: var(--table-header-font-size);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1058,7 +1137,11 @@ input {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  font-weight: var(--bold);
+  font-weight: var(--demibold);
+}
+
+.calendar .day-header:nth-child(7), .calendar .day-header:first-child {
+  color: red;
 }
 
 .item-table {
@@ -1109,7 +1192,8 @@ input {
 }
 
 .item-table thead th {
-  font-size: var(--normal-font-size);
+  font-size: var(--table-header-font-size);
+  font-weight: var(--regular);
   text-align: left;
   height: 2.5em !important;
   padding: 0.2em 0.4em;
@@ -1238,6 +1322,28 @@ tbody tr {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.head-content .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  gap: 0.5em;
+  margin: 1em;
+}
+
+.filter-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.5em;
+  margin: 1em;
 }
 
 .modal-container {
@@ -1782,6 +1888,15 @@ thead {
   }
   .calendar .date .remarks {
     font-size: var(--normal-font-size);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .filter-container {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
 }
 /*# sourceMappingURL=style.css.map */

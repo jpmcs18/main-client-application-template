@@ -3,7 +3,6 @@ import {
   useSetBusy,
   useSetMessage,
 } from '../../custom-hooks/authorize-provider';
-import { Classification } from '../../entities/transaction/Classification';
 import { Personnel } from '../../entities/transaction/Personnel';
 import { getClassifications } from '../../processors/classification-process';
 import {
@@ -26,12 +25,10 @@ export default function ManagePersonnel({
     () =>
       selectedPersonnel ?? {
         id: 0,
-        classification: undefined,
         classificationId: undefined,
         name: '',
       }
   );
-  const [classifications, setClassifications] = useState<Classification[]>([]);
   const [classificationItem, setClassificationItem] = useState<DropdownItem[]>(
     []
   );
@@ -53,13 +50,11 @@ export default function ManagePersonnel({
     await getClassifications()
       .then((res) => {
         if (res !== undefined) {
-          setClassifications(() => res);
-          setClassificationItem(() => [
-            { key: '', value: '' },
-            ...res.map((r) => {
+          setClassificationItem(() =>
+            res.map((r) => {
               return { key: r.id.toString(), value: r.description };
-            }),
-          ]);
+            })
+          );
         }
       })
       .catch((err) => {
@@ -100,37 +95,6 @@ export default function ManagePersonnel({
     }
   }
   function onChange({ value, elementName }: CustomReturn) {
-    if (elementName === 'classification') {
-      if (value === '0') {
-        setPersonnel((prev) => {
-          if (prev === undefined)
-            return {
-              classification: undefined,
-              classificationId: undefined,
-            } as Personnel;
-          return {
-            ...prev,
-            classification: undefined,
-            classificationId: undefined,
-          };
-        });
-        return;
-      }
-      let classification = classifications.filter((x) => x.id === +value)?.[0];
-      setPersonnel((prev) => {
-        if (prev === undefined)
-          return {
-            classification: classification,
-            classificationId: classification.id,
-          } as Personnel;
-        return {
-          ...prev,
-          classification: classification,
-          classificationId: classification.id,
-        };
-      });
-      return;
-    }
     setPersonnel((r) => {
       return { ...r, [elementName]: value };
     });
@@ -152,8 +116,9 @@ export default function ManagePersonnel({
         />
         <CustomDropdown
           title='Classification'
-          name='classification'
-          value={personnel?.classification?.description}
+          name='classificationId'
+          hasDefault={true}
+          value={personnel?.classificationId}
           onChange={onChange}
           itemsList={classificationItem}
         />

@@ -34,8 +34,8 @@ export default function CustomDatePicker({
               className={'custom-datepicker ' + className}
               onChange={onDayChange}
               value={value}
-              disableCalendar={true}
               format='MM/dd/yyyy'
+              disableCalendar={true}
               disableClock={true}
             />
           </>

@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useSetBusy,
   useSetMessage,
 } from '../../custom-hooks/authorize-provider';
-import { Classification } from '../../entities/transaction/Classification';
 import { Concern } from '../../entities/transaction/Concern';
-import { Office } from '../../entities/transaction/Office';
-import { Personnel } from '../../entities/transaction/Personnel';
 import { getClassifications } from '../../processors/classification-process';
 import { createConcern, updateConcern } from '../../processors/concern-process';
 import { getOffices } from '../../processors/office-process';
@@ -31,21 +28,12 @@ export default function ManageConcern({
     () =>
       selectedConcern ?? {
         id: 0,
-        number: '',
-        entryDate: undefined,
         caller: '',
         description: '',
-        classification: undefined,
         classificationId: undefined,
-        closedDate: undefined,
         officeId: undefined,
-        office: undefined,
-        personnel: undefined,
-        personnelId: undefined,
       }
   );
-  const [classifications, setClassifications] = useState<Classification[]>([]);
-  const [offices, setOffices] = useState<Office[]>([]);
   const [classificationItem, setClassificationItem] = useState<DropdownItem[]>(
     () => []
   );
@@ -54,12 +42,14 @@ export default function ManageConcern({
   const [availabelPersonnelItem, setAvailabelPersonnelItem] = useState<
     DropdownItem[]
   >([]);
-  const [personnels, setPersonnels] = useState<Personnel[]>([]);
   const [selectedPersonnel, setSelectedPersonnel] = useState<
-    Personnel | undefined
+    number | undefined
   >();
   const [selectedAvailablePersonnel, setSelectedAvailablePersonnel] = useState<
-    Personnel | undefined
+    number | undefined
+  >();
+  const [selectedPersonnelName, setSelectedPersonnelName] = useState<
+    string | undefined
   >();
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
@@ -82,19 +72,14 @@ export default function ManageConcern({
     await getPersonnels()
       .then((res) => {
         if (res !== undefined) {
-          setPersonnels(res);
-          setPersonnelItem([
-            {
-              key: '',
-              value: '',
-            },
-            ...res.map((x) => {
+          setPersonnelItem(() =>
+            res.map((x) => {
               return {
                 key: x.id.toString(),
                 value: x.name,
               };
-            }),
-          ]);
+            })
+          );
         }
       })
       .catch((err) => {
@@ -105,6 +90,7 @@ export default function ManageConcern({
   async function fetchAvailablePersonnels(
     classificationId?: number | undefined
   ) {
+    console.log(classificationId);
     setBusy(true);
     await getAvailablePersonnelsByClassification(
       classificationId ?? concern?.classificationId ?? 0
@@ -112,18 +98,14 @@ export default function ManageConcern({
       .then((res) => {
         if (res !== undefined) {
           setSelectedAvailablePersonnel(undefined);
-          setAvailabelPersonnelItem([
-            {
-              key: '',
-              value: '',
-            },
-            ...res.map((x) => {
+          setAvailabelPersonnelItem(() =>
+            res.map((x) => {
               return {
                 key: x.id.toString(),
                 value: x.name,
               };
-            }),
-          ]);
+            })
+          );
         }
       })
       .catch((err) => {
@@ -136,13 +118,11 @@ export default function ManageConcern({
     await getClassifications()
       .then((res) => {
         if (res !== undefined) {
-          setClassifications(() => res);
-          setClassificationItem(() => [
-            { key: '', value: '' },
-            ...res.map((r) => {
+          setClassificationItem(() =>
+            res.map((r) => {
               return { key: r.id.toString(), value: r.description };
-            }),
-          ]);
+            })
+          );
         }
       })
       .catch((err) => {
@@ -155,13 +135,11 @@ export default function ManageConcern({
     await getOffices()
       .then((res) => {
         if (res !== undefined) {
-          setOffices(() => res);
-          setOfficeItem(() => [
-            { key: '', value: '' },
-            ...res.map((r) => {
+          setOfficeItem(() =>
+            res.map((r) => {
               return { key: r.id.toString(), value: r.description };
-            }),
-          ]);
+            })
+          );
         }
       })
       .catch((err) => {
@@ -173,19 +151,14 @@ export default function ManageConcern({
     setBusy(true);
     if (concern.id === 0) {
       await createConcern(
-        concern!,
-        selectedPersonnel?.id ?? selectedAvailablePersonnel?.id
+        concern,
+        selectedPersonnel ?? selectedAvailablePersonnel
       )
         .then(() => {
           setMessage({
             message: 'New Concern Added',
             onOk: () => {
-              onClose(
-                true,
-                selectedPersonnel?.name ??
-                  selectedAvailablePersonnel?.name ??
-                  ''
-              );
+              onClose(true, selectedPersonnelName ?? '');
             },
           });
         })
@@ -199,12 +172,7 @@ export default function ManageConcern({
           setMessage({
             message: 'Concern Updated',
             onOk: () => {
-              onClose(
-                true,
-                selectedPersonnel?.name ??
-                  selectedAvailablePersonnel?.name ??
-                  ''
-              );
+              onClose(true, selectedPersonnelName ?? '');
             },
           });
         })
@@ -215,81 +183,26 @@ export default function ManageConcern({
     }
   }
 
-  async function onChange({ elementName, value }: CustomReturn) {
+  async function onChange({ elementName, value, text }: CustomReturn) {
     if (elementName === 'personnel') {
-      if (value === '0') {
-        setSelectedPersonnel(undefined);
-        return;
-      }
-
-      setSelectedPersonnel(personnels.filter((x) => x.id === +value)?.[0]);
+      setSelectedPersonnel(+value);
       setSelectedAvailablePersonnel(undefined);
+      setSelectedPersonnelName(text);
       return;
     }
     if (elementName === 'available-personnel') {
-      if (value === '0') {
-        setSelectedAvailablePersonnel(undefined);
-        return;
-      }
-      setSelectedAvailablePersonnel(
-        personnels.filter((x) => x.id === +value)?.[0]
-      );
+      setSelectedAvailablePersonnel(+value);
       setSelectedPersonnel(undefined);
+      setSelectedPersonnelName(text);
       return;
     }
-    if (elementName === 'office') {
-      if (value === '0') {
-        setConcern((prev) => {
-          if (prev === undefined)
-            return { office: undefined, officeId: undefined } as Concern;
-          return { ...prev, office: undefined, officeId: undefined };
-        });
-        return;
+    if (elementName === 'classificationId') {
+      if (value === undefined) {
+        setAvailabelPersonnelItem(() => []);
       }
-      let office = offices.filter((x) => x.id === +value)?.[0];
-      setConcern((prev) => {
-        if (prev === undefined)
-          return { office: office, officeId: office.id } as Concern;
-        return { ...prev, office: office, officeId: office.id };
-      });
-      return;
-    }
-    if (elementName === 'classification') {
-      if (value === '0') {
-        setConcern((prev) => {
-          if (prev === undefined)
-            return {
-              classification: undefined,
-              classificationId: undefined,
-            } as Concern;
-          return {
-            ...prev,
-            classification: undefined,
-            classificationId: undefined,
-          };
-        });
-        setAvailabelPersonnelItem([]);
-        return;
-      }
-      let classification = classifications.filter((x) => x.id === +value)?.[0];
-      setConcern((prev) => {
-        if (prev === undefined)
-          return {
-            classification: classification,
-            classificationId: classification.id,
-          } as Concern;
-        return {
-          ...prev,
-          classification: classification,
-          classificationId: classification.id,
-        };
-      });
-
-      await fetchAvailablePersonnels(classification?.id);
-      return;
+      await fetchAvailablePersonnels(+value);
     }
     setConcern((prevConcern) => {
-      if (prevConcern === undefined) return { [elementName]: value } as Concern;
       return { ...prevConcern, [elementName]: value };
     });
   }
@@ -308,8 +221,9 @@ export default function ManageConcern({
           <div>
             <CustomDropdown
               title='Office'
-              name='office'
-              value={concern?.office?.description}
+              name='officeId'
+              hasDefault={true}
+              value={concern?.officeId}
               onChange={onChange}
               itemsList={officeItem}
             />
@@ -317,8 +231,9 @@ export default function ManageConcern({
           <div>
             <CustomDropdown
               title='Classification'
-              name='classification'
-              value={concern?.classification?.description}
+              name='classificationId'
+              hasDefault={true}
+              value={concern?.classificationId}
               onChange={onChange}
               itemsList={classificationItem}
             />
@@ -347,14 +262,16 @@ export default function ManageConcern({
               <CustomDropdown
                 title='Available Personnel'
                 name='available-personnel'
-                value={selectedAvailablePersonnel?.name}
+                hasDefault={true}
+                value={selectedAvailablePersonnel}
                 onChange={onChange}
                 itemsList={availabelPersonnelItem}
               />
               <CustomDropdown
                 title='All Personnel'
                 name='personnel'
-                value={selectedPersonnel?.name}
+                hasDefault={true}
+                value={selectedPersonnel}
                 onChange={onChange}
                 itemsList={personnelItem}
               />

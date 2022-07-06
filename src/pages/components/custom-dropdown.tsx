@@ -13,15 +13,17 @@ export default function CustomDropdown({
   itemsList,
   readonly,
   onChange,
+  hasDefault,
 }: {
   title: string;
   name?: string;
   id?: string;
   className?: string;
-  value?: string;
+  value?: any;
   itemsList: DropdownItem[];
   readonly?: boolean | false;
   onChange?: (data: CustomReturn) => void;
+  hasDefault?: boolean | undefined;
 }) {
   return (
     <div className='custom-input'>
@@ -33,17 +35,17 @@ export default function CustomDropdown({
           <select
             id={id}
             className={className}
+            value={value ?? ''}
             onChange={(e) => {
               onChange?.({
-                elementName: name ?? '',
-                value: (e.target.value === '' ? '0' : e.target.value) ?? '0',
+                elementName: name ?? 'def',
+                value: e.target.value,
+                text: e.target.selectedOptions?.[0]?.text,
               });
             }}>
+            {hasDefault && <option value={undefined}></option>}
             {itemsList?.map((item) => (
-              <option
-                key={item.key}
-                value={item.key}
-                selected={item.value === value}>
+              <option key={item.key} value={item.key}>
                 {item.value}
               </option>
             ))}

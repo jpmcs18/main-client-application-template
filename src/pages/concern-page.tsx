@@ -4,20 +4,30 @@ import {
   HubConnectionState,
   LogLevel,
 } from '@microsoft/signalr';
-import React, { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { API } from '../constant';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
 import { Hub } from '../endpoints';
 import { Concern } from '../entities/transaction/Concern';
+import { getClassifications } from '../processors/classification-process';
 import { deleteConcern, searchConcerns } from '../processors/concern-process';
+import { getOffices } from '../processors/office-process';
 import ConcernItems from './components/concerns-components/concern-items';
 import CustomCheckBox from './components/custom-check-box';
+import CustomDatePicker from './components/custom-datepicker';
+import CustomDropdown, { DropdownItem } from './components/custom-dropdown';
+import { CustomReturn } from './components/CustomReturn';
 import Pagination from './components/pagination';
 import SeachBar from './components/seachbar';
 import AssignConcern from './modals/assign-concern';
 import ConcernActionsViewer from './modals/concern-actions-viewer';
 import ManageConcern from './modals/manage-concern';
-
+interface Filtering {
+  classification: any;
+  office: any;
+  startDate: any;
+  endDate: any;
+}
 export type CONCERNACTIONS =
   | { action: 'Add' }
   | { action: 'Assign'; payload: Concern }
@@ -43,6 +53,18 @@ export default function ConcernPage() {
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
   const [connection, setConnection] = useState<HubConnection>();
+  const [classificationItem, setClassificationItem] = useState<DropdownItem[]>(
+    () => []
+  );
+  const [officeItem, setOfficeItem] = useState<DropdownItem[]>(() => []);
+  const [filtering, setFiltering] = useState<Filtering>(() => {
+    return {
+      classification: undefined,
+      office: undefined,
+      startDate: undefined,
+      endDate: undefined,
+    };
+  });
   async function onClose(hasChanges: boolean, personnel: string | undefined) {
     setShowModal(false);
     setShowAssignmentModal(false);
@@ -50,23 +72,30 @@ export default function ConcernPage() {
       console.log(connection?.state);
       await reconnect();
       await connection?.invoke('NewConcern');
-      await connection?.invoke('NewTicket', personnel);
+      if ((personnel ?? '') !== '')
+        await connection?.invoke('NewTicket', personnel);
       searchConcern({});
     }
   }
   useEffect(
     () => {
-      if (!('Notification' in window)) {
-        console.log('This browser does not support desktop notification');
-      } else {
-        Notification.requestPermission();
-      }
-      connect();
-      searchConcern({});
+      initializeComponents();
     },
     // eslint-disable-next-line
     []
   );
+
+  async function initializeComponents() {
+    if (!('Notification' in window)) {
+      console.log('This browser does not support desktop notification');
+    } else {
+      Notification.requestPermission();
+    }
+    await fetchClassifications();
+    await fetchOffices();
+    await connect();
+    await searchConcern({});
+  }
   async function connect() {
     try {
       if (connection === undefined) {
@@ -188,6 +217,49 @@ export default function ConcernPage() {
       })
       .finally(() => setBusy(false));
   }
+  async function fetchClassifications() {
+    setBusy(true);
+    await getClassifications()
+      .then((res) => {
+        if (res !== undefined) {
+          setClassificationItem(() => [
+            { key: '', value: '' },
+            ...res.map((r) => {
+              return { key: r.id.toString(), value: r.description };
+            }),
+          ]);
+        }
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
+  }
+  async function fetchOffices() {
+    setBusy(true);
+    await getOffices()
+      .then((res) => {
+        if (res !== undefined) {
+          setOfficeItem(() => [
+            { key: '', value: '' },
+            ...res.map((r) => {
+              return { key: r.id.toString(), value: r.description };
+            }),
+          ]);
+        }
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
+  }
+
+  async function onChange({ elementName, value }: CustomReturn) {
+    console.log(value);
+    setFiltering((r) => {
+      return { ...r, [elementName]: value };
+    });
+  }
   return (
     <>
       <section>
@@ -198,8 +270,40 @@ export default function ConcernPage() {
       <section>
         <SeachBar search={search} />
       </section>
+      <section>
+        <div className='filter-container'>
+          <CustomDatePicker
+            title='Start Date'
+            name='startDate'
+            value={filtering.startDate}
+            onChange={onChange}
+          />
+          <CustomDatePicker
+            title='End Date'
+            name='endDate'
+            value={filtering.endDate}
+            onChange={onChange}
+          />
+          <CustomDropdown
+            title='Office'
+            name='office'
+            hasDefault={true}
+            value={filtering.office}
+            onChange={onChange}
+            itemsList={officeItem}
+          />
+          <CustomDropdown
+            title='Classification'
+            name='classification'
+            hasDefault={true}
+            value={filtering.classification}
+            onChange={onChange}
+            itemsList={classificationItem}
+          />
+        </div>
+      </section>
       <section className='head-content'>
-        <div className='checkbox-container'>
+        <div className='container'>
           <CustomCheckBox
             text='Assigned'
             id='assigned'

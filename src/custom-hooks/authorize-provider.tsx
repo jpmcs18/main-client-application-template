@@ -101,7 +101,7 @@ export function AuthorizeProvider({ children }: { children: ReactNode }) {
         }>
         <div className='loading-blocker'></div>
         <div className='loading'>
-          <label> Please Wait</label>
+          <div></div>
         </div>
       </div>
       <SetBusyContext.Provider value={setBusy}>

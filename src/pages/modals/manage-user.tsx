@@ -6,7 +6,6 @@ import {
   useSetBusy,
   useSetMessage,
 } from '../../custom-hooks/authorize-provider';
-import { Personnel } from '../../entities/transaction/Personnel';
 import { Role } from '../../entities/user/Role';
 import { User, UserRole } from '../../entities/user/User';
 import { getPersonnels } from '../../processors/personnel-process';
@@ -26,21 +25,16 @@ export default function ManageUser({
   onClose: (needToReLoad: boolean) => void;
 }) {
   const [personnelItem, setPersonnelItem] = useState<DropdownItem[]>([]);
-  const [personnels, setPersonnels] = useState<Personnel[]>([]);
   const [user, setUser] = useState<User>(
     () =>
       usersInfo ?? {
         id: 0,
         username: '',
-        name: '',
         active: false,
         admin: false,
-        userRoles: undefined,
-        personnel: undefined,
         personnelId: undefined,
       }
   );
-  const [roles, setRoles] = useState<Role[]>([]);
   const [roleItems, setRoleItems] = useState<DropdownItem[]>([]);
   const [userRoles, setUserRoles] = useState<UserRole[]>(
     () => usersInfo?.userRoles ?? []
@@ -104,19 +98,14 @@ export default function ManageUser({
     await getPersonnels()
       .then((res) => {
         if (res !== undefined) {
-          setPersonnels(res);
-          setPersonnelItem([
-            {
-              key: '',
-              value: '',
-            },
-            ...res.map((x) => {
+          setPersonnelItem(() =>
+            res.map((x) => {
               return {
                 key: x.id.toString(),
                 value: x.name,
               };
-            }),
-          ]);
+            })
+          );
         }
       })
       .catch((err) => {
@@ -124,39 +113,19 @@ export default function ManageUser({
       })
       .finally(() => setBusy(false));
   }
-  function onChange({ elementName, value }: CustomReturn) {
+  function onChange({ elementName, value, text }: CustomReturn) {
     if (elementName === 'role') {
-      if (value === '0') {
+      if (value !== undefined) {
         return;
       }
-      let role = roles.filter((x) => x.id === +value)?.[0];
       setUserRoles((r) => [
         ...r,
-        { id: 0, roleId: role.id, role: role, userId: user.id },
+        { id: 0, roleId: +value, roleDesc: text, userId: user.id },
       ]);
       setRoleItems((r) => r.filter((x) => x.key !== value));
-    }
-    if (elementName === 'personnel') {
-      if (value === '0') {
-        setUser((prev) => {
-          return { ...prev, personnel: undefined, personnelId: undefined };
-        });
-        return;
-      }
-      let personnel = personnels.filter((x) => x.id === +value)?.[0];
-      setUser((prev) => {
-        return {
-          ...prev,
-          personnel: personnel,
-          personnelId: personnel.id,
-          name: personnel.name,
-        };
-      });
       return;
     }
-
     setUser((prevUser) => {
-      if (prevUser === undefined) return { [elementName]: value } as User;
       return { ...prevUser, [elementName]: value };
     });
   }
@@ -165,18 +134,16 @@ export default function ManageUser({
     await getRoles()
       .then((res) => {
         if (res !== undefined) {
-          setRoles(res);
-          setRoleItems([
-            { key: '', value: '' },
-            ...res
+          setRoleItems(() =>
+            res
               .filter(
                 (x) =>
                   !user.userRoles?.filter((u) => u.roleId === x.id)?.[0]?.id
               )
               .map((x) => {
                 return { key: x.id.toString(), value: x.description };
-              }),
-          ]);
+              })
+          );
         }
       })
       .catch((err) => {
@@ -226,8 +193,9 @@ export default function ManageUser({
         <div>
           <CustomDropdown
             title='Personnel'
-            name='personnel'
-            value={user?.personnel?.name}
+            name='personnelId'
+            hasDefault={true}
+            value={user?.personnelId}
             onChange={onChange}
             itemsList={personnelItem}
           />
@@ -256,7 +224,7 @@ export default function ManageUser({
           <CustomDropdown
             title='Role'
             name='role'
-            value={user?.personnel?.name}
+            hasDefault={true}
             onChange={onChange}
             itemsList={roleItems}
           />
@@ -271,7 +239,7 @@ export default function ManageUser({
             <tbody>
               {userRoles?.map((role) => (
                 <tr key={role.roleId} className={role.deleted ? 'deleted' : ''}>
-                  <td>{role.role?.description}</td>
+                  <td>{role.roleDesc ?? role.role?.description}</td>
                   <td className='table-actions'>
                     {role.deleted && (
                       <FontAwesomeIcon

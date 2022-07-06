@@ -177,7 +177,7 @@ export default function TicketPage() {
         </div>
       </section>
       <section className='head-content'>
-        <div className='checkbox-container'>
+        <div className='container'>
           <CustomCheckBox
             text='Pending'
             id='pending'

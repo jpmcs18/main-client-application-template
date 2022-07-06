@@ -4,7 +4,6 @@ import {
   useSetMessage,
 } from '../../custom-hooks/authorize-provider';
 import { Concern } from '../../entities/transaction/Concern';
-import { Personnel } from '../../entities/transaction/Personnel';
 import { assignConcern } from '../../processors/concern-process';
 import {
   getAvailablePersonnelsByClassification,
@@ -27,12 +26,14 @@ export default function AssignConcern({
   const [availabelPersonnelItem, setAvailabelPersonnelItem] = useState<
     DropdownItem[]
   >([]);
-  const [personnels, setPersonnels] = useState<Personnel[]>([]);
   const [selectedPersonnel, setSelectedPersonnel] = useState<
-    Personnel | undefined
+    number | undefined
   >();
   const [selectedAvailablePersonnel, setSelectedAvailablePersonnel] = useState<
-    Personnel | undefined
+    number | undefined
+  >();
+  const [selectedPersonnelName, setSelectedPersonnelName] = useState<
+    string | undefined
   >();
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
@@ -52,19 +53,14 @@ export default function AssignConcern({
     await getPersonnels()
       .then((res) => {
         if (res !== undefined) {
-          setPersonnels(res);
-          setPersonnelItem([
-            {
-              key: '',
-              value: '',
-            },
-            ...res.map((x) => {
+          setPersonnelItem(() =>
+            res.map((x) => {
               return {
                 key: x.id.toString(),
                 value: x.name,
               };
-            }),
-          ]);
+            })
+          );
         }
       })
       .catch((err) => {
@@ -77,18 +73,14 @@ export default function AssignConcern({
     await getAvailablePersonnelsByClassification(concern?.classificationId ?? 0)
       .then((res) => {
         if (res !== undefined) {
-          setAvailabelPersonnelItem([
-            {
-              key: '',
-              value: '',
-            },
-            ...res.map((x) => {
+          setAvailabelPersonnelItem(() =>
+            res.map((x) => {
               return {
                 key: x.id.toString(),
                 value: x.name,
               };
-            }),
-          ]);
+            })
+          );
         }
       })
       .catch((err) => {
@@ -96,24 +88,15 @@ export default function AssignConcern({
       })
       .finally(() => setBusy(false));
   }
-  function onChange({ elementName, value }: CustomReturn) {
+  function onChange({ elementName, value, text }: CustomReturn) {
+    setSelectedPersonnelName(text);
     if (elementName === 'personnel') {
-      if (value === '0') {
-        setSelectedPersonnel(undefined);
-        return;
-      }
-      setSelectedPersonnel(personnels.filter((x) => x.id === +value)?.[0]);
+      setSelectedPersonnel(+value);
       setSelectedAvailablePersonnel(undefined);
       return;
     }
     if (elementName === 'available-personnel') {
-      if (value === '0') {
-        setSelectedAvailablePersonnel(undefined);
-        return;
-      }
-      setSelectedAvailablePersonnel(
-        personnels.filter((x) => x.id === +value)?.[0]
-      );
+      setSelectedAvailablePersonnel(+value);
       setSelectedPersonnel(undefined);
       return;
     }
@@ -121,25 +104,20 @@ export default function AssignConcern({
 
   async function saveData() {
     setBusy(true);
-    if ((selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0) === 0) {
+    if ((selectedPersonnel ?? selectedAvailablePersonnel ?? 0) === 0) {
       setMessage({ message: 'Select Personnel' });
       return;
     }
     await assignConcern(
       concern?.id ?? 0,
-      selectedPersonnel?.id ?? selectedAvailablePersonnel?.id ?? 0
+      selectedPersonnel ?? selectedAvailablePersonnel ?? 0
     )
       .then((res) => {
         if (res)
           setMessage({
             message: 'Success',
             onOk: () => {
-              onClose(
-                true,
-                selectedPersonnel?.name ??
-                  selectedAvailablePersonnel?.name ??
-                  ''
-              );
+              onClose(true, selectedPersonnelName ?? '');
             },
           });
       })
@@ -155,14 +133,16 @@ export default function AssignConcern({
           <CustomDropdown
             title='Available Personnel'
             name='available-personnel'
-            value={selectedAvailablePersonnel?.name}
+            hasDefault={true}
+            value={selectedAvailablePersonnel}
             onChange={onChange}
             itemsList={availabelPersonnelItem}
           />
           <CustomDropdown
             title='All Personnel'
             name='personnel'
-            value={selectedPersonnel?.name}
+            hasDefault={true}
+            value={selectedPersonnel}
             onChange={onChange}
             itemsList={personnelItem}
           />
