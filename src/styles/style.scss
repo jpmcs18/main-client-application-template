@@ -70,7 +70,7 @@ header {
     align-items: center;
     box-sizing: border-box;
     justify-content: space-between;
-    padding: 0.5em 0;
+    padding: 1em 0;
     .menu-container {
       display: flex;
       align-items: center;
@@ -464,22 +464,20 @@ input {
     display: flex;
 
     div {
-      position: relative;
+      position: absolute;
       z-index: 9999999;
       cursor: progress;
-      height: 3em;
-      width: 3em;
-      animation: scale 1s infinite alternate;
+      height: 5em;
+      width: 5em;
+      border-radius: 50%;
+      animation: breathe 1s infinite alternate;
 
       &:after {
         content: '';
         position: absolute;
-        top: 1em;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        border-left: 1em dotted blue;
+        border-left: 1em dotted rgb(17, 17, 161);
         border-right: 1em dotted black;
+        top: 2.1em;
         animation: rotate 3s infinite reverse;
         height: 1em;
         width: 3em;
@@ -488,13 +486,10 @@ input {
       &:before {
         content: '';
         position: absolute;
-        left: 2em;
-        bottom: 0;
-        right: 0;
-        top: -1em;
         border-top: 1em dotted rgb(164, 24, 24);
         border-bottom: 1em dotted rgb(22, 109, 22);
         animation: rotate2 3s infinite linear;
+        left: 2.1em;
         height: 3em;
         width: 1em;
       }
@@ -502,13 +497,18 @@ input {
   }
 }
 
+@keyframes breathe {
+  to {
+    opacity: 50%;
+  }
+}
 @keyframes rotate {
   0% {
     transform: rotate(360deg);
   }
   30% {
     border-left: 1em dotted black;
-    border-right: 1em dotted blue;
+    border-right: 1em dotted rgb(17, 17, 161);
   }
   50% {
     border-left: 1em dotted rgb(164, 24, 24);
@@ -524,7 +524,7 @@ input {
     border-bottom: 1em dotted rgb(164, 24, 24);
   }
   50% {
-    border-top: 1em dotted blue;
+    border-top: 1em dotted rgb(17, 17, 161);
     border-bottom: 1em dotted black;
   }
 }

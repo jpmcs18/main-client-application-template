@@ -76,12 +76,8 @@ export default function SummaryPage() {
               onClick={() => setCurrentDate(() => addMonths(currentDate, -1))}
             />
             <div className='month-year'>
-              <div onClick={() => setMessage({ message: 'month' })}>
-                {getMonthName(currentDate)}
-              </div>
-              <div onClick={() => setMessage({ message: 'month' })}>
-                {currentDate.getFullYear()}
-              </div>
+              <div>{getMonthName(currentDate)}</div>
+              <div>{currentDate.getFullYear()}</div>
             </div>
             <FontAwesomeIcon
               icon={faAngleRight as IconProp}
