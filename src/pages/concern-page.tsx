@@ -9,6 +9,7 @@ import { API } from '../constant';
 import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
 import { Hub } from '../endpoints';
 import { Concern } from '../entities/transaction/Concern';
+import { addDays } from '../helpers';
 import { getClassifications } from '../processors/classification-process';
 import { deleteConcern, searchConcerns } from '../processors/concern-process';
 import { getOffices } from '../processors/office-process';
@@ -25,8 +26,8 @@ import ManageConcern from './modals/manage-concern';
 interface Filtering {
   classification: any;
   office: any;
-  startDate: any;
-  endDate: any;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
 }
 export type CONCERNACTIONS =
   | { action: 'Add' }
@@ -61,8 +62,8 @@ export default function ConcernPage() {
     return {
       classification: undefined,
       office: undefined,
-      startDate: undefined,
-      endDate: undefined,
+      startDate: addDays(new Date(), -7),
+      endDate: new Date(),
     };
   });
   async function onClose(hasChanges: boolean, personnel: string | undefined) {
@@ -255,10 +256,10 @@ export default function ConcernPage() {
   }
 
   async function onChange({ elementName, value }: CustomReturn) {
-    console.log(value);
     setFiltering((r) => {
       return { ...r, [elementName]: value };
     });
+    console.log(filtering);
   }
   return (
     <>

@@ -138,7 +138,7 @@ export default function HomePage() {
                     ))}
                   </>
                 ) : (
-                  <div>
+                  <div className='nav-menu-container'>
                     <button className='nav-menu'>Menus</button>
                     <div className='menus'>
                       {menus

@@ -1,4 +1,3 @@
-import DateTimePicker from 'react-datetime-picker';
 import 'react-day-picker/lib/style.css';
 import { CustomReturn } from './CustomReturn';
 
@@ -19,9 +18,18 @@ export default function CustomDatePicker({
   readonly?: boolean | false;
   onChange?: (data: CustomReturn) => void;
 }) {
-  function onDayChange(day: Date) {
-    onChange?.({ elementName: name ?? '', value: day });
-  }
+  const text: string | undefined =
+    value === undefined
+      ? undefined
+      : `${value.getFullYear()}-${(value.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${value
+          .getDate()
+          .toString()
+          .padStart(2, '0')}T${value
+          .getHours()
+          .toString()
+          .padStart(2, '0')}:${value.getMinutes().toString().padStart(2, '0')}`;
   return (
     <div className='custom-input'>
       <label htmlFor={name}>{title}</label>
@@ -30,13 +38,19 @@ export default function CustomDatePicker({
           <span>{value?.toLocaleDateString()}</span>
         ) : (
           <>
-            <DateTimePicker
-              className={'custom-datepicker ' + className}
-              onChange={onDayChange}
-              value={value}
-              format='MM/dd/yyyy'
-              disableCalendar={true}
-              disableClock={true}
+            <input
+              type='datetime-local'
+              className='custom-datepicker'
+              value={text}
+              onChange={(e) => {
+                onChange?.({
+                  elementName: name ?? '',
+                  value:
+                    (e.target.value ?? '') === ''
+                      ? undefined
+                      : new Date(e.target.value),
+                });
+              }}
             />
           </>
         )}

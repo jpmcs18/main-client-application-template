@@ -44,7 +44,7 @@ export default function CustomTextBox({
               name={name}
               id={id}
               value={value}
-              className={className}
+              className={`${className} ${type}`}
               onChange={(e) =>
                 onChange?.({ elementName: name ?? '', value: e.target.value })
               }
