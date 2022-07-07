@@ -431,10 +431,10 @@ input {
 }
 
 .loading-screen {
-  //   display: none;
-  // }
+  display: none;
+}
 
-  // .loading-block {
+.loading-block {
   position: fixed;
   top: 0;
   left: 0;
