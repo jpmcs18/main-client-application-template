@@ -541,6 +541,10 @@ input {
 }
 
 .loading-screen {
+  display: none;
+}
+
+.loading-block {
   position: fixed;
   top: 0;
   left: 0;
@@ -550,7 +554,7 @@ input {
   z-index: 99999;
 }
 
-.loading-screen .loading-blocker {
+.loading-block .loading-blocker {
   z-index: 999999;
   background-color: #aaa;
   width: 100%;
@@ -562,7 +566,7 @@ input {
   left: 0;
 }
 
-.loading-screen .loading {
+.loading-block .loading {
   position: absolute;
   top: 0;
   left: 0;
@@ -579,7 +583,7 @@ input {
   display: flex;
 }
 
-.loading-screen .loading div {
+.loading-block .loading div {
   position: relative;
   z-index: 9999999;
   cursor: progress;
@@ -589,7 +593,7 @@ input {
           animation: scale 1s infinite alternate;
 }
 
-.loading-screen .loading div:after {
+.loading-block .loading div:after {
   content: '';
   position: absolute;
   top: 1em;
@@ -603,7 +607,7 @@ input {
   width: 3em;
 }
 
-.loading-screen .loading div:before {
+.loading-block .loading div:before {
   content: '';
   position: absolute;
   left: 2em;
