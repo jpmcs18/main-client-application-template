@@ -462,7 +462,15 @@ input {
     justify-content: center;
     align-items: center;
     display: flex;
-
+    div:nth-child(1) {
+      animation: breathe 1s infinite alternate;
+    }
+    div:nth-child(2) {
+      animation: breathe 2s infinite alternate;
+    }
+    div:nth-child(3) {
+      animation: breathe 3s infinite alternate;
+    }
     div {
       position: absolute;
       z-index: 9999999;
@@ -470,13 +478,15 @@ input {
       height: 5em;
       width: 5em;
       border-radius: 50%;
-      animation: breathe 1s infinite alternate;
 
       &:after {
         content: '';
         position: absolute;
-        border-left: 1em dotted rgb(17, 17, 161);
-        border-right: 1em dotted black;
+
+        border-left: 1em dotted var(--primary-color);
+        border-right: 1em dotted var(--primary-color);
+        // border-left: 1em dotted rgb(17, 17, 161);
+        // border-right: 1em dotted black;
         top: 2.1em;
         animation: rotate 3s infinite reverse;
         height: 1em;
@@ -486,8 +496,10 @@ input {
       &:before {
         content: '';
         position: absolute;
-        border-top: 1em dotted rgb(164, 24, 24);
-        border-bottom: 1em dotted rgb(22, 109, 22);
+        border-top: 1em dotted var(--primary-color);
+        border-bottom: 1em dotted var(--primary-color);
+        // border-top: 1em dotted rgb(164, 24, 24);
+        // border-bottom: 1em dotted rgb(22, 109, 22);
         animation: rotate2 3s infinite linear;
         left: 2.1em;
         height: 3em;
@@ -499,7 +511,7 @@ input {
 
 @keyframes breathe {
   to {
-    opacity: 50%;
+    opacity: 0.5;
   }
 }
 @keyframes rotate {
@@ -507,12 +519,18 @@ input {
     transform: rotate(360deg);
   }
   30% {
-    border-left: 1em dotted black;
-    border-right: 1em dotted rgb(17, 17, 161);
+    border-left: 1em dotted var(--primary-color);
+    border-right: 1em dotted var(--primary-color);
+
+    // border-left: 1em dotted black;
+    // border-right: 1em dotted rgb(17, 17, 161);
   }
   50% {
-    border-left: 1em dotted rgb(164, 24, 24);
-    border-right: 1em dotted rgb(22, 109, 22);
+    // border-left: 1em dotted rgb(164, 24, 24);
+    // border-right: 1em dotted rgb(22, 109, 22);
+
+    border-left: 1em dotted var(--primary-color);
+    border-right: 1em dotted var(--primary-color);
   }
 }
 @keyframes rotate2 {
@@ -520,12 +538,17 @@ input {
     transform: rotate(360deg);
   }
   30% {
-    border-top: 1em dotted rgb(22, 109, 22);
-    border-bottom: 1em dotted rgb(164, 24, 24);
+    border-top: 1em dotted var(--primary-color);
+    border-bottom: 1em dotted var(--primary-color);
+
+    // border-top: 1em dotted rgb(22, 109, 22);
+    // border-bottom: 1em dotted rgb(164, 24, 24);
   }
   50% {
-    border-top: 1em dotted rgb(17, 17, 161);
-    border-bottom: 1em dotted black;
+    border-top: 1em dotted var(--primary-color);
+    border-bottom: 1em dotted var(--primary-color);
+    // border-top: 1em dotted rgb(17, 17, 161);
+    // border-bottom: 1em dotted black;
   }
 }
 
