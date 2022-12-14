@@ -99,7 +99,7 @@ export default function OfficePage() {
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
-      <section>
+      <section className='table-container'>
         <OfficeList.Provider value={offices}>
           <OfficeActions.Provider value={officeAction}>
             <OfficeItems />

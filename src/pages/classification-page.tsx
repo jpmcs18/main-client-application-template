@@ -101,7 +101,7 @@ export default function ClassificationPage() {
         pages={pageCount}
         currentPageNumber={currentPage}
         goInPage={goToPage}></Pagination>
-      <section>
+      <section className='table-container'>
         <ClassificationList.Provider value={classifications}>
           <ClassificationActions.Provider value={classificationAction}>
             <ClassificationItems />

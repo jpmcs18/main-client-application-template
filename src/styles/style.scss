@@ -25,6 +25,10 @@
   --demibold: 700;
   --bold: 900;
   --shadow: 0em 0em 0.5em 0em #ccc;
+  --loading-color-1: rgb(119, 9, 9);
+  --loading-color-2: rgb(6, 74, 6);
+  --loading-color-3: rgb(12, 12, 146);
+  --loading-color-4: black;
 }
 /* width */
 ::-webkit-scrollbar {
@@ -79,7 +83,7 @@ header {
     .nav-icon {
       line-height: 1em;
       font-size: var(--menu-font-size);
-      font-weight: var(--demibold);
+      font-weight: var(--regular);
       text-decoration: none;
       text-align: center;
       width: min-content;
@@ -117,12 +121,12 @@ header {
       z-index: -1;
       left: 0;
       opacity: 0;
-      gap: 2em;
+      gap: 2.5em;
       .menu-items {
         margin: 2em;
         display: flex;
         flex-direction: column;
-        gap: 1em;
+        gap: 0.5em;
         .head {
           text-align: center;
           font-size: var(--header-font-size);
@@ -483,10 +487,8 @@ input {
         content: '';
         position: absolute;
 
-        border-left: 1em dotted var(--primary-color);
-        border-right: 1em dotted var(--primary-color);
-        // border-left: 1em dotted rgb(17, 17, 161);
-        // border-right: 1em dotted black;
+        border-left: 1em dotted var(--loading-color-1);
+        border-right: 1em dotted var(--loading-color-2);
         top: 2.1em;
         animation: rotate 3s infinite reverse;
         height: 1em;
@@ -496,11 +498,9 @@ input {
       &:before {
         content: '';
         position: absolute;
-        border-top: 1em dotted var(--primary-color);
-        border-bottom: 1em dotted var(--primary-color);
-        // border-top: 1em dotted rgb(164, 24, 24);
-        // border-bottom: 1em dotted rgb(22, 109, 22);
-        animation: rotate2 3s infinite linear;
+        border-top: 1em dotted var(--loading-color-3);
+        border-bottom: 1em dotted var(--loading-color-4);
+        animation: rotate2 3s infinite reverse;
         left: 2.1em;
         height: 3em;
         width: 1em;
@@ -511,7 +511,7 @@ input {
 
 @keyframes breathe {
   to {
-    opacity: 0.5;
+    transform: scale(0.2);
   }
 }
 @keyframes rotate {
@@ -519,18 +519,12 @@ input {
     transform: rotate(360deg);
   }
   30% {
-    border-left: 1em dotted var(--primary-color);
-    border-right: 1em dotted var(--primary-color);
-
-    // border-left: 1em dotted black;
-    // border-right: 1em dotted rgb(17, 17, 161);
+    border-left: 1em dotted var(--loading-color-2);
+    border-right: 1em dotted var(--loading-color-1);
   }
   50% {
-    // border-left: 1em dotted rgb(164, 24, 24);
-    // border-right: 1em dotted rgb(22, 109, 22);
-
-    border-left: 1em dotted var(--primary-color);
-    border-right: 1em dotted var(--primary-color);
+    border-left: 1em dotted var(--loading-color-3);
+    border-right: 1em dotted var(--loading-color-4);
   }
 }
 @keyframes rotate2 {
@@ -538,17 +532,12 @@ input {
     transform: rotate(360deg);
   }
   30% {
-    border-top: 1em dotted var(--primary-color);
-    border-bottom: 1em dotted var(--primary-color);
-
-    // border-top: 1em dotted rgb(22, 109, 22);
-    // border-bottom: 1em dotted rgb(164, 24, 24);
+    border-top: 1em dotted var(--loading-color-4);
+    border-bottom: 1em dotted var(--loading-color-3);
   }
   50% {
-    border-top: 1em dotted var(--primary-color);
-    border-bottom: 1em dotted var(--primary-color);
-    // border-top: 1em dotted rgb(17, 17, 161);
-    // border-bottom: 1em dotted black;
+    border-top: 1em dotted var(--loading-color-1);
+    border-bottom: 1em dotted var(--loading-color-2);
   }
 }
 
@@ -875,6 +864,7 @@ input {
   }
 }
 .item-table {
+  overflow-x: auto;
   width: calc(100% - 1.1em);
   border-collapse: collapse;
   box-sizing: border-box;
@@ -1435,6 +1425,9 @@ thead {
     }
   }
 }
+video::-webkit-media-controls-fullscreen-button {
+  display: none;
+}
 @media screen and (max-width: 1000px) {
   :root {
     --label-size: 0.3rem;
@@ -1468,6 +1461,15 @@ thead {
 }
 @media screen and (max-width: 600px) {
   .filter-container {
+    flex-direction: column;
+  }
+  .table-container {
+    overflow-x: auto;
+  }
+  .head-content {
+    flex-direction: column;
+  }
+  .menus {
     flex-direction: column;
   }
 }

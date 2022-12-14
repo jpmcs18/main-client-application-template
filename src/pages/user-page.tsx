@@ -177,7 +177,7 @@ export default function UserPage() {
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
-      <section>
+      <section className='table-container'>
         <table className='users-content item-table'>
           <thead>
             <tr>

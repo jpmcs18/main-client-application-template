@@ -20,6 +20,9 @@ import PersonnelPage from './personnel-page';
 import OfficePage from './office-page';
 import Dashboard from './dashboard';
 import SummaryPage from './summary-page';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faPowerOff } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -121,48 +124,35 @@ export default function HomePage() {
           <header>
             <nav>
               <div className='menu-container'>
+                <div className='nav-menu-container'>
+                  <button className='nav-menu'>
+                    <FontAwesomeIcon icon={faBars as IconProp} />
+                  </button>
+                  <div className='menus'>
+                    {menus
+                      .filter((x) => x.navs.length > 0)
+                      .map((menu) => (
+                        <div className='menu-items' key={menu.head}>
+                          <div className='head'>{menu.head}</div>
+                          <div className='navs'>
+                            {menu.navs.map((nav) => (
+                              <div key={nav.route}>
+                                <NavLink
+                                  to={nav.route ?? ''}
+                                  exact
+                                  className='nav-menu'>
+                                  {nav.name}
+                                </NavLink>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
                 <NavLink to={Routes.Home} exact className='nav-icon'>
                   {ICON}
                 </NavLink>
-                {(profile?.distinctModules?.length ?? 0) <= 3 &&
-                (profile?.distinctModules?.length ?? 0) > 0 ? (
-                  <>
-                    {profile?.distinctModules?.map((x) => (
-                      <NavLink
-                        to={x.route ?? ''}
-                        exact
-                        className='nav-menu'
-                        key={x.accessId}>
-                        {x.description}
-                      </NavLink>
-                    ))}
-                  </>
-                ) : (
-                  <div className='nav-menu-container'>
-                    <button className='nav-menu'>Menus</button>
-                    <div className='menus'>
-                      {menus
-                        .filter((x) => x.navs.length > 0)
-                        .map((menu) => (
-                          <div className='menu-items' key={menu.head}>
-                            <div className='head'>{menu.head}</div>
-                            <div className='navs'>
-                              {menu.navs.map((nav) => (
-                                <div key={nav.route}>
-                                  <NavLink
-                                    to={nav.route ?? ''}
-                                    exact
-                                    className='nav-menu'>
-                                    {nav.name}
-                                  </NavLink>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                )}
               </div>
               <div className='menu-container'>
                 <label
@@ -170,9 +160,9 @@ export default function HomePage() {
                   onClick={() => setShowProfile(true)}>
                   {`${profile?.personnel?.name} (${profile?.personnel?.classification?.description})`}
                 </label>
-                <label onClick={logoutUser} className='nav-menu'>
-                  Logout
-                </label>
+                <button onClick={logoutUser} className='nav-menu'>
+                  <FontAwesomeIcon icon={faPowerOff as IconProp} />
+                </button>
               </div>
             </nav>
           </header>
