@@ -3,7 +3,7 @@ import { PersonnelConcernStatus } from '../../../constant';
 import { PersonnelConcern } from '../../../entities/transaction/PersonnelConcern';
 import { dateToString } from '../../../helpers';
 
-export default function ConcernAction({
+export default function ConcernMonitoringAction({
   action,
 }: {
   action: PersonnelConcern;
@@ -11,14 +11,16 @@ export default function ConcernAction({
   return (
     <div className='concern-action'>
       <div>
-        <span>{action.prevPersonnelConcernId ? 'Forwarded' : 'Assigned'}</span>
+        <span>
+          {action.prevPersonnelConcernId ? 'Forwarded' : 'Assigned'} to
+        </span>
+        &nbsp;
+        <span>
+          ({action.receivedDate && dateToString(action.receivedDate)})
+        </span>
         <span>
           {action.prevPersonnelConcernId ? '' : ` By ${action.creator}`}
         </span>
-        <span>
-          &nbsp; at ({action.receivedDate && dateToString(action.receivedDate)})
-        </span>
-        &nbsp; to
       </div>
       <div>{action.personnel?.name}</div>
       <div>Status</div>

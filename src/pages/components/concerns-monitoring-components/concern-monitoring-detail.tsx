@@ -3,7 +3,7 @@ import { PersonnelConcernStatus } from '../../../constant';
 import { PersonnelConcern } from '../../../entities/transaction/PersonnelConcern';
 import { dateToString } from '../../../helpers';
 
-export default function ConcernDetail({
+export default function ConcernMonitoringDetail({
   concern,
 }: {
   concern: PersonnelConcern;

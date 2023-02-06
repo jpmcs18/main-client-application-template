@@ -1,10 +1,13 @@
-import React, { useContext } from 'react';
-import { ConcernActions, ConcernList } from '../../concern-page';
-import ConcernItem from './concern-item';
+import { useContext } from 'react';
+import {
+  ConcernMonitoringActions,
+  ConcernMonitoringList,
+} from '../../concern-monitoring-page';
+import ConcernItem from './concern-monitoring-item';
 
-export default function ConcernItems() {
-  const action = useContext(ConcernActions);
-  const concerns = useContext(ConcernList);
+export default function ConcernMonitoringItems() {
+  const action = useContext(ConcernMonitoringActions);
+  const concerns = useContext(ConcernMonitoringList);
   return (
     <table className='item-table'>
       <thead>
@@ -13,6 +16,7 @@ export default function ConcernItems() {
           <th style={{ width: '10%' }}>Ticket Number</th>
           <th>Description</th>
           <th style={{ width: '10%' }}>Classification</th>
+          <th style={{ width: '20%' }}>Concern Office</th>
           <th style={{ width: '15%' }}>Caller</th>
           <th style={{ width: '8%' }}>Status</th>
         </tr>

@@ -37,3 +37,10 @@ export function getMonthName(date: Date): string {
   const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format;
   return monthName(date);
 }
+
+export function dateToString(date?: Date | undefined): string | undefined {
+  return date === undefined ? undefined : new Date(date).toLocaleString();
+}
+export function dateToDateString(date?: Date | undefined): string | undefined {
+  return date === undefined ? undefined : new Date(date).toDateString();
+}

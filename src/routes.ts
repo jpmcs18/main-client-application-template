@@ -5,6 +5,7 @@ export const Routes = {
   Office: '/offices',
   Personnel: '/personnels',
   Classification: '/classifications',
+  ConcernMonitoring: '/concerns-monitoring',
   Concern: '/concerns',
   Ticket: '/tickets',
   Summary: '/summary',

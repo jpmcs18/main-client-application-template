@@ -1,17 +1,22 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { ConcernStatus } from '../../../constant';
 import { Concern } from '../../../entities/transaction/Concern';
 import { dateToString } from '../../../helpers';
-import { ConcernActions } from '../../concern-page';
+import { ConcernMonitoringActions } from '../../concern-monitoring-page';
 
-export default function ConcernItem({ concern }: { concern: Concern }) {
-  const action = useContext(ConcernActions);
+export default function ConcernMonitoringItem({
+  concern,
+}: {
+  concern: Concern;
+}) {
+  const action = useContext(ConcernMonitoringActions);
   return (
     <tr>
       <td>{concern.entryDate && dateToString(concern.entryDate)}</td>
       <td>{concern.number}</td>
       <td>{concern.description}</td>
       <td>{concern.classification?.description}</td>
+      <td>{concern.office?.description}</td>
       <td>{concern.caller}</td>
       <td>
         <div>{concern.status}</div>

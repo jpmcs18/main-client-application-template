@@ -6,16 +6,13 @@ import {
 } from '@microsoft/signalr';
 import { createContext, useEffect, useRef, useState } from 'react';
 import { API } from '../constant';
-import {
-  useSetBusy,
-  useSetMessage,
-  useUserProfile,
-} from '../custom-hooks/authorize-provider';
+import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
 import { Hub } from '../endpoints';
 import { Concern } from '../entities/transaction/Concern';
 import { getClassifications } from '../processors/classification-process';
 import { deleteConcern, searchConcerns } from '../processors/concern-process';
-import ConcernItems from './components/concerns-components/concern-items';
+import { getOffices } from '../processors/office-process';
+import ConcernMonitoringItems from './components/concerns-monitoring-components/concern-monitoring-items';
 import CustomCheckBox from './components/custom-check-box';
 import CustomDatePicker from './components/custom-datepicker';
 import CustomDropdown, { DropdownItem } from './components/custom-dropdown';
@@ -24,27 +21,27 @@ import Pagination from './components/pagination';
 import SeachBar from './components/seachbar';
 import AssignConcern from './modals/assign-concern';
 import ConcernActionsViewer from './modals/concern-actions-viewer';
-import ManageConcern from './modals/manage-concern';
+import ManageConcernMonitoring from './modals/manage-concern-monitoring';
 interface Filtering {
   classification?: number | undefined;
+  office?: number | undefined;
   startDate?: Date | undefined;
   endDate?: Date | undefined;
 }
-export type CONCERNACTIONS =
+export type CONCERNMONITORINGACTIONS =
   | { action: 'Add' }
   | { action: 'Assign'; payload: Concern }
   | { action: 'ViewAction'; payload: Concern }
   | { action: 'Edit'; payload: Concern }
   | { action: 'Delete'; payload: number };
 
-export const ConcernList = createContext<Concern[]>([]);
-export const ConcernActions = createContext<(action: CONCERNACTIONS) => void>(
-  () => {}
-);
-export default function ConcernPage() {
+export const ConcernMonitoringList = createContext<Concern[]>([]);
+export const ConcernMonitoringActions = createContext<
+  (action: CONCERNMONITORINGACTIONS) => void
+>(() => {});
+export default function ConcernMonitoringPage() {
   const [key, setKey] = useState<string | undefined>();
   const [pageCount, setPageCount] = useState(0);
-  const profile = useUserProfile();
   const [currentPage, setCurrentPage] = useState(1);
   const [concerns, setConcerns] = useState<Concern[]>(() => []);
   const [showModal, setShowModal] = useState(false);
@@ -59,14 +56,15 @@ export default function ConcernPage() {
   const [classificationItem, setClassificationItem] = useState<DropdownItem[]>(
     () => []
   );
+  const [officeItem, setOfficeItem] = useState<DropdownItem[]>(() => []);
   const [filtering, setFiltering] = useState<Filtering>(() => {
     return {
       classification: undefined,
+      office: undefined,
       startDate: undefined,
       endDate: undefined,
     };
   });
-
   async function onClose(hasChanges: boolean, personnel: string | undefined) {
     setShowModal(false);
     setShowAssignmentModal(false);
@@ -79,7 +77,6 @@ export default function ConcernPage() {
       searchConcern();
     }
   }
-
   useEffect(
     () => {
       initializeComponents();
@@ -95,6 +92,7 @@ export default function ConcernPage() {
       Notification.requestPermission();
     }
     await fetchClassifications();
+    await fetchOffices();
     await connect();
     await searchConcern();
   }
@@ -133,7 +131,6 @@ export default function ConcernPage() {
     if (connection?.state === HubConnectionState.Disconnected)
       await connection?.start();
   }
-
   async function searchConcern() {
     setBusy(true);
     searchConcerns(
@@ -143,7 +140,7 @@ export default function ConcernPage() {
       closed.current,
       filtering.startDate,
       filtering.endDate,
-      profile?.personnel?.officeId,
+      filtering.office,
       filtering.classification
     )
       .then((res) => {
@@ -157,19 +154,16 @@ export default function ConcernPage() {
       })
       .finally(() => setBusy(false));
   }
-
   function search(key: string) {
     setKey(() => key);
     setCurrentPage(() => 1);
     searchConcern();
   }
-
   function goToPage(page: number) {
     setCurrentPage(() => page);
     searchConcern();
   }
-
-  function concernAction(action: CONCERNACTIONS) {
+  function concernAction(action: CONCERNMONITORINGACTIONS) {
     switch (action.action) {
       case 'Add':
         setSelectedConcern(() => undefined);
@@ -218,13 +212,30 @@ export default function ConcernPage() {
       })
       .finally(() => setBusy(false));
   }
-
   async function fetchClassifications() {
     setBusy(true);
     await getClassifications()
       .then((res) => {
         if (res !== undefined) {
           setClassificationItem(() => [
+            { key: '', value: '' },
+            ...res.map((r) => {
+              return { key: r.id.toString(), value: r.description };
+            }),
+          ]);
+        }
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
+  }
+  async function fetchOffices() {
+    setBusy(true);
+    await getOffices()
+      .then((res) => {
+        if (res !== undefined) {
+          setOfficeItem(() => [
             { key: '', value: '' },
             ...res.map((r) => {
               return { key: r.id.toString(), value: r.description };
@@ -247,7 +258,7 @@ export default function ConcernPage() {
     <>
       <section>
         <div className='header'>
-          <div className='header-text'>Concerns</div>
+          <div className='header-text'>Concerns Monitoring</div>
         </div>
       </section>
       <section>
@@ -266,6 +277,13 @@ export default function ConcernPage() {
             name='endDate'
             value={filtering.endDate}
             onChange={onChange}
+          />
+          <CustomDropdown
+            title='Office'
+            name='office'
+            value={filtering.office}
+            onChange={onChange}
+            itemsList={officeItem}
           />
           <CustomDropdown
             title='Classification'
@@ -303,15 +321,18 @@ export default function ConcernPage() {
           goInPage={goToPage}></Pagination>
       </section>
       <section>
-        <ConcernList.Provider value={concerns}>
-          <ConcernActions.Provider value={concernAction}>
-            <ConcernItems />
-          </ConcernActions.Provider>
-        </ConcernList.Provider>
+        <ConcernMonitoringList.Provider value={concerns}>
+          <ConcernMonitoringActions.Provider value={concernAction}>
+            <ConcernMonitoringItems />
+          </ConcernMonitoringActions.Provider>
+        </ConcernMonitoringList.Provider>
       </section>
       <>
         {showModal && (
-          <ManageConcern onClose={onClose} selectedConcern={selectedConcern} />
+          <ManageConcernMonitoring
+            onClose={onClose}
+            selectedConcern={selectedConcern}
+          />
         )}
         {showAssignmentModal && (
           <AssignConcern onClose={onClose} concern={selectedConcern} />

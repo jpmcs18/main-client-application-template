@@ -20,6 +20,7 @@ import PersonnelPage from './personnel-page';
 import OfficePage from './office-page';
 import Dashboard from './dashboard';
 import SummaryPage from './summary-page';
+import ConcernMonitoringPage from './concern-monitoring-page';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -37,6 +38,10 @@ export default function HomePage() {
             {
               head: 'Transactions',
               navs: [
+                {
+                  route: Routes.ConcernMonitoring,
+                  name: 'Concerns Monitoring',
+                },
                 {
                   route: Routes.Concern,
                   name: 'Concerns',
@@ -168,7 +173,17 @@ export default function HomePage() {
                 <label
                   className='user-name nav-menu'
                   onClick={() => setShowProfile(true)}>
-                  {`${profile?.personnel?.name} (${profile?.personnel?.classification?.description})`}
+                  <span className='title-name'>{profile?.personnel?.name}</span>
+                  <span className='sub-name'>
+                    <span>
+                      {profile?.personnel?.office?.abbreviation ??
+                        profile?.personnel?.office?.description}
+                    </span>
+                    <span className='classification-text'>
+                      {profile?.personnel?.classification &&
+                        `(${profile?.personnel?.classification?.description})`}
+                    </span>
+                  </span>
                 </label>
                 <label onClick={logoutUser} className='nav-menu'>
                   Logout
@@ -195,6 +210,16 @@ export default function HomePage() {
             )?.[0]?.id ||
               profile?.admin) && (
               <Route path={Routes.Concern} exact component={ConcernPage} />
+            )}
+            {(profile?.distinctModules?.filter(
+              (x) => x.route === Routes.ConcernMonitoring
+            )?.[0]?.id ||
+              profile?.admin) && (
+              <Route
+                path={Routes.ConcernMonitoring}
+                exact
+                component={ConcernMonitoringPage}
+              />
             )}
             {(profile?.distinctModules?.filter(
               (x) => x.route === Routes.Ticket

@@ -5,6 +5,7 @@ import {
 } from '../../custom-hooks/authorize-provider';
 import { Personnel } from '../../entities/transaction/Personnel';
 import { getClassifications } from '../../processors/classification-process';
+import { getOffices } from '../../processors/office-process';
 import {
   createPersonnel,
   updatePersonnel,
@@ -26,12 +27,14 @@ export default function ManagePersonnel({
       selectedPersonnel ?? {
         id: 0,
         classificationId: undefined,
+        officeId: undefined,
         name: '',
       }
   );
   const [classificationItem, setClassificationItem] = useState<DropdownItem[]>(
     []
   );
+  const [officeItem, setOfficeItem] = useState<DropdownItem[]>([]);
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
   useEffect(
@@ -44,6 +47,7 @@ export default function ManagePersonnel({
 
   async function initializeComponents() {
     await fetchClassifications();
+    await fetchOffices();
   }
   async function fetchClassifications() {
     setBusy(true);
@@ -51,6 +55,23 @@ export default function ManagePersonnel({
       .then((res) => {
         if (res !== undefined) {
           setClassificationItem(() =>
+            res.map((r) => {
+              return { key: r.id.toString(), value: r.description };
+            })
+          );
+        }
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
+  }
+  async function fetchOffices() {
+    setBusy(true);
+    await getOffices()
+      .then((res) => {
+        if (res !== undefined) {
+          setOfficeItem(() =>
             res.map((r) => {
               return { key: r.id.toString(), value: r.description };
             })
@@ -121,6 +142,14 @@ export default function ManagePersonnel({
           value={personnel?.classificationId}
           onChange={onChange}
           itemsList={classificationItem}
+        />
+        <CustomDropdown
+          title='Office'
+          name='officeId'
+          hasDefault={true}
+          value={personnel?.officeId}
+          onChange={onChange}
+          itemsList={officeItem}
         />
       </div>
       <div className='modal-footer'>

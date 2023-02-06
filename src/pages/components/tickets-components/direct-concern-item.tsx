@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { PersonnelConcernStatus } from '../../../constant';
 import { PersonnelConcern } from '../../../entities/transaction/PersonnelConcern';
+import { dateToString } from '../../../helpers';
 import { DirectConcernActions } from '../../ticket-page';
 
 export default function DirectConcernItem({
@@ -18,10 +19,7 @@ export default function DirectConcernItem({
             : `Reason: ${concern.action}`
           : undefined
       }>
-      <td>
-        {concern.receivedDate &&
-          new Date(concern.receivedDate).toLocaleString()}
-      </td>
+      <td>{dateToString(concern.receivedDate)}</td>
       <td>{concern.concern.number}</td>
       <td>
         <div>{concern.concern.description}</div>
@@ -39,7 +37,7 @@ export default function DirectConcernItem({
         <div>{concern.status}</div>
         <div>
           {concern.closedDate && (
-            <span> ({new Date(concern.closedDate).toLocaleString()})</span>
+            <span> ({dateToString(concern.closedDate)})</span>
           )}
         </div>
       </td>
