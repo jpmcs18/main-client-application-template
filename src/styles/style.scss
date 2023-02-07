@@ -13,10 +13,9 @@
   --primary-table-alternating: rgba(226, 195, 195, 0.281);
   --table-hover-color: #f5f1f1;
   --label-size: 0.6rem;
-  --normal-font-size: 0.7rem;
-  --modal-header-font-size: 0.9rem;
+  --normal-font-size: 0.8rem;
   --header-font-size: 1.2rem;
-  --table-header-font-size: 0.8rem;
+  --table-header-font-size: 0.9rem;
   --login-header-font-size: 1.6rem;
   --menu-font-size: 0.8rem;
   --normal: 300;
@@ -135,6 +134,7 @@ header {
         flex-direction: column;
         gap: 1em;
         .head {
+          text-align: center;
           font-size: var(--header-font-size);
           font-weight: var(--demibold);
           color: var(--primary-color-accent);
@@ -752,6 +752,18 @@ input {
     color: var(--primary-color);
     font-size: var(--header-font-size);
     font-weight: var(--demibold);
+    border-bottom: 1px solid var(--primary-color);
+    &:before {
+      content: '';
+      position: absolute;
+      width: 80%;
+      height: 0;
+      border-bottom: 1px solid var(--primary-color);
+      bottom: -0.3em;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+    }
   }
 }
 .calendar {

@@ -87,6 +87,13 @@ export default function ConcernPage() {
     // eslint-disable-next-line
     []
   );
+  useEffect(
+    () => {
+      reconnect();
+    },
+    // eslint-disable-next-line
+    [connection?.state]
+  );
 
   async function initializeComponents() {
     if (!('Notification' in window)) {
@@ -302,7 +309,7 @@ export default function ConcernPage() {
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
-      <section>
+      <section className='table-container'>
         <ConcernList.Provider value={concerns}>
           <ConcernActions.Provider value={concernAction}>
             <ConcernItems />

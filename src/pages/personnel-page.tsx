@@ -16,7 +16,7 @@ export const PersonnelActions = createContext<(action: ACTIONS) => void>(
   () => {}
 );
 
-export default function OfficePage() {
+export default function PersonnelPage() {
   const [key, setKey] = useState<string | undefined>();
   const [personnels, setPersonnels] = useState<Personnel[]>([]);
   const [pageCount, setPageCount] = useState<number>(1);
@@ -103,7 +103,7 @@ export default function OfficePage() {
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
-      <section>
+      <section className='table-container'>
         <PersonnelList.Provider value={personnels}>
           <PersonnelActions.Provider value={personnelAction}>
             <PersonnelItems />

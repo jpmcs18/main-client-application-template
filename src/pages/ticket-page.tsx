@@ -215,7 +215,7 @@ export default function TicketPage() {
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
-      <section>
+      <section className='table-container'>
         <DirectConcernList.Provider value={directConcerns}>
           <DirectConcernActions.Provider value={concernAction}>
             <DirectConcernItems />
