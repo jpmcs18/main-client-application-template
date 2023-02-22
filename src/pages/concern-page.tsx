@@ -79,7 +79,13 @@ export default function ConcernPage() {
       searchConcern();
     }
   }
-
+  useEffect(
+    () => {
+      searchConcern();
+    },
+    //eslint-disable-next-line
+    [currentPage, key]
+  );
   useEffect(
     () => {
       initializeComponents();
@@ -168,12 +174,10 @@ export default function ConcernPage() {
   function search(key: string) {
     setKey(() => key);
     setCurrentPage(() => 1);
-    searchConcern();
   }
 
   function goToPage(page: number) {
     setCurrentPage(() => page);
-    searchConcern();
   }
 
   function concernAction(action: CONCERNACTIONS) {
@@ -214,7 +218,7 @@ export default function ConcernPage() {
     await deleteConcern(id)
       .then(() => {
         setMessage({
-          message: 'User Deleted',
+          message: 'Concern Deleted',
           onOk: () => {
             searchConcern();
           },

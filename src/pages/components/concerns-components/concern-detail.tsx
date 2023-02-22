@@ -9,7 +9,7 @@ export default function ConcernDetail({
   concern: PersonnelConcern;
 }) {
   return (
-    <div className='concern-action'>
+    <div className={'concern-action ' + concern.status}>
       <div>Received Date & Time</div>
       <div>{concern.receivedDate && dateToString(concern.receivedDate)}</div>
       <div>Concern</div>

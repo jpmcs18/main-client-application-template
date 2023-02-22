@@ -8,6 +8,7 @@ import {
 import { UpdateUserProfile } from '../../entities/user/UpdateUserProfile';
 import { saveProfile } from '../../processors/session-manager';
 import { updateProfile } from '../../processors/user-process';
+import CustomCheckBoxButton from '../components/custom-check-box-button';
 import CustomTextBox from '../components/custom-textbox';
 import { CustomReturn } from '../components/CustomReturn';
 import Modal from './modal';
@@ -19,6 +20,7 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
     return {
       username: profile?.username ?? '',
       personnel: profile?.personnel,
+      isAvailable: profile?.isAvailable,
       password: '',
       newPassword: '',
       confirmNewPassword: '',
@@ -48,12 +50,38 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
             saveProfile({
               ...profile,
               username: user.username,
+              isAvailable: user.isAvailable,
             });
             updateProfileInfo({
               ...profile,
               username: user.username,
+              isAvailable: user.isAvailable,
             });
             onClose();
+          },
+        });
+      })
+      .catch((err) => {
+        setMessage({ message: err.message });
+      })
+      .finally(() => setBusy(false));
+  }
+
+  async function saveAvailability(isAvailable: boolean) {
+    setBusy(true);
+    await updateProfile({ isAvailable: isAvailable })
+      .then(() => {
+        setMessage({
+          message: 'Profile Updated',
+          onOk: () => {
+            saveProfile({
+              ...profile,
+              isAvailable: isAvailable,
+            });
+            updateProfileInfo({
+              ...profile,
+              isAvailable: isAvailable,
+            });
           },
         });
       })
@@ -67,6 +95,10 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
     setUser((prevUser) => {
       return { ...prevUser, [elementName]: value };
     });
+
+    if (elementName === 'isAvailable') {
+      saveAvailability(value);
+    }
   }
   return (
     <Modal className='profile-modal' onClose={onClose} title='Users Profile'>
@@ -76,6 +108,24 @@ export default function ManageProfile({ onClose }: { onClose: () => void }) {
             title='Name'
             readonly={true}
             value={user?.personnel?.name}
+          />
+          <CustomTextBox
+            title='Office'
+            readonly={true}
+            value={user?.personnel?.office?.description}
+          />
+          <CustomTextBox
+            title='Office'
+            readonly={true}
+            value={user?.personnel?.personnelClassification
+              ?.map((x) => x.classification?.description)
+              .join(' | ')}
+          />
+          <CustomCheckBoxButton
+            title={user?.isAvailable ? 'Available' : 'Unavailable'}
+            name='isAvailable'
+            isCheck={user?.isAvailable ?? false}
+            onChange={onChange}
           />
           <CustomTextBox
             title='Username'

@@ -146,10 +146,18 @@ export default function SummaryPage() {
               <div className='day'>{x.date.getDate()}</div>
               <div className='remarks'>
                 {!!x.summary?.noOfResolved && (
-                  <div>RESOLVED: {x.summary?.noOfResolved}</div>
+                  <div className='resolved'>
+                    <span className='desktop-features'>RESOLVED</span>
+                    <span className='mobile-features'>R</span>:
+                    <span className='count'>{x.summary?.noOfResolved}</span>
+                  </div>
                 )}
                 {!!x.summary?.noOfForwarded && (
-                  <div>FORWARDED: {x.summary?.noOfForwarded}</div>
+                  <div className='forwarded'>
+                    <span className='desktop-features'>FORWARDED</span>
+                    <span className='mobile-features'>F</span>:
+                    <span className='count'>{x.summary?.noOfForwarded}</span>
+                  </div>
                 )}
               </div>
             </div>

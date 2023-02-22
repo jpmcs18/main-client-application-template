@@ -1,6 +1,5 @@
 import { Personnel } from '../transaction/Personnel';
 import { Module } from './Module';
-import { UserRole } from './User';
 
 export interface Profile {
   username?: string | undefined;
@@ -9,4 +8,5 @@ export interface Profile {
   personnelId?: number | undefined;
   personnel?: Personnel | undefined;
   distinctModules?: Module[] | undefined;
+  isAvailable?: boolean | undefined;
 }

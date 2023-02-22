@@ -21,6 +21,13 @@ import OfficePage from './office-page';
 import Dashboard from './dashboard';
 import SummaryPage from './summary-page';
 import ConcernMonitoringPage from './concern-monitoring-page';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBars,
+  faSignOutAlt,
+  faTimes,
+} from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export default function HomePage() {
   const [showProfile, setShowProfile] = useState(false);
@@ -28,6 +35,7 @@ export default function HomePage() {
   const profile = useUserProfile();
   const updateAuthorize = useUpdateAuthorize();
   const setMessage = useSetMessage();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menus: {
     head: string;
     navs: { route: string | undefined; name: string | undefined }[];
@@ -105,9 +113,8 @@ export default function HomePage() {
             },
           ]),
     ],
-    [profile?.distinctModules, profile?.admin]
+    [profile?.admin, profile?.distinctModules]
   );
-
   function logoutUser() {
     setMessage({
       message: 'Continue to logout?',
@@ -118,34 +125,70 @@ export default function HomePage() {
       },
     });
   }
-
   return (
-    <>
+    <div>
       {authorize ? (
         <BrowserRouter>
           <header>
             <nav>
               <div className='menu-container'>
+                <button
+                  className='nav-menu menu-mobile-bars mobile-features'
+                  onClick={() => {
+                    setIsMenuOpen((x) => !x);
+                  }}>
+                  <FontAwesomeIcon icon={faBars as IconProp} />
+                </button>
                 <NavLink to={Routes.Home} exact className='nav-icon'>
                   {ICON}
                 </NavLink>
-                {(profile?.distinctModules?.length ?? 0) <= 3 &&
-                (profile?.distinctModules?.length ?? 0) > 0 ? (
-                  <>
-                    {profile?.distinctModules?.map((x) => (
-                      <NavLink
-                        to={x.route ?? ''}
-                        exact
-                        className='nav-menu'
-                        key={x.accessId}>
-                        {x.description}
-                      </NavLink>
-                    ))}
-                  </>
-                ) : (
-                  <div className='nav-menu-container'>
-                    <button className='nav-menu'>Menus</button>
-                    <div className='menus'>
+                <div className='nav-menu-container'>
+                  <button
+                    className='nav-menu desktop-features'
+                    onClick={() => setIsMenuOpen(() => true)}>
+                    Menus
+                  </button>
+                  <div className='menu-container'>
+                    <div className={'menus ' + (isMenuOpen ? 'menu-open' : '')}>
+                      <div className='menu-items'>
+                        <button
+                          className={
+                            'btn-menu-close ' + (isMenuOpen ? 'close-show' : '')
+                          }
+                          onClick={() => setIsMenuOpen(() => false)}>
+                          <FontAwesomeIcon icon={faTimes as IconProp} />
+                          <span> Close</span>
+                        </button>
+                      </div>
+                      <div className='menu-items'>
+                        <label
+                          className='user-name nav-menu mobile-features'
+                          onClick={() => {
+                            setIsMenuOpen(() => false);
+                            setShowProfile(true);
+                          }}>
+                          <div
+                            className={
+                              'title-name ' +
+                              (profile?.isAvailable ? 'user-available' : '')
+                            }>
+                            {profile?.personnel?.name}
+                          </div>
+                          <div className='sub-name'>
+                            <span>
+                              {profile?.personnel?.office?.abbreviation ??
+                                profile?.personnel?.office?.description}
+                            </span>
+                            <span className='classification-text'>
+                              {!!profile?.personnel?.personnelClassification
+                                ?.length &&
+                                `(${profile?.personnel?.personnelClassification
+                                  ?.map((x) => x.classification?.description)
+                                  .join(' | ')})`}
+                            </span>
+                          </div>
+                        </label>
+                      </div>
                       {menus
                         .filter((x) => x.navs.length > 0)
                         .map((menu) => (
@@ -155,6 +198,7 @@ export default function HomePage() {
                               {menu.navs.map((nav) => (
                                 <div key={nav.route}>
                                   <NavLink
+                                    onClick={() => setIsMenuOpen(() => false)}
                                     to={nav.route ?? ''}
                                     exact
                                     className='nav-menu'>
@@ -167,26 +211,43 @@ export default function HomePage() {
                         ))}
                     </div>
                   </div>
-                )}
+                </div>
               </div>
+              <div
+                onClick={() => setIsMenuOpen(() => false)}
+                className={
+                  'menu-blocker ' + (isMenuOpen ? 'menu-blocker-show' : '')
+                }></div>
               <div className='menu-container'>
                 <label
-                  className='user-name nav-menu'
+                  className='user-name nav-menu desktop-features'
                   onClick={() => setShowProfile(true)}>
-                  <span className='title-name'>{profile?.personnel?.name}</span>
-                  <span className='sub-name'>
+                  <div
+                    className={
+                      'title-name ' +
+                      (profile?.isAvailable ? 'user-available' : '')
+                    }>
+                    {profile?.personnel?.name}
+                  </div>
+                  <div className='sub-name'>
                     <span>
                       {profile?.personnel?.office?.abbreviation ??
                         profile?.personnel?.office?.description}
                     </span>
                     <span className='classification-text'>
-                      {profile?.personnel?.classification &&
-                        `(${profile?.personnel?.classification?.description})`}
+                      {!!profile?.personnel?.personnelClassification?.length &&
+                        `(${profile?.personnel?.personnelClassification
+                          ?.map((x) => x.classification?.description)
+                          .join(' | ')})`}
                     </span>
-                  </span>
+                  </div>
                 </label>
                 <label onClick={logoutUser} className='nav-menu'>
-                  Logout
+                  <FontAwesomeIcon
+                    icon={faSignOutAlt as IconProp}
+                    className='mobile-features'
+                  />
+                  <span className='desktop-features'>Logout</span>
                 </label>
               </div>
             </nav>
@@ -265,6 +326,6 @@ export default function HomePage() {
       ) : (
         <LoginPage />
       )}
-    </>
+    </div>
   );
 }

@@ -79,6 +79,13 @@ export default function ConcernMonitoringPage() {
   }
   useEffect(
     () => {
+      searchConcern();
+    },
+    //eslint-disable-next-line
+    [currentPage, key]
+  );
+  useEffect(
+    () => {
       initializeComponents();
     },
     // eslint-disable-next-line
@@ -157,11 +164,9 @@ export default function ConcernMonitoringPage() {
   function search(key: string) {
     setKey(() => key);
     setCurrentPage(() => 1);
-    searchConcern();
   }
   function goToPage(page: number) {
     setCurrentPage(() => page);
-    searchConcern();
   }
   function concernAction(action: CONCERNMONITORINGACTIONS) {
     switch (action.action) {
@@ -201,7 +206,7 @@ export default function ConcernMonitoringPage() {
     await deleteConcern(id)
       .then(() => {
         setMessage({
-          message: 'User Deleted',
+          message: 'Concern Deleted',
           onOk: () => {
             searchConcern();
           },
@@ -320,7 +325,7 @@ export default function ConcernMonitoringPage() {
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
-      <section>
+      <section className='table-container'>
         <ConcernMonitoringList.Provider value={concerns}>
           <ConcernMonitoringActions.Provider value={concernAction}>
             <ConcernMonitoringItems />

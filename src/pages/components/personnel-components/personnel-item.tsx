@@ -7,8 +7,13 @@ export default function PersonnelItem({ personnel }: { personnel: Personnel }) {
   return (
     <tr>
       <td>{personnel.name}</td>
+      <td>{personnel.number}</td>
       <td>{personnel.office?.description}</td>
-      <td>{personnel.classification?.description}</td>
+      <td>
+        {personnel?.personnelClassification
+          ?.map((x) => x.classification?.description)
+          .join(' | ')}
+      </td>
       <td className='table-actions'>
         <button
           className='btn'

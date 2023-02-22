@@ -7,6 +7,7 @@ export interface User {
   name?: string;
   active: boolean;
   admin: boolean;
+  isAvailable?: boolean | undefined;
   personnel?: Personnel | undefined;
   personnelId: number | undefined;
   userRoles?: UserRole[] | undefined;
