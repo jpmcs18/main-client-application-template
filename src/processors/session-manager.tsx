@@ -46,6 +46,7 @@ export function saveProfile(profile: Profile) {
       admin: profile.admin,
       personnel: profile.personnel,
       distinctModules: profile.distinctModules,
+      isAvailable: profile.isAvailable,
     };
     sessionStorage.setItem(profile_add, encrypt(JSON.stringify(trimmed)));
   }

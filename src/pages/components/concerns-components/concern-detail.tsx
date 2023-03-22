@@ -1,6 +1,7 @@
 import React from 'react';
 import { PersonnelConcernStatus } from '../../../constant';
 import { PersonnelConcern } from '../../../entities/transaction/PersonnelConcern';
+import { dateToString } from '../../../helpers';
 
 export default function ConcernDetail({
   concern,
@@ -8,12 +9,9 @@ export default function ConcernDetail({
   concern: PersonnelConcern;
 }) {
   return (
-    <div className='concern-action'>
+    <div className={'concern-action ' + concern.status}>
       <div>Received Date & Time</div>
-      <div>
-        {concern.receivedDate &&
-          new Date(concern.receivedDate).toLocaleString()}
-      </div>
+      <div>{concern.receivedDate && dateToString(concern.receivedDate)}</div>
       <div>Concern</div>
       <div>{concern.concern.description}</div>
       {concern.prevPersonnelConcernId && (
@@ -28,7 +26,7 @@ export default function ConcernDetail({
       <div>
         {concern.status}
         {concern.closedDate && (
-          <span> ({new Date(concern.closedDate).toLocaleString()})</span>
+          <span> ({dateToString(concern.closedDate)})</span>
         )}
       </div>
       {concern.statusId !== PersonnelConcernStatus.Pending && (

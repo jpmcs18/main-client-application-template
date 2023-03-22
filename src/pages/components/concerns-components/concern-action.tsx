@@ -1,6 +1,7 @@
 import React from 'react';
 import { PersonnelConcernStatus } from '../../../constant';
 import { PersonnelConcern } from '../../../entities/transaction/PersonnelConcern';
+import { dateToString } from '../../../helpers';
 
 export default function ConcernAction({
   action,
@@ -10,27 +11,20 @@ export default function ConcernAction({
   return (
     <div className='concern-action'>
       <div>
-        <span>
-          {action.prevPersonnelConcernId ? 'Forwarded' : 'Assigned'} to
-        </span>
-        &nbsp;
-        <span>
-          (
-          {action.receivedDate &&
-            new Date(action.receivedDate).toLocaleString()}
-          )
-        </span>
+        <span>{action.prevPersonnelConcernId ? 'Forwarded' : 'Assigned'}</span>
         <span>
           {action.prevPersonnelConcernId ? '' : ` By ${action.creator}`}
         </span>
+        <span>
+          &nbsp; at ({action.receivedDate && dateToString(action.receivedDate)})
+        </span>
+        &nbsp; to
       </div>
       <div>{action.personnel?.name}</div>
       <div>Status</div>
       <div>
         {action.status}
-        {action.closedDate && (
-          <span> ({new Date(action.closedDate).toLocaleString()})</span>
-        )}
+        {action.closedDate && <span> ({dateToString(action.closedDate)})</span>}
       </div>
       {action.statusId !== PersonnelConcernStatus.Pending && (
         <>

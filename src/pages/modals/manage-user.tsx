@@ -115,13 +115,15 @@ export default function ManageUser({
   }
   function onChange({ elementName, value, text }: CustomReturn) {
     if (elementName === 'role') {
-      if (value !== undefined) {
+      console.log(value);
+      if (value === undefined) {
         return;
       }
       setUserRoles((r) => [
         ...r,
         { id: 0, roleId: +value, roleDesc: text, userId: user.id },
       ]);
+      console.log(userRoles);
       setRoleItems((r) => r.filter((x) => x.key !== value));
       return;
     }
@@ -208,15 +210,21 @@ export default function ManageUser({
         </div>
         <div>
           <CustomCheckBoxButton
-            title='Is Admin'
+            title={user?.admin ? 'Admin' : 'User'}
             name='admin'
             isCheck={user?.admin ?? false}
             onChange={onChange}
           />
           <CustomCheckBoxButton
-            title='Is Active'
+            title={user?.active ? 'Active' : 'Inactive'}
             name='active'
             isCheck={user?.active ?? false}
+            onChange={onChange}
+          />
+          <CustomCheckBoxButton
+            title={user?.isAvailable ? 'Available' : 'Unavailable'}
+            name='isAvailable'
+            isCheck={user?.isAvailable ?? false}
             onChange={onChange}
           />
         </div>

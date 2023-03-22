@@ -4,15 +4,17 @@ import {
   HubConnectionState,
   LogLevel,
 } from '@microsoft/signalr';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 import { API } from '../constant';
-import { useSetBusy, useSetMessage } from '../custom-hooks/authorize-provider';
+import {
+  useSetBusy,
+  useSetMessage,
+  useUserProfile,
+} from '../custom-hooks/authorize-provider';
 import { Hub } from '../endpoints';
 import { Concern } from '../entities/transaction/Concern';
-import { addDays } from '../helpers';
 import { getClassifications } from '../processors/classification-process';
 import { deleteConcern, searchConcerns } from '../processors/concern-process';
-import { getOffices } from '../processors/office-process';
 import ConcernItems from './components/concerns-components/concern-items';
 import CustomCheckBox from './components/custom-check-box';
 import CustomDatePicker from './components/custom-datepicker';
@@ -24,10 +26,9 @@ import AssignConcern from './modals/assign-concern';
 import ConcernActionsViewer from './modals/concern-actions-viewer';
 import ManageConcern from './modals/manage-concern';
 interface Filtering {
-  classification: any;
-  office: any;
-  startDate: Date | undefined;
-  endDate: Date | undefined;
+  classification?: number | undefined;
+  startDate?: Date | undefined;
+  endDate?: Date | undefined;
 }
 export type CONCERNACTIONS =
   | { action: 'Add' }
@@ -43,29 +44,29 @@ export const ConcernActions = createContext<(action: CONCERNACTIONS) => void>(
 export default function ConcernPage() {
   const [key, setKey] = useState<string | undefined>();
   const [pageCount, setPageCount] = useState(0);
+  const profile = useUserProfile();
   const [currentPage, setCurrentPage] = useState(1);
   const [concerns, setConcerns] = useState<Concern[]>(() => []);
   const [showModal, setShowModal] = useState(false);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [showActionsModal, setShowActionsModal] = useState(false);
   const [selectedConcern, setSelectedConcern] = useState<Concern | undefined>();
-  const [assigned, setAssigned] = useState(true);
-  const [closed, setClosed] = useState(false);
+  const assigned = useRef(true);
+  const closed = useRef(false);
   const setBusy = useSetBusy();
   const setMessage = useSetMessage();
   const [connection, setConnection] = useState<HubConnection>();
   const [classificationItem, setClassificationItem] = useState<DropdownItem[]>(
     () => []
   );
-  const [officeItem, setOfficeItem] = useState<DropdownItem[]>(() => []);
   const [filtering, setFiltering] = useState<Filtering>(() => {
     return {
       classification: undefined,
-      office: undefined,
-      startDate: addDays(new Date(), -7),
-      endDate: new Date(),
+      startDate: undefined,
+      endDate: undefined,
     };
   });
+
   async function onClose(hasChanges: boolean, personnel: string | undefined) {
     setShowModal(false);
     setShowAssignmentModal(false);
@@ -75,15 +76,29 @@ export default function ConcernPage() {
       await connection?.invoke('NewConcern');
       if ((personnel ?? '') !== '')
         await connection?.invoke('NewTicket', personnel);
-      searchConcern({});
+      searchConcern();
     }
   }
+  useEffect(
+    () => {
+      searchConcern();
+    },
+    //eslint-disable-next-line
+    [currentPage, key]
+  );
   useEffect(
     () => {
       initializeComponents();
     },
     // eslint-disable-next-line
     []
+  );
+  useEffect(
+    () => {
+      reconnect();
+    },
+    // eslint-disable-next-line
+    [connection?.state]
   );
 
   async function initializeComponents() {
@@ -93,10 +108,10 @@ export default function ConcernPage() {
       Notification.requestPermission();
     }
     await fetchClassifications();
-    await fetchOffices();
     await connect();
-    await searchConcern({});
+    await searchConcern();
   }
+
   async function connect() {
     try {
       if (connection === undefined) {
@@ -107,11 +122,11 @@ export default function ConcernPage() {
 
         conn.on('NewConcern', () => {
           new Notification('New Concern Added');
-          searchConcern({});
+          searchConcern();
         });
         conn.on('ResolveConcern', (ticketnumber) => {
           new Notification(`Ticket ${ticketnumber} Resolved`);
-          searchConcern({});
+          searchConcern();
         });
         await conn.start();
         if (conn.state === HubConnectionState.Connected) {
@@ -131,23 +146,18 @@ export default function ConcernPage() {
     if (connection?.state === HubConnectionState.Disconnected)
       await connection?.start();
   }
-  async function searchConcern({
-    searchKey,
-    pageNumber,
-    isAssigned,
-    isClosed,
-  }: {
-    searchKey?: string;
-    pageNumber?: number;
-    isAssigned?: boolean;
-    isClosed?: boolean;
-  }) {
+
+  async function searchConcern() {
     setBusy(true);
     searchConcerns(
-      searchKey ?? key,
-      pageNumber ?? currentPage,
-      isAssigned ?? assigned,
-      isClosed ?? closed
+      key,
+      currentPage,
+      assigned.current,
+      closed.current,
+      filtering.startDate,
+      filtering.endDate,
+      profile?.personnel?.officeId,
+      filtering.classification
     )
       .then((res) => {
         if (res !== undefined) {
@@ -160,15 +170,16 @@ export default function ConcernPage() {
       })
       .finally(() => setBusy(false));
   }
+
   function search(key: string) {
-    setKey(key);
-    setCurrentPage(1);
-    searchConcern({ searchKey: key, pageNumber: 1 });
+    setKey(() => key);
+    setCurrentPage(() => 1);
   }
+
   function goToPage(page: number) {
-    setCurrentPage(page);
-    searchConcern({ pageNumber: page });
+    setCurrentPage(() => page);
   }
+
   function concernAction(action: CONCERNACTIONS) {
     switch (action.action) {
       case 'Add':
@@ -207,9 +218,9 @@ export default function ConcernPage() {
     await deleteConcern(id)
       .then(() => {
         setMessage({
-          message: 'User Deleted',
+          message: 'Concern Deleted',
           onOk: () => {
-            searchConcern({});
+            searchConcern();
           },
         });
       })
@@ -218,6 +229,7 @@ export default function ConcernPage() {
       })
       .finally(() => setBusy(false));
   }
+
   async function fetchClassifications() {
     setBusy(true);
     await getClassifications()
@@ -236,30 +248,11 @@ export default function ConcernPage() {
       })
       .finally(() => setBusy(false));
   }
-  async function fetchOffices() {
-    setBusy(true);
-    await getOffices()
-      .then((res) => {
-        if (res !== undefined) {
-          setOfficeItem(() => [
-            { key: '', value: '' },
-            ...res.map((r) => {
-              return { key: r.id.toString(), value: r.description };
-            }),
-          ]);
-        }
-      })
-      .catch((err) => {
-        setMessage({ message: err.message });
-      })
-      .finally(() => setBusy(false));
-  }
 
   async function onChange({ elementName, value }: CustomReturn) {
     setFiltering((r) => {
       return { ...r, [elementName]: value };
     });
-    console.log(filtering);
   }
   return (
     <>
@@ -286,17 +279,8 @@ export default function ConcernPage() {
             onChange={onChange}
           />
           <CustomDropdown
-            title='Office'
-            name='office'
-            hasDefault={true}
-            value={filtering.office}
-            onChange={onChange}
-            itemsList={officeItem}
-          />
-          <CustomDropdown
             title='Classification'
             name='classification'
-            hasDefault={true}
             value={filtering.classification}
             onChange={onChange}
             itemsList={classificationItem}
@@ -309,21 +293,19 @@ export default function ConcernPage() {
             text='Assigned'
             id='assigned'
             checkChange={() => {
-              var x = !assigned;
-              setAssigned(x);
-              searchConcern({ isAssigned: x });
+              assigned.current = !assigned.current;
+              searchConcern();
             }}
-            isCheck={assigned}
+            isCheck={assigned.current}
           />
           <CustomCheckBox
             text='Closed'
             id='closed'
             checkChange={() => {
-              var x = !closed;
-              setClosed(x);
-              searchConcern({ isClosed: x });
+              closed.current = !closed.current;
+              searchConcern();
             }}
-            isCheck={closed}
+            isCheck={closed.current}
           />
         </div>
         <Pagination
@@ -331,7 +313,7 @@ export default function ConcernPage() {
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
-      <section>
+      <section className='table-container'>
         <ConcernList.Provider value={concerns}>
           <ConcernActions.Provider value={concernAction}>
             <ConcernItems />

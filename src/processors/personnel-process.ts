@@ -36,10 +36,19 @@ export async function searchPersonnels(
   );
 }
 export async function createPersonnel(
-  personnel: Personnel
+  personnel: Personnel,
+  classificationIds: number[] | undefined
 ): Promise<Personnel | undefined> {
-  return httpPost(PersonnelEnd.Add, personnel);
+  return httpPost(PersonnelEnd.Add, { ...personnel, classificationIds });
 }
-export async function updatePersonnel(personnel: Personnel): Promise<boolean> {
-  return httpPut(`${PersonnelEnd.Update}/${personnel.id}`, personnel);
+export async function updatePersonnel(
+  personnel: Personnel,
+  newClassificationIds: number[] | undefined,
+  classificationsToDelete: number[] | undefined
+): Promise<boolean> {
+  return httpPut(`${PersonnelEnd.Update}/${personnel.id}`, {
+    ...personnel,
+    newClassificationIds,
+    classificationsToDelete,
+  });
 }

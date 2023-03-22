@@ -122,7 +122,7 @@ export default function RolePage() {
           currentPageNumber={currentPage}
           goInPage={goToPage}></Pagination>
       </section>
-      <section>
+      <section className='table-container'>
         <RoleList.Provider value={roles}>
           <RoleActions.Provider value={roleAction}>
             <RoleItems />

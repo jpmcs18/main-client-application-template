@@ -10,6 +10,8 @@ export default function PersonnelItems() {
       <thead>
         <tr>
           <th>Name</th>
+          <th>Mobile Number</th>
+          <th>Office</th>
           <th>Classification</th>
         </tr>
         <tr>
